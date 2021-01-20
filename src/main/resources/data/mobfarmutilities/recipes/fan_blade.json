@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " I ",
+    "IBI",
+    " I "
+  ],
+  "key": {
+	"I": {
+	  "tag": "forge:ingots/iron"
+	},
+	"B": {
+	  "item": "minecraft:iron_bars"
+	}
+  },
+  "result": {
+    "item": "mobfarmutilities:fan_blade"
+  }
+}

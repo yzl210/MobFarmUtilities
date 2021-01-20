@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "mobfarmutilities:block/fan/side",
+    "down": "mobfarmutilities:block/fan/side",
+    "up": "mobfarmutilities:block/fan/side",
+    "east": "mobfarmutilities:block/fan/side",
+    "west": "mobfarmutilities:block/fan/side",
+    "north": "mobfarmutilities:block/fan/front_inactive",
+    "south": "mobfarmutilities:block/fan/back"
+  }
+}
