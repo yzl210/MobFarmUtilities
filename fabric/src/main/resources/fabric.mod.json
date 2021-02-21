@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "mobfarmutilities",
+  "version": "${version}",
+  "name": "Mob Farm Utilities",
+  "description": "Add some useful mob farm utilities",
+  "authors": [
+    "yzl210"
+  ],
+  "contact": {
+    "issues": "https://github.com/yzl210/MobFarmUtilities/issues",
+    "sources": "https://github.com/yzl210/MobFarmUtilities"
+  },
+  "license": "GPLv3",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "cn.leomc.mobfarmutilities.fabric.MobFarmUtilitiesFabric"
+    ],
+    "client": [
+      "cn.leomc.mobfarmutilities.fabric.MobFarmUtilitiesFabricClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "fabric": "*",
+    "minecraft": ">=1.16.3",
+    "architectury": ">=1.1.55"
+  },
+  "suggests": {
+    "flamingo": "*"
+  }
+}

@@ -1,0 +1,19 @@
+modLoader = "javafml"
+loaderVersion = "[34,)"
+license = "GNU GPLv3"
+[[mods]]
+modId = "mobfarmutilities"
+version = "${version}"
+displayName = "Mob Farm Utilities"
+issueTrackerURL = "https://github.com/yzl210/MobFarmUtilities/issues"
+authors = "yzl210"
+description = '''
+Add some useful mob farm utilities
+'''
+
+[[dependencies.mobfarmutilities]]
+modId = "architectury"
+mandatory = true
+versionRange = "[1.1.55,)"
+ordering = "AFTER"
+side = "BOTH"
