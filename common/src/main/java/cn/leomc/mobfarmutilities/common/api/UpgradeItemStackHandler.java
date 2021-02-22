@@ -33,8 +33,8 @@ public class UpgradeItemStackHandler {
     }
 
     public NonNullList<ItemStack> getNonNullItemStackList() {
-        NonNullList<ItemStack> nonNullList = NonNullList.create();
-        upgradeItems.forEach((type, stack) -> nonNullList.add(stack));
+        NonNullList<ItemStack> nonNullList = NonNullList.withSize(4, ItemStack.EMPTY);
+        upgradeItems.forEach(nonNullList::set);
         return nonNullList;
     }
 

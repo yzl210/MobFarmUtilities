@@ -25,11 +25,8 @@ public class MobFarmUtilities {
     public static IProxy PROXY = EnvExecutor.getEnvSpecific(() -> ClientProxy::new, () -> ServerProxy::new);
 
     public MobFarmUtilities() {
-        //IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
         TextureStitchEvent.PRE.register(this::onTextureStitch);
         ModRegistry.register();
-
-        //eventBus.addListener(this::onCommonSetup);
     }
 
     @Environment(EnvType.CLIENT)

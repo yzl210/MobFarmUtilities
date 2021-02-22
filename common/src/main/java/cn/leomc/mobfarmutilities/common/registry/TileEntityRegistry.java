@@ -1,7 +1,10 @@
 package cn.leomc.mobfarmutilities.common.registry;
 
 import cn.leomc.mobfarmutilities.MobFarmUtilities;
+import cn.leomc.mobfarmutilities.common.block.FanBlock;
+import cn.leomc.mobfarmutilities.common.block.ItemCollectorBlock;
 import cn.leomc.mobfarmutilities.common.tileentity.FanTileEntity;
+import cn.leomc.mobfarmutilities.common.tileentity.ItemCollectorTileEntity;
 import me.shedaniel.architectury.registry.DeferredRegister;
 import me.shedaniel.architectury.registry.RegistrySupplier;
 import net.minecraft.tileentity.TileEntityType;
@@ -14,7 +17,10 @@ public class TileEntityRegistry {
 
 
     public static final RegistrySupplier<TileEntityType<FanTileEntity>> FAN = TILE_ENTITIES.register("fan",
-            () -> TileEntityType.Builder.create(FanTileEntity::new, BlockRegistry.FAN.get()).build(null));
+            () -> TileEntityType.Builder.create(FanBlock::getTileEntity, BlockRegistry.FAN.get()).build(null));
+
+    public static final RegistrySupplier<TileEntityType<ItemCollectorTileEntity>> ITEM_COLLECTOR = TILE_ENTITIES.register("item_collector",
+            () -> TileEntityType.Builder.create(ItemCollectorBlock::getTileEntity, BlockRegistry.ITEM_COLLECTOR.get()).build(null));
 
 
     public static void register() {

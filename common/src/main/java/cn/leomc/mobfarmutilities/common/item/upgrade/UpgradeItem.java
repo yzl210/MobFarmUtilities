@@ -61,7 +61,7 @@ public class UpgradeItem extends Item {
             return new TranslationTextComponent("text." + MobFarmUtilities.MODID + "." + getRegistryName(), max);
         }
 
-        public RegistrySupplier<Item> getRegistryObject() {
+        public RegistrySupplier<Item> getRegistrySupplier() {
             return registrySupplier;
         }
 

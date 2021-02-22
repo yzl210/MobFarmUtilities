@@ -1,9 +1,8 @@
 package cn.leomc.mobfarmutilities.common.container;
 
-import cn.leomc.mobfarmutilities.common.api.ItemStackHandlerInventoryWrapper;
 import cn.leomc.mobfarmutilities.common.registry.BlockRegistry;
 import cn.leomc.mobfarmutilities.common.registry.ContainerRegistry;
-import cn.leomc.mobfarmutilities.common.tileentity.FanTileEntity;
+import cn.leomc.mobfarmutilities.common.tileentity.ItemCollectorTileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
@@ -11,18 +10,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
 
-public class FanContainer extends BaseContainer {
-
-    public FanContainer(TileEntity tileEntity, PlayerEntity playerEntity, PlayerInventory playerInventory, int windowId) {
-        super(ContainerRegistry.FAN.get(), tileEntity, playerEntity, playerInventory, windowId);
-        if (tileEntity instanceof FanTileEntity)
-            addSlotRange(new ItemStackHandlerInventoryWrapper(((FanTileEntity) tileEntity).getItems()), 0, 20, 40, 4, 40);
+public class ItemCollectorContainer extends BaseContainer {
+    public ItemCollectorContainer(TileEntity tileEntity, PlayerEntity playerEntity, PlayerInventory playerInventory, int windowId) {
+        super(ContainerRegistry.ITEM_COLLECTOR.get(), tileEntity, playerEntity, playerInventory, windowId);
+        if (tileEntity instanceof ItemCollectorTileEntity)
+            addSlotBox(((ItemCollectorTileEntity) tileEntity).getInventory(), 0, 8, 34, 9, 18, 2, 18);
     }
-
 
     @Override
     public boolean canInteractWith(PlayerEntity playerIn) {
-        return isWithinUsableDistance(IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos()), playerIn, BlockRegistry.FAN.get());
+        return isWithinUsableDistance(IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos()), playerIn, BlockRegistry.ITEM_COLLECTOR.get());
     }
 
     @Override
@@ -32,17 +29,13 @@ public class FanContainer extends BaseContainer {
         if (slot != null && slot.getHasStack()) {
             ItemStack stack = slot.getStack();
             itemstack = stack.copy();
-            if (index >= 36 && index <= 39) {
+            if (index >= 36) {
                 if (!this.mergeItemStack(stack, 0, 36, true)) {
                     return ItemStack.EMPTY;
                 }
                 slot.onSlotChange(stack, itemstack);
             } else {
-
-                if (!this.mergeItemStack(stack, 36, 40, false)) {
-                    return ItemStack.EMPTY;
-                }
-
+                return ItemStack.EMPTY;
             }
 
             if (stack.isEmpty()) {
@@ -60,6 +53,5 @@ public class FanContainer extends BaseContainer {
 
         return itemstack;
     }
-
 
 }

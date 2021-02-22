@@ -19,6 +19,8 @@ public class ItemRegistry {
 
     public static final RegistrySupplier<Item> FAN_BLADE = register("fan_blade", () -> new Item(new Item.Properties().group(ModRegistry.ITEM_GROUP)));
 
+    public static final RegistrySupplier<Item> ITEM_COLLECTOR = register("item_collector", () -> new BlockItem(BlockRegistry.ITEM_COLLECTOR.get(), new Item.Properties().group(ModRegistry.ITEM_GROUP)));
+
 
     static {
         for (UpgradeItem.Type type : UpgradeItem.Type.values()) {

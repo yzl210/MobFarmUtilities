@@ -58,6 +58,14 @@ public abstract class BaseScreen<C extends Container> extends ContainerScreen<C>
         }
     }
 
+
+    protected void addSlotBox(int x, int y, int horAmount, int dx, int verAmount, int dy) {
+        for (int j = 0; j < verAmount; j++) {
+            addSlotRange(x, y, horAmount, dx);
+            y += dy;
+        }
+    }
+
     protected int getCenteredOffset(String string) {
         return this.getCenteredOffset(string, xSize / 2);
     }

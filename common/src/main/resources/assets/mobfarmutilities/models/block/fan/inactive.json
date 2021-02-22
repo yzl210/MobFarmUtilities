@@ -1,5 +1,5 @@
 {
-  "parent": "block/cube",
+  "parent": "minecraft:block/cube",
   "textures": {
     "particle": "mobfarmutilities:block/fan/side",
     "down": "mobfarmutilities:block/fan/side",

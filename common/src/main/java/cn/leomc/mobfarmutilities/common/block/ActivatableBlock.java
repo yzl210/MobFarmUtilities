@@ -13,7 +13,7 @@ import net.minecraft.state.StateContainer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class ActivatableBlock extends DirectionalBlock {
+public class ActivatableBlock extends Block {
 
     public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
 

@@ -4,10 +4,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
-public class ItemStackHandlerWrapper implements IInventory {
+public class ItemStackHandlerInventoryWrapper implements IInventory {
     protected UpgradeItemStackHandler upgradeItemStackHandler;
 
-    public ItemStackHandlerWrapper(UpgradeItemStackHandler upgradeItemStackHandler) {
+    public ItemStackHandlerInventoryWrapper(UpgradeItemStackHandler upgradeItemStackHandler) {
         this.upgradeItemStackHandler = upgradeItemStackHandler;
     }
 
@@ -18,7 +18,10 @@ public class ItemStackHandlerWrapper implements IInventory {
 
     @Override
     public boolean isEmpty() {
-        return false;
+        for (ItemStack itemStack : upgradeItemStackHandler.upgradeItems.values())
+            if (!itemStack.isEmpty())
+                return false;
+        return true;
     }
 
     @Override

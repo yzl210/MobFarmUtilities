@@ -2,6 +2,7 @@ package cn.leomc.mobfarmutilities.common.registry;
 
 import cn.leomc.mobfarmutilities.MobFarmUtilities;
 import cn.leomc.mobfarmutilities.common.block.FanBlock;
+import cn.leomc.mobfarmutilities.common.block.ItemCollectorBlock;
 import me.shedaniel.architectury.registry.DeferredRegister;
 import me.shedaniel.architectury.registry.RegistrySupplier;
 import net.minecraft.block.Block;
@@ -15,6 +16,8 @@ public class BlockRegistry {
 
 
     public static final RegistrySupplier<Block> FAN = register("fan", FanBlock::new);
+
+    public static final RegistrySupplier<Block> ITEM_COLLECTOR = register("item_collector", ItemCollectorBlock::new);
 
 
     public static void register() {

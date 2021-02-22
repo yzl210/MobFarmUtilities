@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "mobfarmutilities:block/item_collector/side",
+    "down": "mobfarmutilities:block/item_collector/side",
+    "up": "mobfarmutilities:block/item_collector/top",
+    "east": "mobfarmutilities:block/item_collector/side",
+    "west": "mobfarmutilities:block/item_collector/side",
+    "north": "mobfarmutilities:block/item_collector/side",
+    "south": "mobfarmutilities:block/item_collector/side"
+  }
+}

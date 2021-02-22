@@ -1,7 +1,6 @@
 package cn.leomc.mobfarmutilities.common.tileentity;
 
 import cn.leomc.mobfarmutilities.MobFarmUtilities;
-import cn.leomc.mobfarmutilities.common.api.FanUpgradeItemStackHandler;
 import cn.leomc.mobfarmutilities.common.api.RedstoneMode;
 import cn.leomc.mobfarmutilities.common.api.UpgradeItemStackHandler;
 import cn.leomc.mobfarmutilities.common.block.ActivatableBlock;
@@ -28,7 +27,7 @@ import java.util.List;
 
 public class FanTileEntity extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
 
-    private final FanUpgradeItemStackHandler item = new FanUpgradeItemStackHandler();
+    protected final UpgradeItemStackHandler item = new UpgradeItemStackHandler(UpgradeItem.Type.FAN_SPEED, UpgradeItem.Type.FAN_DISTANCE, UpgradeItem.Type.FAN_WIDTH, UpgradeItem.Type.FAN_HEIGHT);
 
     public FanTileEntity() {
         super(TileEntityRegistry.FAN.get());

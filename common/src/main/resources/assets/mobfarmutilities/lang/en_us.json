@@ -1,11 +1,13 @@
 {
   "block.mobfarmutilities.fan": "Fan",
+  "block.mobfarmutilities.item_collector": "Item Collector",
   "item.mobfarmutilities.fan_blade": "Fan Blade",
   "item.mobfarmutilities.upgrade_fan_distance": "Fan Distance Upgrade",
   "item.mobfarmutilities.upgrade_fan_width": "Fan Width Upgrade",
   "item.mobfarmutilities.upgrade_fan_height": "Fan Height Upgrade",
   "item.mobfarmutilities.upgrade_fan_speed": "Fan Speed Upgrade",
   "container.mobfarmutilities.fan": "Fan",
+  "container.mobfarmutilities.item_collector": "Item Collector",
   "text.mobfarmutilities.mode": "Redstone Mode: %s",
   "text.mobfarmutilities.mode.ignored": "Ignored",
   "text.mobfarmutilities.mode.high": "High",

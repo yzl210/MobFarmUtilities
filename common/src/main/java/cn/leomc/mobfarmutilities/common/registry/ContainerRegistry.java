@@ -2,7 +2,9 @@ package cn.leomc.mobfarmutilities.common.registry;
 
 import cn.leomc.mobfarmutilities.MobFarmUtilities;
 import cn.leomc.mobfarmutilities.common.container.FanContainer;
+import cn.leomc.mobfarmutilities.common.container.ItemCollectorContainer;
 import cn.leomc.mobfarmutilities.common.tileentity.FanTileEntity;
+import cn.leomc.mobfarmutilities.common.tileentity.ItemCollectorTileEntity;
 import me.shedaniel.architectury.registry.DeferredRegister;
 import me.shedaniel.architectury.registry.MenuRegistry;
 import me.shedaniel.architectury.registry.RegistrySupplier;
@@ -24,6 +26,16 @@ public class ContainerRegistry {
                     return null;
                 }
                 return new FanContainer(tileEntity, inventory.player, inventory, id);
+            }));
+
+    public static final RegistrySupplier<ContainerType<ItemCollectorContainer>> ITEM_COLLECTOR = CONTAINERS.register("item_collector",
+            () -> MenuRegistry.ofExtended((id, inventory, data) -> {
+                BlockPos pos = data.readBlockPos();
+                TileEntity tileEntity = inventory.player.getEntityWorld().getTileEntity(pos);
+                if (!(tileEntity instanceof ItemCollectorTileEntity)) {
+                    return null;
+                }
+                return new ItemCollectorContainer(tileEntity, inventory.player, inventory, id);
             }));
 
 

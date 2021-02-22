@@ -1,9 +1,8 @@
 package cn.leomc.mobfarmutilities.common.block;
 
 import cn.leomc.mobfarmutilities.common.api.InventoryWrapper;
-import cn.leomc.mobfarmutilities.common.api.ItemStackHandlerInventoryWrapper;
-import cn.leomc.mobfarmutilities.common.api.blockstate.IHasDirection;
-import cn.leomc.mobfarmutilities.common.tileentity.FanTileEntity;
+import cn.leomc.mobfarmutilities.common.api.blockstate.IFluidLoggable;
+import cn.leomc.mobfarmutilities.common.tileentity.ItemCollectorTileEntity;
 import me.shedaniel.architectury.platform.Platform;
 import me.shedaniel.architectury.registry.MenuRegistry;
 import net.minecraft.block.Block;
@@ -12,8 +11,10 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ISidedInventoryProvider;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.StateContainer;
@@ -25,30 +26,30 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
 
+public class ItemCollectorBlock extends ActivatableBlock implements ITileEntityProvider, IFluidLoggable, ISidedInventoryProvider {
 
-public class FanBlock extends ActivatableBlock implements ITileEntityProvider, IHasDirection, ISidedInventoryProvider {
-
-    public FanBlock() {
+    public ItemCollectorBlock() {
         super(Properties.create(Material.IRON)
-                .setRequiresTool()
                 .hardnessAndResistance(1.5F, 6.0F)
+                .setRequiresTool()
         );
     }
 
-    public static FanTileEntity getTileEntity() {
+    public static ItemCollectorTileEntity getTileEntity() {
         if (Platform.isForge()) {
-            Class<FanTileEntity> tileEntityClass;
+            Class<ItemCollectorTileEntity> tileEntityClass;
             try {
-                tileEntityClass = (Class<FanTileEntity>) Class.forName("cn.leomc.mobfarmutilities.forge.ForgeFanTileEntity");
+                tileEntityClass = (Class<ItemCollectorTileEntity>) Class.forName("cn.leomc.mobfarmutilities.forge.ForgeItemCollectorTileEntity");
                 return tileEntityClass.getConstructor().newInstance();
             } catch (ClassNotFoundException | ClassCastException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
                 e.printStackTrace();
             }
         }
-        return new FanTileEntity();
+        return new ItemCollectorTileEntity();
     }
 
     @Override
@@ -63,7 +64,6 @@ public class FanBlock extends ActivatableBlock implements ITileEntityProvider, I
             return ActionResultType.SUCCESS;
         } else
             throw new IllegalStateException("Named Container not found!");
-
     }
 
     @Override
@@ -71,36 +71,41 @@ public class FanBlock extends ActivatableBlock implements ITileEntityProvider, I
         if (state.getBlock() == newState.getBlock())
             return;
         TileEntity tileEntity = worldIn.getTileEntity(pos);
-        if (tileEntity instanceof FanTileEntity) {
-            ((FanTileEntity) tileEntity).dropAllItems();
+        if (tileEntity instanceof ItemCollectorTileEntity) {
+            ((ItemCollectorTileEntity) tileEntity).dropAllItems();
         }
         super.onReplaced(state, worldIn, pos, newState, isMoving);
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return getDirection(context, super.getStateForPlacement(context));
-    }
-
-    @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        super.fillStateContainer(builder);
-        builder.add(FACING);
+        super.fillStateContainer(builder.add(WATERLOGGED));
     }
 
     @Override
-    public TileEntity createNewTileEntity(IBlockReader worldIn) {
-        return getTileEntity();
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        FluidState fluidState = context.getWorld().getFluidState(context.getPos());
+        return super.getStateForPlacement(context).with(WATERLOGGED, fluidState.getFluid() == getSupportedFluid());
+    }
+
+    @Override
+    public FluidState getFluidState(BlockState state) {
+        return getFluid(state);
     }
 
     @Override
     public ISidedInventory createInventory(BlockState state, IWorld world, BlockPos pos) {
         TileEntity tileEntity = world.getTileEntity(pos);
-        if (tileEntity instanceof FanTileEntity) {
-            ItemStackHandlerInventoryWrapper items = new ItemStackHandlerInventoryWrapper(((FanTileEntity) tileEntity).getItems());
-            return new InventoryWrapper(items);
+        if (tileEntity instanceof ItemCollectorTileEntity) {
+            Inventory inventory = ((ItemCollectorTileEntity) tileEntity).getInventory();
+            return new InventoryWrapper(inventory);
         }
         return null;
+    }
+
+    @Override
+    public @Nullable TileEntity createNewTileEntity(IBlockReader worldIn) {
+        return getTileEntity();
     }
 
 }
