@@ -5,7 +5,9 @@ import cn.leomc.mobfarmutilities.common.api.ItemStackHandlerInventoryWrapper;
 import cn.leomc.mobfarmutilities.common.api.blockstate.IHasDirection;
 import cn.leomc.mobfarmutilities.common.tileentity.FanTileEntity;
 import me.shedaniel.architectury.platform.Platform;
+import me.shedaniel.architectury.registry.BlockProperties;
 import me.shedaniel.architectury.registry.MenuRegistry;
+import me.shedaniel.architectury.registry.ToolType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ITileEntityProvider;
@@ -32,7 +34,8 @@ import java.lang.reflect.InvocationTargetException;
 public class FanBlock extends ActivatableBlock implements ITileEntityProvider, IHasDirection, ISidedInventoryProvider {
 
     public FanBlock() {
-        super(Properties.create(Material.IRON)
+        super(BlockProperties.of(Material.IRON)
+                .tool(ToolType.PICKAXE, 1)
                 .setRequiresTool()
                 .hardnessAndResistance(1.5F, 6.0F)
         );

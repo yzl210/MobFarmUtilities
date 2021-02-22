@@ -1,23 +1,20 @@
 package cn.leomc.mobfarmutilities.common.block;
 
 import cn.leomc.mobfarmutilities.common.api.InventoryWrapper;
-import cn.leomc.mobfarmutilities.common.api.blockstate.IFluidLoggable;
 import cn.leomc.mobfarmutilities.common.tileentity.ItemCollectorTileEntity;
 import me.shedaniel.architectury.platform.Platform;
+import me.shedaniel.architectury.registry.BlockProperties;
 import me.shedaniel.architectury.registry.MenuRegistry;
-import net.minecraft.block.Block;
+import me.shedaniel.architectury.registry.ToolType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.fluid.FluidState;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ISidedInventoryProvider;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -30,10 +27,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
 
-public class ItemCollectorBlock extends ActivatableBlock implements ITileEntityProvider, IFluidLoggable, ISidedInventoryProvider {
+public class ItemCollectorBlock extends ActivatableBlock implements ITileEntityProvider, ISidedInventoryProvider {
 
     public ItemCollectorBlock() {
-        super(Properties.create(Material.IRON)
+        super(BlockProperties.of(Material.IRON)
+                .tool(ToolType.PICKAXE, 1)
                 .hardnessAndResistance(1.5F, 6.0F)
                 .setRequiresTool()
         );
@@ -75,22 +73,6 @@ public class ItemCollectorBlock extends ActivatableBlock implements ITileEntityP
             ((ItemCollectorTileEntity) tileEntity).dropAllItems();
         }
         super.onReplaced(state, worldIn, pos, newState, isMoving);
-    }
-
-    @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        super.fillStateContainer(builder.add(WATERLOGGED));
-    }
-
-    @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        FluidState fluidState = context.getWorld().getFluidState(context.getPos());
-        return super.getStateForPlacement(context).with(WATERLOGGED, fluidState.getFluid() == getSupportedFluid());
-    }
-
-    @Override
-    public FluidState getFluidState(BlockState state) {
-        return getFluid(state);
     }
 
     @Override
