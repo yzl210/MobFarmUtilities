@@ -12,8 +12,8 @@ import net.minecraft.tileentity.TileEntity;
 
 public class BaseContainer extends Container {
 
+    public final PlayerEntity playerEntity;
     protected final TileEntity tileEntity;
-    protected final PlayerEntity playerEntity;
     protected final PlayerInventory playerInventory;
 
     protected BaseContainer(ContainerType<?> type, TileEntity tileEntity, PlayerEntity playerEntity, PlayerInventory playerInventory, int windowId) {
@@ -55,6 +55,11 @@ public class BaseContainer extends Container {
         addSlotRange(playerInventory, 0, leftCol, topRow, 9, 18);
     }
 
+
+    @Override
+    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+        return ItemStack.EMPTY;
+    }
 
     @Override
     public boolean canInteractWith(PlayerEntity playerIn) {

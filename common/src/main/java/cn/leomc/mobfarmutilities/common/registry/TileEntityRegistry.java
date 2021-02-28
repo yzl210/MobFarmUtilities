@@ -1,8 +1,10 @@
 package cn.leomc.mobfarmutilities.common.registry;
 
 import cn.leomc.mobfarmutilities.MobFarmUtilities;
+import cn.leomc.mobfarmutilities.common.block.ExperienceCollectorBlock;
 import cn.leomc.mobfarmutilities.common.block.FanBlock;
 import cn.leomc.mobfarmutilities.common.block.ItemCollectorBlock;
+import cn.leomc.mobfarmutilities.common.tileentity.ExperienceCollectorTileEntity;
 import cn.leomc.mobfarmutilities.common.tileentity.FanTileEntity;
 import cn.leomc.mobfarmutilities.common.tileentity.ItemCollectorTileEntity;
 import me.shedaniel.architectury.registry.DeferredRegister;
@@ -21,6 +23,9 @@ public class TileEntityRegistry {
 
     public static final RegistrySupplier<TileEntityType<ItemCollectorTileEntity>> ITEM_COLLECTOR = TILE_ENTITIES.register("item_collector",
             () -> TileEntityType.Builder.create(ItemCollectorBlock::getTileEntity, BlockRegistry.ITEM_COLLECTOR.get()).build(null));
+
+    public static final RegistrySupplier<TileEntityType<ExperienceCollectorTileEntity>> EXPERIENCE_COLLECTOR = TILE_ENTITIES.register("experience_collector",
+            () -> TileEntityType.Builder.create(ExperienceCollectorBlock::getTileEntity, BlockRegistry.EXPERIENCE_COLLECTOR.get()).build(null));
 
 
     public static void register() {

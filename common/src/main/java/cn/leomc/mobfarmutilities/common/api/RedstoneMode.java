@@ -1,12 +1,15 @@
 package cn.leomc.mobfarmutilities.common.api;
 
 import cn.leomc.mobfarmutilities.MobFarmUtilities;
-import cn.leomc.mobfarmutilities.common.utils.TextureUtils;
+import cn.leomc.mobfarmutilities.client.utils.TextureUtils;
+import cn.leomc.mobfarmutilities.common.block.ActivatableBlock;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.block.BlockState;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 public enum RedstoneMode implements ITranslatable, IStringSerializable {
     IGNORED,
@@ -14,10 +17,26 @@ public enum RedstoneMode implements ITranslatable, IStringSerializable {
     LOW;
 
     @Environment(EnvType.CLIENT)
-    private TextureAtlasSprite sprite;
+    private net.minecraft.client.renderer.texture.TextureAtlasSprite sprite;
 
     public static String getModeTranslationKey() {
         return "text." + MobFarmUtilities.MODID + ".mode";
+    }
+
+    public static void updateRedstone(BlockState state, World world, BlockPos pos) {
+        RedstoneMode mode = state.get(ActivatableBlock.MODE);
+        if (mode == RedstoneMode.HIGH)
+            if (world.isBlockPowered(pos))
+                world.setBlockState(pos, state.with(ActivatableBlock.ACTIVE, true));
+            else
+                world.setBlockState(pos, state.with(ActivatableBlock.ACTIVE, false));
+        if (mode == RedstoneMode.LOW)
+            if (world.isBlockPowered(pos))
+                world.setBlockState(pos, state.with(ActivatableBlock.ACTIVE, false));
+            else
+                world.setBlockState(pos, state.with(ActivatableBlock.ACTIVE, true));
+        if (mode == RedstoneMode.IGNORED)
+            world.setBlockState(pos, state.with(ActivatableBlock.ACTIVE, true));
     }
 
     public RedstoneMode next() {
@@ -57,7 +76,7 @@ public enum RedstoneMode implements ITranslatable, IStringSerializable {
     }
 
     @Environment(EnvType.CLIENT)
-    public TextureAtlasSprite getTextureAtlasSprite() {
+    public net.minecraft.client.renderer.texture.TextureAtlasSprite getTextureAtlasSprite() {
         if (sprite == null)
             sprite = TextureUtils.getAtlasTexture(getTextureResourceLocation());
         return sprite;

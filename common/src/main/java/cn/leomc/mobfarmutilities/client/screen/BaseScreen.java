@@ -1,7 +1,6 @@
 package cn.leomc.mobfarmutilities.client.screen;
 
-import cn.leomc.mobfarmutilities.MobFarmUtilities;
-import cn.leomc.mobfarmutilities.common.utils.TextureUtils;
+import cn.leomc.mobfarmutilities.client.utils.Textures;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Pair;
@@ -11,7 +10,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.PlayerContainer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
 import java.util.ArrayList;
@@ -44,10 +42,12 @@ public abstract class BaseScreen<C extends Container> extends ContainerScreen<C>
         minecraft.getTextureManager().bindTexture(PlayerContainer.LOCATION_BLOCKS_TEXTURE);
         int relX = (this.width - this.xSize) / 2;
         int relY = (this.height - this.ySize) / 2;
-        blit(matrixStack, relX, relY, 0, this.xSize, this.xSize, TextureUtils.getAtlasTexture(new ResourceLocation(MobFarmUtilities.MODID, "gui/generic")));
-        TextureAtlasSprite slot = TextureUtils.getAtlasTexture(new ResourceLocation(MobFarmUtilities.MODID, "gui/slot_small"));
-        for (Pair<Integer, Integer> pair : slots) {
-            blit(matrixStack, guiLeft + pair.getFirst(), guiTop + pair.getSecond(), 1, slot.getWidth(), slot.getHeight(), slot);
+        blit(matrixStack, relX, relY, 0, this.xSize, this.xSize, Textures.GENERIC_GUI.get());
+        if (!slots.isEmpty()) {
+            TextureAtlasSprite slot = Textures.SLOT_SMALL.get();
+            for (Pair<Integer, Integer> pair : slots) {
+                blit(matrixStack, guiLeft + pair.getFirst(), guiTop + pair.getSecond(), 1, slot.getWidth(), slot.getHeight(), slot);
+            }
         }
     }
 

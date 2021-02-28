@@ -6,7 +6,7 @@ modId = "mobfarmutilities"
 version = "${version}"
 displayName = "Mob Farm Utilities"
 issueTrackerURL = "https://github.com/yzl210/MobFarmUtilities/issues"
-authors = "yzl210"
+authors = "6LeoMC"
 description = '''
 Add some useful mob farm utilities
 '''
@@ -14,6 +14,6 @@ Add some useful mob farm utilities
 [[dependencies.mobfarmutilities]]
 modId = "architectury"
 mandatory = true
-versionRange = "[1.1.55,)"
+versionRange = "[1.8.128,)"
 ordering = "AFTER"
 side = "BOTH"

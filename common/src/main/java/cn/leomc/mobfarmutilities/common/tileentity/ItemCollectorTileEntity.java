@@ -29,6 +29,7 @@ public class ItemCollectorTileEntity extends TileEntity implements ITickableTile
 
     protected Inventory inventory;
 
+
     public ItemCollectorTileEntity() {
         super(TileEntityRegistry.ITEM_COLLECTOR.get());
         inventory = new Inventory(18);
@@ -49,11 +50,10 @@ public class ItemCollectorTileEntity extends TileEntity implements ITickableTile
         if (world.isRemote)
             return;
         BlockState state = world.getBlockState(pos);
-        updateRedstone();
+        RedstoneMode.updateRedstone(state, world, pos);
         if (!state.get(ActivatableBlock.ACTIVE))
             return;
-
-        AxisAlignedBB axisAlignedBB = new AxisAlignedBB(pos
+        AxisAlignedBB area = new AxisAlignedBB(pos
                 .offset(Direction.NORTH, 5)
                 .offset(Direction.WEST, 5)
                 .offset(Direction.UP, 2)
@@ -62,29 +62,14 @@ public class ItemCollectorTileEntity extends TileEntity implements ITickableTile
                 .offset(Direction.EAST, 5)
                 .offset(Direction.DOWN, 2)
                 .add(1, 1, 1));
-        List<ItemEntity> entities = world.getEntitiesWithinAABB(ItemEntity.class, axisAlignedBB);
+
+        List<ItemEntity> entities = world.getEntitiesWithinAABB(ItemEntity.class, area);
         for (ItemEntity itemEntity : entities) {
             ItemStack itemStack = inventory.addItem(itemEntity.getItem());
             itemEntity.setItem(itemStack);
         }
     }
 
-    public void updateRedstone() {
-        BlockState state = getBlockState();
-        RedstoneMode mode = state.get(ActivatableBlock.MODE);
-        if (mode == RedstoneMode.HIGH)
-            if (world.isBlockPowered(pos))
-                world.setBlockState(pos, state.with(ActivatableBlock.ACTIVE, true));
-            else
-                world.setBlockState(pos, state.with(ActivatableBlock.ACTIVE, false));
-        if (mode == RedstoneMode.LOW)
-            if (world.isBlockPowered(pos))
-                world.setBlockState(pos, state.with(ActivatableBlock.ACTIVE, false));
-            else
-                world.setBlockState(pos, state.with(ActivatableBlock.ACTIVE, true));
-        if (mode == RedstoneMode.IGNORED)
-            world.setBlockState(pos, state.with(ActivatableBlock.ACTIVE, true));
-    }
 
     @Override
     public void read(BlockState state, CompoundNBT nbt) {

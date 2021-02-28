@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "mobfarmutilities:block/liquid_experience"
+    }
+  }
+}

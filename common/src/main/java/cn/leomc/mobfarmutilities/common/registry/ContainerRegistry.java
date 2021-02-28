@@ -1,8 +1,10 @@
 package cn.leomc.mobfarmutilities.common.registry;
 
 import cn.leomc.mobfarmutilities.MobFarmUtilities;
+import cn.leomc.mobfarmutilities.common.container.ExperienceCollectorContainer;
 import cn.leomc.mobfarmutilities.common.container.FanContainer;
 import cn.leomc.mobfarmutilities.common.container.ItemCollectorContainer;
+import cn.leomc.mobfarmutilities.common.tileentity.ExperienceCollectorTileEntity;
 import cn.leomc.mobfarmutilities.common.tileentity.FanTileEntity;
 import cn.leomc.mobfarmutilities.common.tileentity.ItemCollectorTileEntity;
 import me.shedaniel.architectury.registry.DeferredRegister;
@@ -38,6 +40,16 @@ public class ContainerRegistry {
                 return new ItemCollectorContainer(tileEntity, inventory.player, inventory, id);
             }));
 
+
+    public static final RegistrySupplier<ContainerType<ExperienceCollectorContainer>> EXPERIENCE_COLLECTOR = CONTAINERS.register("experience_collector",
+            () -> MenuRegistry.ofExtended((id, inventory, data) -> {
+                BlockPos pos = data.readBlockPos();
+                TileEntity tileEntity = inventory.player.getEntityWorld().getTileEntity(pos);
+                if (!(tileEntity instanceof ExperienceCollectorTileEntity)) {
+                    return null;
+                }
+                return new ExperienceCollectorContainer(tileEntity, inventory.player, inventory, id);
+            }));
 
     public static void register() {
         CONTAINERS.register();

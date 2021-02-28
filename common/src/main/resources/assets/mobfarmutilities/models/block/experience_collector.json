@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "mobfarmutilities:block/experience_collector/side",
+    "down": "mobfarmutilities:block/experience_collector/side",
+    "up": "mobfarmutilities:block/experience_collector/top",
+    "east": "mobfarmutilities:block/experience_collector/side",
+    "west": "mobfarmutilities:block/experience_collector/side",
+    "north": "mobfarmutilities:block/experience_collector/side",
+    "south": "mobfarmutilities:block/experience_collector/side"
+  }
+}

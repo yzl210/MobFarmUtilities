@@ -6,12 +6,15 @@ import cn.leomc.mobfarmutilities.common.api.UpgradeItemStackHandler;
 import cn.leomc.mobfarmutilities.common.block.ActivatableBlock;
 import cn.leomc.mobfarmutilities.common.container.FanContainer;
 import cn.leomc.mobfarmutilities.common.item.upgrade.UpgradeItem;
+import cn.leomc.mobfarmutilities.common.network.NetworkHandler;
+import cn.leomc.mobfarmutilities.common.network.message.MotionChangeMessage;
 import cn.leomc.mobfarmutilities.common.registry.TileEntityRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DirectionalBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
@@ -20,12 +23,14 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.List;
 
 public class FanTileEntity extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
+
 
     protected final UpgradeItemStackHandler item = new UpgradeItemStackHandler(UpgradeItem.Type.FAN_SPEED, UpgradeItem.Type.FAN_DISTANCE, UpgradeItem.Type.FAN_WIDTH, UpgradeItem.Type.FAN_HEIGHT);
 
@@ -38,7 +43,7 @@ public class FanTileEntity extends TileEntity implements ITickableTileEntity, IN
         if (world.isRemote)
             return;
         BlockState state = world.getBlockState(pos);
-        updateRedstone();
+        RedstoneMode.updateRedstone(state, world, pos);
         if (!state.get(ActivatableBlock.ACTIVE))
             return;
         Direction facing = state.get(DirectionalBlock.FACING);
@@ -78,30 +83,15 @@ public class FanTileEntity extends TileEntity implements ITickableTileEntity, IN
             z += speed;
         for (Entity entity : entities) {
             try {
-                if (entity instanceof PlayerEntity)
-                    MobFarmUtilities.PROXY.getClientPlayer().setMotion(entity.getMotion().add(x, y, z));
+                if (entity instanceof ServerPlayerEntity)
+                    NetworkHandler.INSTANCE.sendToPlayer((ServerPlayerEntity) entity, new MotionChangeMessage(new Vector3d(x, y, z)));
+
             } catch (NullPointerException ignored) {
             }
             entity.setMotion(entity.getMotion().add(x, y, z));
         }
     }
 
-    public void updateRedstone() {
-        BlockState state = getBlockState();
-        RedstoneMode mode = state.get(ActivatableBlock.MODE);
-        if (mode == RedstoneMode.HIGH)
-            if (world.isBlockPowered(pos))
-                world.setBlockState(pos, state.with(ActivatableBlock.ACTIVE, true));
-            else
-                world.setBlockState(pos, state.with(ActivatableBlock.ACTIVE, false));
-        if (mode == RedstoneMode.LOW)
-            if (world.isBlockPowered(pos))
-                world.setBlockState(pos, state.with(ActivatableBlock.ACTIVE, false));
-            else
-                world.setBlockState(pos, state.with(ActivatableBlock.ACTIVE, true));
-        if (mode == RedstoneMode.IGNORED)
-            world.setBlockState(pos, state.with(ActivatableBlock.ACTIVE, true));
-    }
 
     public UpgradeItemStackHandler getItems() {
         return item;
