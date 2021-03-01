@@ -28,7 +28,7 @@ import java.util.List;
 
 public class ExperienceCollectorTileEntity extends TileEntity implements ITickableTileEntity, INamedContainerProvider, BlockEntityExtension {
 
-    protected Integer amount;
+    private int amount;
     protected int limit = 5000;
     protected boolean syncedOnLoad;
 
@@ -98,7 +98,7 @@ public class ExperienceCollectorTileEntity extends TileEntity implements ITickab
         return super.write(compound);
     }
 
-    public Integer getAmount() {
+    public int getAmount() {
         return amount;
     }
 
@@ -108,7 +108,25 @@ public class ExperienceCollectorTileEntity extends TileEntity implements ITickab
             this.amount = limit;
         if (this.amount < 0)
             this.amount = 0;
+        amountChanged();
         syncData();
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+        if (this.amount > limit)
+            this.amount = limit;
+        if (this.amount < 0)
+            this.amount = 0;
+        amountChanged();
+        syncData();
+    }
+
+    public int getLimit() {
+        return limit;
+    }
+
+    protected void amountChanged(){
     }
 
     public void dropAllExperience() {

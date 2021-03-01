@@ -4,6 +4,7 @@
   "block.mobfarmutilities.item_collector": "物品收集器",
   "block.mobfarmutilities.experience_collector": "经验收集器",
   "block.mobfarmutilities.liquid_experience": "液态经验",
+  "fluid.mobfarmutilities.liquid_experience": "液态经验",
   "item.mobfarmutilities.upgrade_fan_distance": "风扇距离升级",
   "item.mobfarmutilities.upgrade_fan_width": "风扇宽度升级",
   "item.mobfarmutilities.upgrade_fan_height": "风扇高度升级",

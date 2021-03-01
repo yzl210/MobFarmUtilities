@@ -3,6 +3,7 @@
   "block.mobfarmutilities.item_collector": "Item Collector",
   "block.mobfarmutilities.experience_collector": "Experience Collector",
   "block.mobfarmutilities.liquid_experience": "Liquid Experience",
+  "fluid.mobfarmutilities.liquid_experience": "Liquid Experience",
   "item.mobfarmutilities.fan_blade": "Fan Blade",
   "item.mobfarmutilities.upgrade_fan_distance": "Fan Distance Upgrade",
   "item.mobfarmutilities.upgrade_fan_width": "Fan Width Upgrade",

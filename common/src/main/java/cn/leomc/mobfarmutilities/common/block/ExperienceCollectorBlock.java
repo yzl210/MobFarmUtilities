@@ -68,6 +68,15 @@ public class ExperienceCollectorBlock extends ActivatableBlock implements ITileE
                 return ActionResultType.SUCCESS;
             }
 
+        if (player.getHeldItem(Hand.MAIN_HAND).getItem() == ItemRegistry.LIQUID_EXPERIENCE_BUCKET.get() && tileEntity instanceof ExperienceCollectorTileEntity && !player.isSneaking())
+            if (((ExperienceCollectorTileEntity) tileEntity).getAmount() < ((ExperienceCollectorTileEntity) tileEntity).getLimit() - 1000) {
+                if (!player.isCreative())
+                    player.setHeldItem(Hand.MAIN_HAND, new ItemStack(Items.BUCKET));
+                ((ExperienceCollectorTileEntity) tileEntity).addAmount(1000);
+                worldIn.playSound(null, pos, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                return ActionResultType.SUCCESS;
+            }
+
         if (tileEntity instanceof INamedContainerProvider) {
             if (player instanceof ServerPlayerEntity)
                 MenuRegistry.openExtendedMenu((ServerPlayerEntity) player, (INamedContainerProvider) tileEntity, packetBuffer -> packetBuffer.writeBlockPos(tileEntity.getPos()));
