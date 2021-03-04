@@ -6,12 +6,13 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.InvWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ForgeFanTileEntity extends FanTileEntity {
 
-    protected LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new ItemStackHandlerWrapper(item));
+    protected LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(upgradeHandler.getInventory()));
 
     public ForgeFanTileEntity() {
         super();

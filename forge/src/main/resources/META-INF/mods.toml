@@ -4,7 +4,7 @@ license = "GNU GPLv3"
 [[mods]]
 modId = "mobfarmutilities"
 version = "${version}"
-displayName = "Mob Farm Utilities"
+displayName = "Mob Farm Helpers"
 issueTrackerURL = "https://github.com/yzl210/MobFarmUtilities/issues"
 authors = "6LeoMC"
 description = '''
@@ -14,6 +14,6 @@ Add some useful mob farm utilities
 [[dependencies.mobfarmutilities]]
 modId = "architectury"
 mandatory = true
-versionRange = "[1.8.128,)"
+versionRange = "[1.8.130,)"
 ordering = "AFTER"
 side = "BOTH"

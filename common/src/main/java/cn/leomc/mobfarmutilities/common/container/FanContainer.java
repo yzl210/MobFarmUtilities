@@ -1,6 +1,5 @@
 package cn.leomc.mobfarmutilities.common.container;
 
-import cn.leomc.mobfarmutilities.common.api.ItemStackHandlerInventoryWrapper;
 import cn.leomc.mobfarmutilities.common.registry.BlockRegistry;
 import cn.leomc.mobfarmutilities.common.registry.ContainerRegistry;
 import cn.leomc.mobfarmutilities.common.tileentity.FanTileEntity;
@@ -16,7 +15,7 @@ public class FanContainer extends BaseContainer {
     public FanContainer(TileEntity tileEntity, PlayerEntity playerEntity, PlayerInventory playerInventory, int windowId) {
         super(ContainerRegistry.FAN.get(), tileEntity, playerEntity, playerInventory, windowId);
         if (tileEntity instanceof FanTileEntity)
-            addSlotRange(new ItemStackHandlerInventoryWrapper(((FanTileEntity) tileEntity).getItems()), 0, 20, 40, 4, 40);
+            addSlotRange(((FanTileEntity) tileEntity).getUpgradeHandler().getInventory(), 0, 79, 60, 1, 0);
     }
 
 
@@ -32,14 +31,14 @@ public class FanContainer extends BaseContainer {
         if (slot != null && slot.getHasStack()) {
             ItemStack stack = slot.getStack();
             itemstack = stack.copy();
-            if (index >= 36 && index <= 39) {
+            if (index >= 36 && index <= 37) {
                 if (!this.mergeItemStack(stack, 0, 36, true)) {
                     return ItemStack.EMPTY;
                 }
                 slot.onSlotChange(stack, itemstack);
             } else {
 
-                if (!this.mergeItemStack(stack, 36, 40, false)) {
+                if (!this.mergeItemStack(stack, 36, 37, false)) {
                     return ItemStack.EMPTY;
                 }
 

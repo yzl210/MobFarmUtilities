@@ -28,15 +28,13 @@ import java.util.List;
 
 public class ExperienceCollectorTileEntity extends TileEntity implements ITickableTileEntity, INamedContainerProvider, BlockEntityExtension {
 
-    private int amount;
     protected int limit = 5000;
-    protected boolean syncedOnLoad;
+    private int amount;
 
 
     public ExperienceCollectorTileEntity() {
         super(TileEntityRegistry.EXPERIENCE_COLLECTOR.get());
         amount = 0;
-        syncedOnLoad = false;
     }
 
     @Override
@@ -46,6 +44,7 @@ public class ExperienceCollectorTileEntity extends TileEntity implements ITickab
 
     @Override
     public @Nullable Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+        syncData();
         return new ExperienceCollectorContainer(this, playerEntity, playerInventory, i);
     }
 
@@ -53,10 +52,6 @@ public class ExperienceCollectorTileEntity extends TileEntity implements ITickab
     public void tick() {
         if (world.isRemote)
             return;
-        if (!syncedOnLoad) {
-            syncedOnLoad = true;
-            syncData();
-        }
         BlockState state = world.getBlockState(pos);
         RedstoneMode.updateRedstone(state, world, pos);
         if (!state.get(ActivatableBlock.ACTIVE))
@@ -102,8 +97,8 @@ public class ExperienceCollectorTileEntity extends TileEntity implements ITickab
         return amount;
     }
 
-    public void addAmount(int amount) {
-        this.amount += amount;
+    public void setAmount(int amount) {
+        this.amount = amount;
         if (this.amount > limit)
             this.amount = limit;
         if (this.amount < 0)
@@ -112,8 +107,8 @@ public class ExperienceCollectorTileEntity extends TileEntity implements ITickab
         syncData();
     }
 
-    public void setAmount(int amount) {
-        this.amount = amount;
+    public void addAmount(int amount) {
+        this.amount += amount;
         if (this.amount > limit)
             this.amount = limit;
         if (this.amount < 0)
@@ -126,7 +121,7 @@ public class ExperienceCollectorTileEntity extends TileEntity implements ITickab
         return limit;
     }
 
-    protected void amountChanged(){
+    protected void amountChanged() {
     }
 
     public void dropAllExperience() {

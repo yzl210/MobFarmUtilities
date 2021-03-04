@@ -5,6 +5,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.player.PlayerInventory;
@@ -66,12 +67,17 @@ public abstract class BaseScreen<C extends Container> extends ContainerScreen<C>
         }
     }
 
-    protected int getCenteredOffset(String string) {
+    public int getCenteredOffset(String string) {
         return this.getCenteredOffset(string, xSize / 2);
     }
 
-    protected int getCenteredOffset(String string, int xPos) {
+    public int getCenteredOffset(String string, int xPos) {
         return ((xPos * 2) - font.getStringWidth(string)) / 2;
     }
+
+    public FontRenderer getFont() {
+        return font;
+    }
+
 
 }

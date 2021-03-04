@@ -4,16 +4,26 @@ import cn.leomc.mobfarmutilities.client.RedstoneModeButton;
 import cn.leomc.mobfarmutilities.client.utils.TextureUtils;
 import cn.leomc.mobfarmutilities.client.utils.Textures;
 import cn.leomc.mobfarmutilities.common.container.ExperienceCollectorContainer;
+import cn.leomc.mobfarmutilities.common.network.NetworkHandler;
+import cn.leomc.mobfarmutilities.common.network.message.ChangeExperienceMessage;
 import cn.leomc.mobfarmutilities.common.registry.BlockRegistry;
 import cn.leomc.mobfarmutilities.common.registry.FluidRegistry;
 import cn.leomc.mobfarmutilities.common.tileentity.ExperienceCollectorTileEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.PlayerContainer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ExperienceCollectorScreen extends BaseScreen<ExperienceCollectorContainer> {
 
@@ -40,6 +50,19 @@ public class ExperienceCollectorScreen extends BaseScreen<ExperienceCollectorCon
     }
 
     @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+        if (true)
+            return super.mouseScrolled(mouseX, mouseY, delta);
+        if (mouseX >= guiLeft + 75 && mouseX <= guiLeft + 75 + 17 && mouseY >= guiTop + 15 && mouseY <= guiTop + 15 + 61) {
+            TileEntity tileEntity = container.getTileEntity();
+            if (tileEntity instanceof ExperienceCollectorTileEntity)
+                NetworkHandler.INSTANCE.sendToServer(new ChangeExperienceMessage(tileEntity.getPos(), (int) (delta > 0 ? delta : -delta), hasShiftDown(), !(delta > 0)));
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int x, int y) {
         super.drawGuiContainerBackgroundLayer(matrixStack, partialTicks, x, y);
         int width = 18;
@@ -57,8 +80,11 @@ public class ExperienceCollectorScreen extends BaseScreen<ExperienceCollectorCon
         super.renderHoveredTooltip(matrixStack, x, y);
         if (x >= guiLeft + 75 && x <= guiLeft + 75 + 17 && y >= guiTop + 15 && y <= guiTop + 15 + 61) {
             int amount = ((ExperienceCollectorTileEntity) container.getTileEntity()).getAmount();
-            ITextComponent textComponent = new TranslationTextComponent("text.mobfarmutilities.fluid_tank", new TranslationTextComponent(BlockRegistry.LIQUID_EXPERIENCE.get().getTranslationKey()), amount);
-            renderTooltip(matrixStack, textComponent, x, y);
+            List<IReorderingProcessor> reorderingProcessorList = new ArrayList<>();
+            ITextComponent liquid = new TranslationTextComponent("text.mobfarmutilities.fluid_tank", new TranslationTextComponent(BlockRegistry.LIQUID_EXPERIENCE.get().getTranslationKey()), amount);
+            reorderingProcessorList.add(IReorderingProcessor.fromString(liquid.getString(), Style.EMPTY));
+            reorderingProcessorList.add(IReorderingProcessor.fromString(I18n.format("text.mobfarmutilities.how_to_store_get_experience"), Style.EMPTY.applyFormatting(TextFormatting.DARK_GRAY)));
+            renderTooltip(matrixStack, reorderingProcessorList, x, y);
         }
     }
 }

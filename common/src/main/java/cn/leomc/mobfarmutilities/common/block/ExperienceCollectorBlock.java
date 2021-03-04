@@ -69,7 +69,7 @@ public class ExperienceCollectorBlock extends ActivatableBlock implements ITileE
             }
 
         if (player.getHeldItem(Hand.MAIN_HAND).getItem() == ItemRegistry.LIQUID_EXPERIENCE_BUCKET.get() && tileEntity instanceof ExperienceCollectorTileEntity && !player.isSneaking())
-            if (((ExperienceCollectorTileEntity) tileEntity).getAmount() < ((ExperienceCollectorTileEntity) tileEntity).getLimit() - 1000) {
+            if (((ExperienceCollectorTileEntity) tileEntity).getAmount() <= ((ExperienceCollectorTileEntity) tileEntity).getLimit() - 1000) {
                 if (!player.isCreative())
                     player.setHeldItem(Hand.MAIN_HAND, new ItemStack(Items.BUCKET));
                 ((ExperienceCollectorTileEntity) tileEntity).addAmount(1000);

@@ -26,6 +26,8 @@ public class Textures {
 
     public static Supplier<TextureAtlasSprite> VERTICAL_FLUID_TANK = register("gui/vertical_fluid_tank");
 
+    public static Supplier<TextureAtlasSprite> TEXTFIELD = register("gui/textfield");
+
 
     public static Supplier<TextureAtlasSprite> STILL_LIQUID_EXPERIENCE = register(LiquidExperienceFluid.Still.getResourceLocation());
 

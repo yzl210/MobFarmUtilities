@@ -17,10 +17,18 @@
   "text.mobfarmutilities.mode.ignored": "Ignored",
   "text.mobfarmutilities.mode.high": "High",
   "text.mobfarmutilities.mode.low": "Low",
-  "text.mobfarmutilities.upgrade_fan_distance": "Fan distance +1 block, can stack up to %s.",
-  "text.mobfarmutilities.upgrade_fan_width": "Fan width +1 block, can stack up to %s.",
-  "text.mobfarmutilities.upgrade_fan_height": "Fan height +1 block, can stack up to %s.",
-  "text.mobfarmutilities.upgrade_fan_speed": "Fan speed +1, can stack up to %s.",
+  "text.mobfarmutilities.upgrade.fan_distance": "Fan Distance",
+  "text.mobfarmutilities.upgrade.fan_width": "Fan Width",
+  "text.mobfarmutilities.upgrade.fan_height": "Fan Height",
+  "text.mobfarmutilities.upgrade.fan_speed": "Fan Speed",
+  "text.mobfarmutilities.upgrade.fan": "Fan Upgrades",
+  "text.mobfarmutilities.upgrade": "%s %s/%s",
+  "text.mobfarmutilities.material": "%s * %s",
+  "text.mobfarmutilities.tag": "Tag: %s",
+  "text.mobfarmutilities.scroll": "Scroll to Select",
+  "text.mobfarmutilities.how_to_upgrade.1": "Left Click to Upgrade",
+  "text.mobfarmutilities.how_to_upgrade.2": "Right Click to Downgrade",
+  "text.mobfarmutilities.how_to_store_get_experience": "Scroll to Store/Get Experience (WIP!)",
   "text.mobfarmutilities.fluid_tank": "%s: %s mB",
-  "itemGroup.mobfarmutilities.default": "Mob Farm Utilities"
+  "itemGroup.mobfarmutilities.default": "Mob Farm Helpers"
 }

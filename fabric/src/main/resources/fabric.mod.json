@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "mobfarmutilities",
   "version": "${version}",
-  "name": "Mob Farm Utilities",
+  "name": "Mob Farm Helpers",
   "description": "Add some useful mob farm utilities",
   "authors": [
     "6LeoMC"
@@ -25,7 +25,7 @@
     "fabricloader": ">=0.7.4",
     "fabric": "*",
     "minecraft": ">=1.16.3",
-    "architectury": ">=1.8.128"
+    "architectury": ">=1.8.130"
   },
   "suggests": {
     "flamingo": "*"

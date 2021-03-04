@@ -6,10 +6,8 @@ import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,11 +15,11 @@ import javax.annotation.Nonnull;
 
 public class ForgeExperienceCollectorTileEntity extends ExperienceCollectorTileEntity {
 
-    protected FluidStack fluidStack = new FluidStack(FluidRegistry.LIQUID_EXPERIENCE.get(), getAmount()){
+    protected FluidStack fluidStack = new FluidStack(FluidRegistry.LIQUID_EXPERIENCE.get(), getAmount()) {
         @Override
         protected void updateEmpty() {
             super.updateEmpty();
-            if(super.getAmount() != getAmount())
+            if (super.getAmount() != getAmount())
                 setAmount(super.getAmount());
         }
     };
@@ -100,13 +98,13 @@ public class ForgeExperienceCollectorTileEntity extends ExperienceCollectorTileE
     });
 
 
+    public ForgeExperienceCollectorTileEntity() {
+        super();
+    }
+
     @Override
     protected void amountChanged() {
         fluidStack.setAmount(getAmount());
-    }
-
-    public ForgeExperienceCollectorTileEntity() {
-        super();
     }
 
     @NotNull

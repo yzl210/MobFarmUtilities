@@ -1,7 +1,6 @@
 package cn.leomc.mobfarmutilities.common.block;
 
 import cn.leomc.mobfarmutilities.common.api.InventoryWrapper;
-import cn.leomc.mobfarmutilities.common.api.ItemStackHandlerInventoryWrapper;
 import cn.leomc.mobfarmutilities.common.api.blockstate.IHasDirection;
 import cn.leomc.mobfarmutilities.common.tileentity.FanTileEntity;
 import me.shedaniel.architectury.platform.Platform;
@@ -100,8 +99,7 @@ public class FanBlock extends ActivatableBlock implements ITileEntityProvider, I
     public ISidedInventory createInventory(BlockState state, IWorld world, BlockPos pos) {
         TileEntity tileEntity = world.getTileEntity(pos);
         if (tileEntity instanceof FanTileEntity) {
-            ItemStackHandlerInventoryWrapper items = new ItemStackHandlerInventoryWrapper(((FanTileEntity) tileEntity).getItems());
-            return new InventoryWrapper(items);
+            return new InventoryWrapper(((FanTileEntity) tileEntity).getUpgradeHandler().getInventory());
         }
         return null;
     }

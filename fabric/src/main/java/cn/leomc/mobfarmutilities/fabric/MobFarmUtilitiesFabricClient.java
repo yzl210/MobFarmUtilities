@@ -4,12 +4,15 @@ import cn.leomc.mobfarmutilities.client.screen.ExperienceCollectorScreen;
 import cn.leomc.mobfarmutilities.client.screen.FanScreen;
 import cn.leomc.mobfarmutilities.client.screen.ItemCollectorScreen;
 import cn.leomc.mobfarmutilities.client.utils.Textures;
+import cn.leomc.mobfarmutilities.common.registry.BlockRegistry;
 import cn.leomc.mobfarmutilities.common.registry.ContainerRegistry;
 import cn.leomc.mobfarmutilities.common.registry.FluidRegistry;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
@@ -28,6 +31,9 @@ public class MobFarmUtilitiesFabricClient implements ClientModInitializer {
         ScreenRegistry.register(ContainerRegistry.ITEM_COLLECTOR.get(), ItemCollectorScreen::new);
         ScreenRegistry.register(ContainerRegistry.EXPERIENCE_COLLECTOR.get(), ExperienceCollectorScreen::new);
         registerFluid(FluidRegistry.LIQUID_EXPERIENCE.get(), FluidRegistry.FLOWING_LIQUID_EXPERIENCE.get(), new Supplier[]{Textures.STILL_LIQUID_EXPERIENCE, Textures.FLOWING_LIQUID_EXPERIENCE}, -1);
+        BlockRenderLayerMap.INSTANCE.putBlock(BlockRegistry.LIQUID_EXPERIENCE.get(), RenderType.getTranslucent());
+        BlockRenderLayerMap.INSTANCE.putFluids(RenderType.getTranslucent(), FluidRegistry.LIQUID_EXPERIENCE.get(), FluidRegistry.FLOWING_LIQUID_EXPERIENCE.get());
+
     }
 
     public void registerFluid(Fluid still, Fluid flowing, Supplier<TextureAtlasSprite>[] fluidSpritesSupplier, int color) {

@@ -1,7 +1,6 @@
 package cn.leomc.mobfarmutilities.common.registry;
 
 import cn.leomc.mobfarmutilities.MobFarmUtilities;
-import cn.leomc.mobfarmutilities.common.item.upgrade.UpgradeItem;
 import cn.leomc.mobfarmutilities.common.utils.PlatformCompatibility;
 import me.shedaniel.architectury.registry.DeferredRegister;
 import me.shedaniel.architectury.registry.RegistrySupplier;
@@ -27,13 +26,6 @@ public class ItemRegistry {
 
 
     public static final RegistrySupplier<Item> LIQUID_EXPERIENCE_BUCKET = register("liquid_experience_bucket", () -> PlatformCompatibility.getBucketItem(FluidRegistry.LIQUID_EXPERIENCE, new Item.Properties().group(ModRegistry.ITEM_GROUP).containerItem(Items.BUCKET).maxStackSize(1)));
-
-
-    static {
-        for (UpgradeItem.Type type : UpgradeItem.Type.values()) {
-            type.setRegistrySupplier(register(type.getRegistryName(), () -> new UpgradeItem(type)));
-        }
-    }
 
 
     public static void register() {
