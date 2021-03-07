@@ -15,31 +15,11 @@ loom {
     useFabricMixin = true
 }
 
-repositories {
-    maven {
-        name = "JEI Maven"
-        url = "https://dvs1.progwml6.com/files/maven"
-    }
-    maven {
-        name = 'TOP Maven'
-        url = "https://maven.tterrag.com"
-    }
-    maven {
-        name = "Curse Maven"
-        url = "https://www.cursemaven.com"
-    }
-}
+
 
 dependencies {
     forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
     modCompile "me.shedaniel:architectury-forge:${rootProject.architectury_version}"
-
-    modRuntime "mezz.jei:jei-1.16.4:${rootProject.jei_version}"
-    modCompile "mezz.jei:jei-1.16.4:${rootProject.jei_version}:api"
-
-    modImplementation "mcjty.theoneprobe:TheOneProbe-1.16:${rootProject.top_version}"
-    modRuntime "curse.maven:jade-324717:${rootProject.jade_version}"
-    modCompile "curse.maven:jade-api-324717:${rootProject.jade_api_version}"
 
 
     implementation(project(path: ":common")) {
