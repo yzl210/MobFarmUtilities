@@ -22,7 +22,7 @@ repositories {
     }
     maven {
         name = 'TOP Maven'
-        url = "http://maven.tterrag.com"
+        url = "https://maven.tterrag.com"
     }
     maven {
         name = "Curse Maven"
