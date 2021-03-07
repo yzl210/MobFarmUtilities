@@ -37,7 +37,7 @@ public class ExperienceCollectorBlock extends ActivatableBlock implements Entity
         );
     }
 
-    public static ExperienceCollectorBlockEntity getTileEntity() {
+    public static ExperienceCollectorBlockEntity getBlockEntity() {
         if (Platform.isForge()) {
             Class<ExperienceCollectorBlockEntity> tileEntityClass;
             try {
@@ -99,7 +99,7 @@ public class ExperienceCollectorBlock extends ActivatableBlock implements Entity
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockGetter worldIn) {
-        return getTileEntity();
+        return getBlockEntity();
     }
 
 }

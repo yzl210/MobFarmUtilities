@@ -15,7 +15,7 @@ public class ModRegistry {
     public static void register() {
         BlockRegistry.register();
         ItemRegistry.register();
-        TileEntityRegistry.register();
+        BlockEntityRegistry.register();
         ContainerMenuRegistry.register();
         NetworkHandler.register();
     }

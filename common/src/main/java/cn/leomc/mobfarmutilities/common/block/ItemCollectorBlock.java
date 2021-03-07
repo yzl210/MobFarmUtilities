@@ -32,7 +32,7 @@ public class ItemCollectorBlock extends ActivatableBlock implements EntityBlock,
         );
     }
 
-    public static ItemCollectorBlockEntity getTileEntity() {
+    public static ItemCollectorBlockEntity getBlockEntity() {
         if (Platform.isForge()) {
             Class<ItemCollectorBlockEntity> tileEntityClass;
             try {
@@ -82,7 +82,7 @@ public class ItemCollectorBlock extends ActivatableBlock implements EntityBlock,
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockGetter worldIn) {
-        return getTileEntity();
+        return getBlockEntity();
     }
 
 }

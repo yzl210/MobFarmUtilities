@@ -4,7 +4,7 @@ import cn.leomc.mobfarmutilities.MobFarmUtilities;
 import cn.leomc.mobfarmutilities.common.api.RedstoneMode;
 import cn.leomc.mobfarmutilities.common.block.ActivatableBlock;
 import cn.leomc.mobfarmutilities.common.menu.ItemCollectorMenu;
-import cn.leomc.mobfarmutilities.common.registry.TileEntityRegistry;
+import cn.leomc.mobfarmutilities.common.registry.BlockEntityRegistry;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -31,7 +31,7 @@ public class ItemCollectorBlockEntity extends BlockEntity implements TickableBlo
 
 
     public ItemCollectorBlockEntity() {
-        super(TileEntityRegistry.ITEM_COLLECTOR.get());
+        super(BlockEntityRegistry.ITEM_COLLECTOR.get());
         inventory = new SimpleContainer(18);
     }
 

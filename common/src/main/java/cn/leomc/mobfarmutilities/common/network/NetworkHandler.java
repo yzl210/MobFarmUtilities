@@ -1,10 +1,7 @@
 package cn.leomc.mobfarmutilities.common.network;
 
 import cn.leomc.mobfarmutilities.MobFarmUtilities;
-import cn.leomc.mobfarmutilities.common.network.message.ChangeExperienceMessage;
-import cn.leomc.mobfarmutilities.common.network.message.ChangeGradeMessage;
-import cn.leomc.mobfarmutilities.common.network.message.MotionChangeMessage;
-import cn.leomc.mobfarmutilities.common.network.message.RedstoneModeChangeMessage;
+import cn.leomc.mobfarmutilities.common.network.message.*;
 import me.shedaniel.architectury.networking.NetworkChannel;
 import net.minecraft.resources.ResourceLocation;
 
@@ -19,6 +16,7 @@ public class NetworkHandler {
         INSTANCE.register(MotionChangeMessage.class, MotionChangeMessage::encode, MotionChangeMessage::decode, MotionChangeMessage::handle);
         INSTANCE.register(ChangeGradeMessage.class, ChangeGradeMessage::encode, ChangeGradeMessage::decode, ChangeGradeMessage::handle);
         INSTANCE.register(ChangeExperienceMessage.class, ChangeExperienceMessage::encode, ChangeExperienceMessage::decode, ChangeExperienceMessage::handle);
+        INSTANCE.register(SyncDataMessage.class, SyncDataMessage::encode, SyncDataMessage::decode, SyncDataMessage::handle);
     }
 
 

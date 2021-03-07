@@ -36,7 +36,7 @@ public class FanBlock extends ActivatableBlock implements EntityBlock, IHasDirec
         );
     }
 
-    public static FanBlockEntity getTileEntity() {
+    public static FanBlockEntity getBlockEntity() {
         if (Platform.isForge()) {
             Class<FanBlockEntity> tileEntityClass;
             try {
@@ -88,7 +88,7 @@ public class FanBlock extends ActivatableBlock implements EntityBlock, IHasDirec
 
     @Override
     public BlockEntity newBlockEntity(BlockGetter worldIn) {
-        return getTileEntity();
+        return getBlockEntity();
     }
 
     @Override

@@ -29,5 +29,11 @@
   },
   "suggests": {
     "flamingo": "*"
+  },
+  "custom": {
+    "waila:plugins": {
+      "id": "mobfarmutilities:wthit_plugin",
+      "initializer": "cn.leomc.mobfarmutilities.fabric.compat.WTHITCompat"
+    }
   }
 }

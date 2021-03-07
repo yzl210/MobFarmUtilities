@@ -7,14 +7,17 @@ import cn.leomc.mobfarmutilities.client.screen.ItemCollectorScreen;
 import cn.leomc.mobfarmutilities.common.registry.BlockRegistry;
 import cn.leomc.mobfarmutilities.common.registry.ContainerMenuRegistry;
 import cn.leomc.mobfarmutilities.common.registry.FluidRegistry;
+import cn.leomc.mobfarmutilities.forge.compat.top.TOPCompat;
 import me.shedaniel.architectury.platform.forge.EventBuses;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 
@@ -25,6 +28,7 @@ public class MobFarmUtilitiesForge {
     public MobFarmUtilitiesForge() {
         EventBuses.registerModEventBus(MobFarmUtilities.MODID, FMLJavaModLoadingContext.get().getModEventBus());
         new MobFarmUtilities();
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onInterModComms);
         if (FMLEnvironment.dist.isClient())
             FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onClientSetup);
     }
@@ -37,7 +41,11 @@ public class MobFarmUtilitiesForge {
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.LIQUID_EXPERIENCE.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(FluidRegistry.LIQUID_EXPERIENCE.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(FluidRegistry.FLOWING_LIQUID_EXPERIENCE.get(), RenderType.translucent());
+    }
 
+    public void onInterModComms(InterModEnqueueEvent event) {
+        if (ModList.get().isLoaded("theoneprobe"))
+            TOPCompat.enable();
     }
 
 

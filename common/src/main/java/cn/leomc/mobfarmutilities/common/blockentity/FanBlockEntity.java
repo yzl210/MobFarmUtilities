@@ -5,11 +5,12 @@ import cn.leomc.mobfarmutilities.common.api.RedstoneMode;
 import cn.leomc.mobfarmutilities.common.api.UpgradeHandler;
 import cn.leomc.mobfarmutilities.common.api.blockstate.Upgradable;
 import cn.leomc.mobfarmutilities.common.block.ActivatableBlock;
+import cn.leomc.mobfarmutilities.common.compat.IInfoProvider;
 import cn.leomc.mobfarmutilities.common.item.upgrade.UpgradeType;
 import cn.leomc.mobfarmutilities.common.menu.FanMenu;
 import cn.leomc.mobfarmutilities.common.network.NetworkHandler;
 import cn.leomc.mobfarmutilities.common.network.message.MotionChangeMessage;
-import cn.leomc.mobfarmutilities.common.registry.TileEntityRegistry;
+import cn.leomc.mobfarmutilities.common.registry.BlockEntityRegistry;
 import me.shedaniel.architectury.extensions.BlockEntityExtension;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -29,16 +30,17 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class FanBlockEntity extends BlockEntity implements TickableBlockEntity, MenuProvider, Upgradable, BlockEntityExtension {
+public class FanBlockEntity extends BlockEntity implements TickableBlockEntity, MenuProvider, Upgradable, BlockEntityExtension, IInfoProvider {
 
 
     protected final UpgradeHandler upgradeHandler = new UpgradeHandler(this, UpgradeType.FAN_SPEED, UpgradeType.FAN_DISTANCE, UpgradeType.FAN_WIDTH, UpgradeType.FAN_HEIGHT);
 
 
     public FanBlockEntity() {
-        super(TileEntityRegistry.FAN.get());
+        super(BlockEntityRegistry.FAN.get());
     }
 
     @Override
@@ -138,5 +140,13 @@ public class FanBlockEntity extends BlockEntity implements TickableBlockEntity, 
     @Override
     public @NotNull CompoundTag saveClientData(@NotNull CompoundTag tag) {
         return upgradeHandler.write(tag, false);
+    }
+
+    @Override
+    public List<Component> getInfo() {
+
+        List<Component> components = new ArrayList<>();
+        upgradeHandler.getSupportedUpgrades().forEach(type -> components.add(new TranslatableComponent("text.mobfarmutilities.info.upgrade", new TranslatableComponent(type.getTranslationKey()), upgradeHandler.getUpgradeLevel(type), type.getMaxLevel())));
+        return components;
     }
 }

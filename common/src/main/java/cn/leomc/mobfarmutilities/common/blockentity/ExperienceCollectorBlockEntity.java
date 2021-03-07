@@ -4,7 +4,7 @@ import cn.leomc.mobfarmutilities.MobFarmUtilities;
 import cn.leomc.mobfarmutilities.common.api.RedstoneMode;
 import cn.leomc.mobfarmutilities.common.block.ActivatableBlock;
 import cn.leomc.mobfarmutilities.common.menu.ExperienceCollectorMenu;
-import cn.leomc.mobfarmutilities.common.registry.TileEntityRegistry;
+import cn.leomc.mobfarmutilities.common.registry.BlockEntityRegistry;
 import me.shedaniel.architectury.extensions.BlockEntityExtension;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -33,7 +33,7 @@ public class ExperienceCollectorBlockEntity extends BlockEntity implements Ticka
 
 
     public ExperienceCollectorBlockEntity() {
-        super(TileEntityRegistry.EXPERIENCE_COLLECTOR.get());
+        super(BlockEntityRegistry.EXPERIENCE_COLLECTOR.get());
         amount = 0;
     }
 

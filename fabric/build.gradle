@@ -32,9 +32,9 @@ dependencies {
     // Remove the next line if you don't want to depend on the API
     modCompile "me.shedaniel:architectury-fabric:${rootProject.architectury_version}"
 
-    modRuntime "me.shedaniel:RoughlyEnoughItems:${rootProject.rei_version}"
+    modImplementation "me.shedaniel:RoughlyEnoughItems:${rootProject.rei_version}"
     modRuntime "com.terraformersmc:modmenu:${rootProject.modmenu_version}"
-    modRuntime "curse.maven:wthit-440979:${rootProject.wthit_version}"
+    modImplementation "curse.maven:wthit-440979:${rootProject.wthit_version}"
 
     implementation(project(path: ":common")) {
         transitive = false
