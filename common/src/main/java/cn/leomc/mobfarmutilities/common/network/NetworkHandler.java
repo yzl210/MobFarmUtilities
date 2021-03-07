@@ -6,7 +6,7 @@ import cn.leomc.mobfarmutilities.common.network.message.ChangeGradeMessage;
 import cn.leomc.mobfarmutilities.common.network.message.MotionChangeMessage;
 import cn.leomc.mobfarmutilities.common.network.message.RedstoneModeChangeMessage;
 import me.shedaniel.architectury.networking.NetworkChannel;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 
 public class NetworkHandler {

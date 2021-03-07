@@ -3,23 +3,23 @@ package cn.leomc.mobfarmutilities.client.screen;
 import cn.leomc.mobfarmutilities.MobFarmUtilities;
 import cn.leomc.mobfarmutilities.client.RedstoneModeButton;
 import cn.leomc.mobfarmutilities.client.UpgradeSelector;
-import cn.leomc.mobfarmutilities.common.container.FanContainer;
-import cn.leomc.mobfarmutilities.common.tileentity.FanTileEntity;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
+import cn.leomc.mobfarmutilities.common.blockentity.FanBlockEntity;
+import cn.leomc.mobfarmutilities.common.menu.FanMenu;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 
-public class FanScreen extends BaseScreen<FanContainer> {
+public class FanScreen extends BaseScreen<FanMenu> {
 
-    protected ITextComponent title;
+    protected Component title;
 
     protected RedstoneModeButton redstoneModeButton;
 
     protected UpgradeSelector upgradeSelector;
 
 
-    public FanScreen(FanContainer container, PlayerInventory playerInventory, ITextComponent titleIn) {
+    public FanScreen(FanMenu container, Inventory playerInventory, Component titleIn) {
         super(container, playerInventory, titleIn);
         this.title = titleIn;
     }
@@ -27,10 +27,10 @@ public class FanScreen extends BaseScreen<FanContainer> {
     @Override
     protected void init() {
         super.init();
-        redstoneModeButton = addButton(new RedstoneModeButton(this, guiLeft, guiTop, container.getTileEntity().getPos(), container.getTileEntity().getWorld()));
-        if (container.getTileEntity() instanceof FanTileEntity) {
-            String title = I18n.format("text." + MobFarmUtilities.MODID + ".upgrade.fan");
-            upgradeSelector = new UpgradeSelector(this, getCenteredOffset(""), 30, title, guiLeft, guiTop, ((FanTileEntity) container.getTileEntity()).getUpgradeHandler(), ((FanTileEntity) container.getTileEntity()).getUpgradeHandler().getSupportedUpgrades());
+        redstoneModeButton = addButton(new RedstoneModeButton(this, leftPos, topPos, menu.getTileEntity().getBlockPos(), menu.getTileEntity().getLevel()));
+        if (menu.getTileEntity() instanceof FanBlockEntity) {
+            String title = I18n.get("text." + MobFarmUtilities.MODID + ".upgrade.fan");
+            upgradeSelector = new UpgradeSelector(this, getCenteredOffset(""), 30, title, leftPos, topPos, ((FanBlockEntity) menu.getTileEntity()).getUpgradeHandler(), ((FanBlockEntity) menu.getTileEntity()).getUpgradeHandler().getSupportedUpgrades());
         }
         addSlotRange(79, 60, 1, 0);
     }
@@ -48,26 +48,26 @@ public class FanScreen extends BaseScreen<FanContainer> {
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int x, int y) {
-        super.drawGuiContainerForegroundLayer(matrixStack, x, y);
+    protected void renderLabels(PoseStack matrixStack, int x, int y) {
+        super.renderLabels(matrixStack, x, y);
         upgradeSelector.renderForeground(matrixStack);
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(matrixStack, partialTicks, x, y);
+    protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
+        super.renderBg(matrixStack, partialTicks, x, y);
         upgradeSelector.renderBackground(matrixStack);
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
-        renderHoveredTooltip(matrixStack, mouseX, mouseY);
+        renderTooltip(matrixStack, mouseX, mouseY);
     }
 
     @Override
-    protected void renderHoveredTooltip(MatrixStack matrixStack, int x, int y) {
-        super.renderHoveredTooltip(matrixStack, x, y);
+    protected void renderTooltip(PoseStack matrixStack, int x, int y) {
+        super.renderTooltip(matrixStack, x, y);
         upgradeSelector.renderToolTip(matrixStack, x, y);
     }
 }

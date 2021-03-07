@@ -3,17 +3,17 @@ package cn.leomc.mobfarmutilities.client;
 
 import cn.leomc.mobfarmutilities.client.screen.BaseScreen;
 import cn.leomc.mobfarmutilities.client.utils.Textures;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.SimpleSound;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.inventory.container.PlayerContainer;
-import net.minecraft.util.IReorderingProcessor;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.network.chat.Style;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.world.inventory.InventoryMenu;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,13 +54,13 @@ public class ScrollSelector<T> {
         if (checkInBound((int) mouseX, (int) mouseY)) {
             selectedIndex -= delta;
             if (!restrictIndex())
-                Minecraft.getInstance().getSoundHandler().play(SimpleSound.master(SoundEvents.UI_BUTTON_CLICK, 2.0F));
+                Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 2.0F));
         }
     }
 
     public void onClick(int clickType, double mouseX, double mouseY) {
         if (checkInBound((int) mouseX, (int) mouseY))
-            Minecraft.getInstance().getSoundHandler().play(SimpleSound.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
     }
 
     public boolean checkInBound(int mouseX, int mouseY) {
@@ -69,8 +69,8 @@ public class ScrollSelector<T> {
 
     public void updateSize() {
         restrictIndex();
-        width = parent.getFont().getStringWidth(elements.get(selectedIndex).toString());
-        height = parent.getFont().FONT_HEIGHT;
+        width = parent.getFont().width(elements.get(selectedIndex).toString());
+        height = parent.getFont().lineHeight;
     }
 
     public boolean restrictIndex() {
@@ -85,31 +85,31 @@ public class ScrollSelector<T> {
         return false;
     }
 
-    public void renderBackground(MatrixStack matrixStack) {
-        Minecraft.getInstance().getTextureManager().bindTexture(PlayerContainer.LOCATION_BLOCKS_TEXTURE);
-        AbstractGui.blit(matrixStack, guiLeft + x - 48, guiTop + y - 5, 0, 96, 16, Textures.TEXTFIELD.get());
+    public void renderBackground(PoseStack matrixStack) {
+        Minecraft.getInstance().getTextureManager().bind(InventoryMenu.BLOCK_ATLAS);
+        GuiComponent.blit(matrixStack, guiLeft + x - 48, guiTop + y - 5, 0, 96, 16, Textures.TEXTFIELD.get());
     }
 
-    public void renderForeground(MatrixStack matrixStack) {
+    public void renderForeground(PoseStack matrixStack) {
         String renderString;
         if (elements.isEmpty() || selectedIndex < 0 || selectedIndex >= elements.size())
             renderString = "Error!";
         else
             renderString = elements.get(selectedIndex).toString();
 
-        Minecraft.getInstance().fontRenderer.drawString(matrixStack, renderString, parent.getCenteredOffset(renderString, x), y, 0xffffffff);
+        Minecraft.getInstance().font.draw(matrixStack, renderString, parent.getCenteredOffset(renderString, x), y, 0xffffffff);
         updateSize();
     }
 
-    public void renderToolTip(MatrixStack matrixStack, int mouseX, int mouseY) {
+    public void renderToolTip(PoseStack matrixStack, int mouseX, int mouseY) {
         if (checkInBound(mouseX, mouseY)) {
-            List<IReorderingProcessor> reorderingProcessorList = new ArrayList<>();
+            List<FormattedCharSequence> reorderingProcessorList = new ArrayList<>();
             for (int i = 0; i < elements.size(); i++) {
                 if (selectedIndex == i) {
-                    reorderingProcessorList.add(IReorderingProcessor.fromString("->" + elements.get(i).toString(), Style.EMPTY.applyFormatting(TextFormatting.WHITE)));
+                    reorderingProcessorList.add(FormattedCharSequence.forward("->" + elements.get(i).toString(), Style.EMPTY.applyFormat(ChatFormatting.WHITE)));
                     continue;
                 }
-                reorderingProcessorList.add(IReorderingProcessor.fromString(">" + elements.get(i).toString(), Style.EMPTY.applyFormatting(TextFormatting.GRAY)));
+                reorderingProcessorList.add(FormattedCharSequence.forward(">" + elements.get(i).toString(), Style.EMPTY.applyFormat(ChatFormatting.GRAY)));
             }
             parent.renderTooltip(matrixStack, reorderingProcessorList, mouseX, mouseY);
         }

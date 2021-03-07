@@ -3,20 +3,20 @@ package cn.leomc.mobfarmutilities.client;
 import cn.leomc.mobfarmutilities.MobFarmUtilities;
 import cn.leomc.mobfarmutilities.client.screen.BaseScreen;
 import cn.leomc.mobfarmutilities.common.api.UpgradeHandler;
-import cn.leomc.mobfarmutilities.common.container.BaseContainer;
 import cn.leomc.mobfarmutilities.common.item.upgrade.UpgradeType;
+import cn.leomc.mobfarmutilities.common.menu.BaseMenu;
 import cn.leomc.mobfarmutilities.common.network.NetworkHandler;
 import cn.leomc.mobfarmutilities.common.network.message.ChangeGradeMessage;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.SimpleSound;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.util.IReorderingProcessor;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.network.chat.Style;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.FormattedCharSequence;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,22 +43,22 @@ public class UpgradeSelector extends ScrollSelector<UpgradeType> {
     @Override
     public void updateSize() {
         restrictIndex();
-        width = parent.getFont().getStringWidth(elements.get(selectedIndex).getLocalizedName());
-        height = parent.getFont().FONT_HEIGHT;
+        width = parent.getFont().width(elements.get(selectedIndex).getLocalizedName());
+        height = parent.getFont().lineHeight;
     }
 
     @Override
     public void onClick(int clickType, double mouseX, double mouseY) {
         if (checkInBound((int) mouseX, (int) mouseY))
-            if (parent.getContainer() instanceof BaseContainer) {
+            if (parent.getMenu() instanceof BaseMenu) {
                 switch (clickType) {
                     case 0:
-                        NetworkHandler.INSTANCE.sendToServer(new ChangeGradeMessage(((BaseContainer) parent.getContainer()).getTileEntity().getPos(), elements.get(selectedIndex), true));
-                        Minecraft.getInstance().getSoundHandler().play(SimpleSound.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                        NetworkHandler.INSTANCE.sendToServer(new ChangeGradeMessage(((BaseMenu) parent.getMenu()).getTileEntity().getBlockPos(), elements.get(selectedIndex), true));
+                        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                         break;
                     case 1:
-                        NetworkHandler.INSTANCE.sendToServer(new ChangeGradeMessage(((BaseContainer) parent.getContainer()).getTileEntity().getPos(), elements.get(selectedIndex), false));
-                        Minecraft.getInstance().getSoundHandler().play(SimpleSound.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                        NetworkHandler.INSTANCE.sendToServer(new ChangeGradeMessage(((BaseMenu) parent.getMenu()).getTileEntity().getBlockPos(), elements.get(selectedIndex), false));
+                        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                         break;
                     case 3:
                         onScroll(mouseX, mouseY, -1D);
@@ -71,41 +71,41 @@ public class UpgradeSelector extends ScrollSelector<UpgradeType> {
 
 
     @Override
-    public void renderForeground(MatrixStack matrixStack) {
-        Minecraft.getInstance().fontRenderer.drawString(matrixStack, title, parent.getCenteredOffset(title, x), y, 0xffffffff);
+    public void renderForeground(PoseStack matrixStack) {
+        Minecraft.getInstance().font.draw(matrixStack, title, parent.getCenteredOffset(title, x), y, 0xffffffff);
         updateSize();
     }
 
     @Override
-    public void renderToolTip(MatrixStack matrixStack, int mouseX, int mouseY) {
+    public void renderToolTip(PoseStack matrixStack, int mouseX, int mouseY) {
         if (checkInBound(mouseX, mouseY)) {
-            List<IReorderingProcessor> reorderingProcessorList = new ArrayList<>();
-            reorderingProcessorList.add(IReorderingProcessor.fromString(title, Style.EMPTY.applyFormatting(TextFormatting.AQUA)));
+            List<FormattedCharSequence> reorderingProcessorList = new ArrayList<>();
+            reorderingProcessorList.add(FormattedCharSequence.forward(title, Style.EMPTY.applyFormat(ChatFormatting.AQUA)));
             for (int i = 0; i < elements.size(); i++) {
                 UpgradeType type = elements.get(i);
-                String s = I18n.format("text." + MobFarmUtilities.MODID + ".upgrade", type.getLocalizedName(), upgradeHandler.getUpgradeLevel(type), type.getMaxLevel());
+                String s = I18n.get("text." + MobFarmUtilities.MODID + ".upgrade", type.getLocalizedName(), upgradeHandler.getUpgradeLevel(type), type.getMaxLevel());
                 if (selectedIndex == i) {
                     if (selectedIndex != lastSelectedIndex || showCount > type.getSupportedItems().size())
                         showCount = 0;
                     lastSelectedIndex = selectedIndex;
-                    TextFormatting color = upgradeHandler.isMaxLevel(type) ? TextFormatting.GREEN : TextFormatting.WHITE;
-                    reorderingProcessorList.add(IReorderingProcessor.fromString("-> " + s, Style.EMPTY.applyFormatting(color)));
-                    String itemName = I18n.format(type.getSupportedItems().get((int) Math.floor(showCount)).getTranslationKey());
-                    String material = I18n.format("text." + MobFarmUtilities.MODID + ".material", itemName, type.getRequiredCount());
-                    TextFormatting materialColor = type.isEnough(upgradeHandler.getInventory().getStackInSlot(0)) ? upgradeHandler.isMaxLevel(type) ? TextFormatting.WHITE : TextFormatting.GREEN : TextFormatting.RED;
-                    reorderingProcessorList.add(IReorderingProcessor.fromString(material, Style.EMPTY.applyFormatting(materialColor)));
+                    ChatFormatting color = upgradeHandler.isMaxLevel(type) ? ChatFormatting.GREEN : ChatFormatting.WHITE;
+                    reorderingProcessorList.add(FormattedCharSequence.forward("-> " + s, Style.EMPTY.applyFormat(color)));
+                    String itemName = I18n.get(type.getSupportedItems().get((int) Math.floor(showCount)).getDescriptionId());
+                    String material = I18n.get("text." + MobFarmUtilities.MODID + ".material", itemName, type.getRequiredCount());
+                    ChatFormatting materialColor = type.isEnough(upgradeHandler.getInventory().getItem(0)) ? upgradeHandler.isMaxLevel(type) ? ChatFormatting.WHITE : ChatFormatting.GREEN : ChatFormatting.RED;
+                    reorderingProcessorList.add(FormattedCharSequence.forward(material, Style.EMPTY.applyFormat(materialColor)));
                     if (!type.getTagName().isEmpty()) {
-                        String tag = I18n.format("text." + MobFarmUtilities.MODID + ".tag", type.getTagName());
-                        reorderingProcessorList.add(IReorderingProcessor.fromString(tag, Style.EMPTY.applyFormatting(TextFormatting.DARK_GRAY)));
+                        String tag = I18n.get("text." + MobFarmUtilities.MODID + ".tag", type.getTagName());
+                        reorderingProcessorList.add(FormattedCharSequence.forward(tag, Style.EMPTY.applyFormat(ChatFormatting.DARK_GRAY)));
                     }
                     continue;
                 }
-                TextFormatting color = upgradeHandler.isMaxLevel(type) ? TextFormatting.DARK_GREEN : TextFormatting.GRAY;
-                reorderingProcessorList.add(IReorderingProcessor.fromString("> " + s, Style.EMPTY.applyFormatting(color)));
+                ChatFormatting color = upgradeHandler.isMaxLevel(type) ? ChatFormatting.DARK_GREEN : ChatFormatting.GRAY;
+                reorderingProcessorList.add(FormattedCharSequence.forward("> " + s, Style.EMPTY.applyFormat(color)));
             }
-            reorderingProcessorList.add(IReorderingProcessor.fromString(I18n.format("text." + MobFarmUtilities.MODID + ".scroll"), Style.EMPTY.applyFormatting(TextFormatting.DARK_GRAY)));
-            reorderingProcessorList.add(IReorderingProcessor.fromString(I18n.format("text." + MobFarmUtilities.MODID + ".how_to_upgrade.1"), Style.EMPTY.applyFormatting(TextFormatting.DARK_GRAY)));
-            reorderingProcessorList.add(IReorderingProcessor.fromString(I18n.format("text." + MobFarmUtilities.MODID + ".how_to_upgrade.2"), Style.EMPTY.applyFormatting(TextFormatting.DARK_GRAY)));
+            reorderingProcessorList.add(FormattedCharSequence.forward(I18n.get("text." + MobFarmUtilities.MODID + ".scroll"), Style.EMPTY.applyFormat(ChatFormatting.DARK_GRAY)));
+            reorderingProcessorList.add(FormattedCharSequence.forward(I18n.get("text." + MobFarmUtilities.MODID + ".how_to_upgrade.1"), Style.EMPTY.applyFormat(ChatFormatting.DARK_GRAY)));
+            reorderingProcessorList.add(FormattedCharSequence.forward(I18n.get("text." + MobFarmUtilities.MODID + ".how_to_upgrade.2"), Style.EMPTY.applyFormat(ChatFormatting.DARK_GRAY)));
             showCount += 0.015;
             parent.renderTooltip(matrixStack, reorderingProcessorList, mouseX, mouseY);
         }

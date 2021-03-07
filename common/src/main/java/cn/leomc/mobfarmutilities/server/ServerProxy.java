@@ -1,8 +1,8 @@
 package cn.leomc.mobfarmutilities.server;
 
 import cn.leomc.mobfarmutilities.common.api.IProxy;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 
 public class ServerProxy implements IProxy {
     @Override
@@ -11,12 +11,12 @@ public class ServerProxy implements IProxy {
     }
 
     @Override
-    public PlayerEntity getClientPlayer() {
+    public Player getClientPlayer() {
         throw new IllegalStateException("Client Only");
     }
 
     @Override
-    public World getClientWorld() {
+    public Level getClientWorld() {
         throw new IllegalStateException("Client Only");
     }
 }

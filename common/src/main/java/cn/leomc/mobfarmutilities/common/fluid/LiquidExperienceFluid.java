@@ -5,13 +5,13 @@ import cn.leomc.mobfarmutilities.common.registry.BlockRegistry;
 import cn.leomc.mobfarmutilities.common.registry.FluidRegistry;
 import cn.leomc.mobfarmutilities.common.registry.ItemRegistry;
 import me.shedaniel.architectury.platform.Platform;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.FlowingFluidBlock;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.Item;
-import net.minecraft.state.StateContainer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -20,24 +20,24 @@ public abstract class LiquidExperienceFluid extends BaseFlowingFluid {
 
 
     @Override
-    public Item getFilledBucket() {
+    public Item getBucket() {
         return ItemRegistry.LIQUID_EXPERIENCE_BUCKET.get();
     }
 
     @Override
-    public Fluid getFlowingFluid() {
+    public Fluid getFlowing() {
         return FluidRegistry.FLOWING_LIQUID_EXPERIENCE.get();
     }
 
     @Override
-    public Fluid getStillFluid() {
+    public Fluid getSource() {
         return FluidRegistry.LIQUID_EXPERIENCE.get();
     }
 
 
     @Override
-    protected BlockState getBlockState(FluidState state) {
-        return BlockRegistry.LIQUID_EXPERIENCE.get().getDefaultState().with(FlowingFluidBlock.LEVEL, getLevelFromState(state));
+    protected BlockState createLegacyBlock(FluidState state) {
+        return BlockRegistry.LIQUID_EXPERIENCE.get().defaultBlockState().setValue(LiquidBlock.LEVEL, getLegacyLevel(state));
     }
 
 
@@ -61,9 +61,9 @@ public abstract class LiquidExperienceFluid extends BaseFlowingFluid {
         }
 
         @Override
-        protected void fillStateContainer(StateContainer.Builder<Fluid, FluidState> builder) {
-            builder.add(LEVEL_1_8);
-            super.fillStateContainer(builder);
+        protected void createFluidStateDefinition(StateDefinition.Builder<Fluid, FluidState> builder) {
+            builder.add(LEVEL);
+            super.createFluidStateDefinition(builder);
         }
 
         @Override
@@ -72,8 +72,8 @@ public abstract class LiquidExperienceFluid extends BaseFlowingFluid {
         }
 
         @Override
-        public int getLevel(FluidState fluidState) {
-            return fluidState.get(LEVEL_1_8);
+        public int getAmount(FluidState fluidState) {
+            return fluidState.getValue(LEVEL);
         }
 
     }
@@ -103,7 +103,7 @@ public abstract class LiquidExperienceFluid extends BaseFlowingFluid {
         }
 
         @Override
-        public int getLevel(FluidState fluidState) {
+        public int getAmount(FluidState fluidState) {
             return 8;
         }
 

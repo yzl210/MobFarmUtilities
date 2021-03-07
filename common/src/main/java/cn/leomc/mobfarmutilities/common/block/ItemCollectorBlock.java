@@ -1,92 +1,87 @@
 package cn.leomc.mobfarmutilities.common.block;
 
 import cn.leomc.mobfarmutilities.common.api.InventoryWrapper;
-import cn.leomc.mobfarmutilities.common.tileentity.ItemCollectorTileEntity;
+import cn.leomc.mobfarmutilities.common.blockentity.ItemCollectorBlockEntity;
 import me.shedaniel.architectury.platform.Platform;
 import me.shedaniel.architectury.registry.BlockProperties;
 import me.shedaniel.architectury.registry.MenuRegistry;
 import me.shedaniel.architectury.registry.ToolType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.ISidedInventoryProvider;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.*;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
 
-public class ItemCollectorBlock extends ActivatableBlock implements ITileEntityProvider, ISidedInventoryProvider {
+public class ItemCollectorBlock extends ActivatableBlock implements EntityBlock, WorldlyContainerHolder {
 
     public ItemCollectorBlock() {
-        super(BlockProperties.of(Material.IRON)
+        super(BlockProperties.of(Material.METAL)
                 .tool(ToolType.PICKAXE, 1)
-                .hardnessAndResistance(1.5F, 6.0F)
-                .setRequiresTool()
+                .strength(1.5F, 6.0F)
+                .requiresCorrectToolForDrops()
         );
     }
 
-    public static ItemCollectorTileEntity getTileEntity() {
+    public static ItemCollectorBlockEntity getTileEntity() {
         if (Platform.isForge()) {
-            Class<ItemCollectorTileEntity> tileEntityClass;
+            Class<ItemCollectorBlockEntity> tileEntityClass;
             try {
-                tileEntityClass = (Class<ItemCollectorTileEntity>) Class.forName("cn.leomc.mobfarmutilities.forge.ForgeItemCollectorTileEntity");
+                tileEntityClass = (Class<ItemCollectorBlockEntity>) Class.forName("cn.leomc.mobfarmutilities.forge.ForgeItemCollectorBlockEntity");
                 return tileEntityClass.getConstructor().newInstance();
             } catch (ClassNotFoundException | ClassCastException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
                 e.printStackTrace();
             }
         }
-        return new ItemCollectorTileEntity();
+        return new ItemCollectorBlockEntity();
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (worldIn.isRemote || handIn != Hand.MAIN_HAND)
-            return ActionResultType.CONSUME;
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+        if (worldIn.isClientSide || handIn != InteractionHand.MAIN_HAND)
+            return InteractionResult.CONSUME;
 
-        TileEntity tileEntity = worldIn.getTileEntity(pos);
-        if (tileEntity instanceof INamedContainerProvider) {
-            if (player instanceof ServerPlayerEntity)
-                MenuRegistry.openExtendedMenu((ServerPlayerEntity) player, (INamedContainerProvider) tileEntity, packetBuffer -> packetBuffer.writeBlockPos(tileEntity.getPos()));
-            return ActionResultType.SUCCESS;
+        BlockEntity tileEntity = worldIn.getBlockEntity(pos);
+        if (tileEntity instanceof MenuProvider) {
+            if (player instanceof ServerPlayer)
+                MenuRegistry.openExtendedMenu((ServerPlayer) player, (MenuProvider) tileEntity, packetBuffer -> packetBuffer.writeBlockPos(tileEntity.getBlockPos()));
+            return InteractionResult.SUCCESS;
         } else
             throw new IllegalStateException("Named Container not found!");
     }
 
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() == newState.getBlock())
             return;
-        TileEntity tileEntity = worldIn.getTileEntity(pos);
-        if (tileEntity instanceof ItemCollectorTileEntity) {
-            ((ItemCollectorTileEntity) tileEntity).dropAllItems();
+        BlockEntity tileEntity = worldIn.getBlockEntity(pos);
+        if (tileEntity instanceof ItemCollectorBlockEntity) {
+            ((ItemCollectorBlockEntity) tileEntity).dropAllItems();
         }
-        super.onReplaced(state, worldIn, pos, newState, isMoving);
+        super.onRemove(state, worldIn, pos, newState, isMoving);
     }
 
     @Override
-    public ISidedInventory createInventory(BlockState state, IWorld world, BlockPos pos) {
-        TileEntity tileEntity = world.getTileEntity(pos);
-        if (tileEntity instanceof ItemCollectorTileEntity) {
-            Inventory inventory = ((ItemCollectorTileEntity) tileEntity).getInventory();
+    public WorldlyContainer getContainer(BlockState state, LevelAccessor world, BlockPos pos) {
+        BlockEntity tileEntity = world.getBlockEntity(pos);
+        if (tileEntity instanceof ItemCollectorBlockEntity) {
+            SimpleContainer inventory = ((ItemCollectorBlockEntity) tileEntity).getInventory();
             return new InventoryWrapper(inventory);
         }
         return null;
     }
 
     @Override
-    public @Nullable TileEntity createNewTileEntity(IBlockReader worldIn) {
+    public @Nullable BlockEntity newBlockEntity(BlockGetter worldIn) {
         return getTileEntity();
     }
 

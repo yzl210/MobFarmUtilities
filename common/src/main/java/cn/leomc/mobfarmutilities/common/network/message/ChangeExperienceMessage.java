@@ -1,14 +1,14 @@
 package cn.leomc.mobfarmutilities.common.network.message;
 
-import cn.leomc.mobfarmutilities.common.container.BaseContainer;
-import cn.leomc.mobfarmutilities.common.tileentity.ExperienceCollectorTileEntity;
+import cn.leomc.mobfarmutilities.common.blockentity.ExperienceCollectorBlockEntity;
+import cn.leomc.mobfarmutilities.common.menu.BaseMenu;
 import cn.leomc.mobfarmutilities.common.utils.Utils;
 import me.shedaniel.architectury.networking.NetworkManager;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.function.Supplier;
 
@@ -26,37 +26,37 @@ public class ChangeExperienceMessage {
         this.toPlayer = toPlayer;
     }
 
-    public static void encode(ChangeExperienceMessage message, PacketBuffer packetBuffer) {
+    public static void encode(ChangeExperienceMessage message, FriendlyByteBuf packetBuffer) {
         packetBuffer.writeBlockPos(message.pos);
         packetBuffer.writeInt(message.amount);
-        packetBuffer.writeString(Boolean.toString(message.level));
+        packetBuffer.writeUtf(Boolean.toString(message.level));
         packetBuffer.writeByteArray(Boolean.toString(message.toPlayer).getBytes());
     }
 
-    public static ChangeExperienceMessage decode(PacketBuffer packetBuffer) {
-        return new ChangeExperienceMessage(packetBuffer.readBlockPos(), packetBuffer.readInt(), Boolean.parseBoolean(packetBuffer.readString()), Boolean.parseBoolean(new String(packetBuffer.readByteArray())));
+    public static ChangeExperienceMessage decode(FriendlyByteBuf packetBuffer) {
+        return new ChangeExperienceMessage(packetBuffer.readBlockPos(), packetBuffer.readInt(), Boolean.parseBoolean(packetBuffer.readUtf()), Boolean.parseBoolean(new String(packetBuffer.readByteArray())));
     }
 
 
     public static void handle(ChangeExperienceMessage message, Supplier<NetworkManager.PacketContext> context) {
         if (true)
             return;
-        PlayerEntity playerEntity = context.get().getPlayer();
+        Player playerEntity = context.get().getPlayer();
         if (playerEntity == null)
             return;
         context.get().queue(() -> {
-            if (playerEntity.openContainer instanceof BaseContainer) {
-                World world = playerEntity.getEntityWorld();
-                if (world.isBlockLoaded(message.pos)) {
-                    TileEntity tileEntityO = world.getTileEntity(message.pos);
-                    if (tileEntityO instanceof ExperienceCollectorTileEntity) {
-                        ExperienceCollectorTileEntity tileEntity = (ExperienceCollectorTileEntity) tileEntityO;
+            if (playerEntity.containerMenu instanceof BaseMenu) {
+                Level world = playerEntity.getCommandSenderWorld();
+                if (world.hasChunkAt(message.pos)) {
+                    BlockEntity tileEntityO = world.getBlockEntity(message.pos);
+                    if (tileEntityO instanceof ExperienceCollectorBlockEntity) {
+                        ExperienceCollectorBlockEntity tileEntity = (ExperienceCollectorBlockEntity) tileEntityO;
                         if (message.toPlayer)
                             if (message.level) {
                                 int neededPoints = Utils.getPointsForNextLevel(playerEntity.experienceLevel, message.amount);
                                 if (tileEntity.getAmount() >= neededPoints) {
                                     tileEntity.addAmount(-neededPoints);
-                                    playerEntity.addExperienceLevel(message.amount);
+                                    playerEntity.giveExperienceLevels(message.amount);
                                 }
                             } else {
                                 if (tileEntity.getAmount() >= message.amount) {
@@ -71,10 +71,10 @@ public class ChangeExperienceMessage {
                                 int neededPoints = Utils.getPointsForNextLevel(playerEntity.experienceLevel - message.amount, message.amount);
                                 if (playerEntity.experienceLevel >= message.amount) {
                                     tileEntity.addAmount(neededPoints);
-                                    playerEntity.addExperienceLevel(-message.amount);
+                                    playerEntity.giveExperienceLevels(-message.amount);
                                 }
                             } else {
-                                if (playerEntity.experienceTotal >= message.amount) {
+                                if (playerEntity.totalExperience >= message.amount) {
                                     tileEntity.addAmount(message.amount);
                                     playerEntity.giveExperiencePoints(-message.amount);
                                 }

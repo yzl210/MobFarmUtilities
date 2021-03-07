@@ -1,19 +1,19 @@
 package cn.leomc.mobfarmutilities.common.api.blockstate;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.IBucketPickupHandler;
-import net.minecraft.block.ILiquidContainer;
-import net.minecraft.fluid.FlowingFluid;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.BucketPickup;
+import net.minecraft.world.level.block.LiquidBlockContainer;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 
-public interface IFluidLoggable extends IBucketPickupHandler, ILiquidContainer {
+public interface IFluidLoggable extends BucketPickup, LiquidBlockContainer {
 
     BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
@@ -26,35 +26,35 @@ public interface IFluidLoggable extends IBucketPickupHandler, ILiquidContainer {
     }
 
     default FluidState getFluid(BlockState state) {
-        if (state.get(WATERLOGGED)) {
+        if (state.getValue(WATERLOGGED)) {
             Fluid fluid = getSupportedFluid();
             if (fluid instanceof FlowingFluid) {
-                return ((FlowingFluid) fluid).getStillFluidState(false);
+                return ((FlowingFluid) fluid).getSource(false);
             }
-            return fluid.getDefaultState();
+            return fluid.defaultFluidState();
         }
-        return Fluids.EMPTY.getDefaultState();
+        return Fluids.EMPTY.defaultFluidState();
     }
 
-    default void updateFluids(BlockState state, IWorld world, BlockPos currentPos) {
-        if (state.get(WATERLOGGED)) {
+    default void updateFluids(BlockState state, LevelAccessor world, BlockPos currentPos) {
+        if (state.getValue(WATERLOGGED)) {
             Fluid fluid = getSupportedFluid();
-            world.getPendingFluidTicks().scheduleTick(currentPos, fluid, fluid.getTickRate(world));
+            world.getLiquidTicks().scheduleTick(currentPos, fluid, fluid.getTickDelay(world));
         }
     }
 
     @Override
-    default boolean canContainFluid(IBlockReader world, BlockPos pos, BlockState state, Fluid fluid) {
-        return !state.get(WATERLOGGED) && isValidFluid(fluid);
+    default boolean canPlaceLiquid(BlockGetter world, BlockPos pos, BlockState state, Fluid fluid) {
+        return !state.getValue(WATERLOGGED) && isValidFluid(fluid);
     }
 
     @Override
-    default boolean receiveFluid(IWorld world, BlockPos pos, BlockState state, FluidState fluidState) {
-        Fluid fluid = fluidState.getFluid();
-        if (canContainFluid(world, pos, state, fluid)) {
-            if (!world.isRemote()) {
-                world.setBlockState(pos, state.with(WATERLOGGED, true), 3);
-                world.getPendingFluidTicks().scheduleTick(pos, fluid, fluid.getTickRate(world));
+    default boolean placeLiquid(LevelAccessor world, BlockPos pos, BlockState state, FluidState fluidState) {
+        Fluid fluid = fluidState.getType();
+        if (canPlaceLiquid(world, pos, state, fluid)) {
+            if (!world.isClientSide()) {
+                world.setBlock(pos, state.setValue(WATERLOGGED, true), 3);
+                world.getLiquidTicks().scheduleTick(pos, fluid, fluid.getTickDelay(world));
             }
             return true;
         }
@@ -62,9 +62,9 @@ public interface IFluidLoggable extends IBucketPickupHandler, ILiquidContainer {
     }
 
     @Override
-    default Fluid pickupFluid(IWorld world, BlockPos pos, BlockState state) {
-        if (state.get(WATERLOGGED)) {
-            world.setBlockState(pos, state.with(WATERLOGGED, false), 3);
+    default Fluid takeLiquid(LevelAccessor world, BlockPos pos, BlockState state) {
+        if (state.getValue(WATERLOGGED)) {
+            world.setBlock(pos, state.setValue(WATERLOGGED, false), 3);
             return getSupportedFluid();
         }
         return Fluids.EMPTY;

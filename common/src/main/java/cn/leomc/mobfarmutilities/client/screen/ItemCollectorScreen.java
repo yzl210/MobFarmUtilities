@@ -1,18 +1,18 @@
 package cn.leomc.mobfarmutilities.client.screen;
 
 import cn.leomc.mobfarmutilities.client.RedstoneModeButton;
-import cn.leomc.mobfarmutilities.common.container.ItemCollectorContainer;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
+import cn.leomc.mobfarmutilities.common.menu.ItemCollectorMenu;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 
-public class ItemCollectorScreen extends BaseScreen<ItemCollectorContainer> {
+public class ItemCollectorScreen extends BaseScreen<ItemCollectorMenu> {
 
-    protected ITextComponent title;
+    protected Component title;
 
     protected RedstoneModeButton redstoneModeButton;
 
-    public ItemCollectorScreen(ItemCollectorContainer container, PlayerInventory playerInventory, ITextComponent titleIn) {
+    public ItemCollectorScreen(ItemCollectorMenu container, Inventory playerInventory, Component titleIn) {
         super(container, playerInventory, titleIn);
         title = titleIn;
     }
@@ -20,14 +20,14 @@ public class ItemCollectorScreen extends BaseScreen<ItemCollectorContainer> {
     @Override
     protected void init() {
         super.init();
-        redstoneModeButton = addButton(new RedstoneModeButton(this, guiLeft, guiTop, container.getTileEntity().getPos(), container.getTileEntity().getWorld()));
+        redstoneModeButton = addButton(new RedstoneModeButton(this, leftPos, topPos, menu.getTileEntity().getBlockPos(), menu.getTileEntity().getLevel()));
         addSlotBox(8, 34, 9, 18, 2, 18);
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
-        renderHoveredTooltip(matrixStack, mouseX, mouseY);
+        renderTooltip(matrixStack, mouseX, mouseY);
     }
 
 }

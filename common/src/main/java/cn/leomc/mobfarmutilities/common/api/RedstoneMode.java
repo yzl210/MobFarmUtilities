@@ -5,13 +5,13 @@ import cn.leomc.mobfarmutilities.client.utils.TextureUtils;
 import cn.leomc.mobfarmutilities.common.block.ActivatableBlock;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
-public enum RedstoneMode implements ITranslatable, IStringSerializable {
+public enum RedstoneMode implements ITranslatable, StringRepresentable {
     IGNORED,
     HIGH,
     LOW;
@@ -23,20 +23,20 @@ public enum RedstoneMode implements ITranslatable, IStringSerializable {
         return "text." + MobFarmUtilities.MODID + ".mode";
     }
 
-    public static void updateRedstone(BlockState state, World world, BlockPos pos) {
-        RedstoneMode mode = state.get(ActivatableBlock.MODE);
+    public static void updateRedstone(BlockState state, Level world, BlockPos pos) {
+        RedstoneMode mode = state.getValue(ActivatableBlock.MODE);
         if (mode == RedstoneMode.HIGH)
-            if (world.isBlockPowered(pos))
-                world.setBlockState(pos, state.with(ActivatableBlock.ACTIVE, true));
+            if (world.hasNeighborSignal(pos))
+                world.setBlockAndUpdate(pos, state.setValue(ActivatableBlock.ACTIVE, true));
             else
-                world.setBlockState(pos, state.with(ActivatableBlock.ACTIVE, false));
+                world.setBlockAndUpdate(pos, state.setValue(ActivatableBlock.ACTIVE, false));
         if (mode == RedstoneMode.LOW)
-            if (world.isBlockPowered(pos))
-                world.setBlockState(pos, state.with(ActivatableBlock.ACTIVE, false));
+            if (world.hasNeighborSignal(pos))
+                world.setBlockAndUpdate(pos, state.setValue(ActivatableBlock.ACTIVE, false));
             else
-                world.setBlockState(pos, state.with(ActivatableBlock.ACTIVE, true));
+                world.setBlockAndUpdate(pos, state.setValue(ActivatableBlock.ACTIVE, true));
         if (mode == RedstoneMode.IGNORED)
-            world.setBlockState(pos, state.with(ActivatableBlock.ACTIVE, true));
+            world.setBlockAndUpdate(pos, state.setValue(ActivatableBlock.ACTIVE, true));
     }
 
     public RedstoneMode next() {
@@ -53,13 +53,13 @@ public enum RedstoneMode implements ITranslatable, IStringSerializable {
     }
 
     @Override
-    public String getString() {
+    public String getSerializedName() {
         return toString().toLowerCase();
     }
 
     @Override
     public String getTranslationKey() {
-        return "text." + MobFarmUtilities.MODID + ".mode." + getString();
+        return "text." + MobFarmUtilities.MODID + ".mode." + getSerializedName();
     }
 
     public ResourceLocation getTextureResourceLocation() {

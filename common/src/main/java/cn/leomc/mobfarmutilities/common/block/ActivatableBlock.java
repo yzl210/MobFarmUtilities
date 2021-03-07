@@ -2,16 +2,16 @@ package cn.leomc.mobfarmutilities.common.block;
 
 
 import cn.leomc.mobfarmutilities.common.api.RedstoneMode;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 
 public class ActivatableBlock extends Block {
 
@@ -23,45 +23,45 @@ public class ActivatableBlock extends Block {
         super(builder);
     }
 
-    public void updateRedstone(World worldIn, BlockState state, BlockPos pos) {
-        if (worldIn.isRemote)
+    public void updateRedstone(Level worldIn, BlockState state, BlockPos pos) {
+        if (worldIn.isClientSide)
             return;
-        RedstoneMode mode = state.get(MODE);
+        RedstoneMode mode = state.getValue(MODE);
         if (mode == RedstoneMode.HIGH)
-            if (worldIn.isBlockPowered(pos))
-                worldIn.setBlockState(pos, state.with(ACTIVE, true));
+            if (worldIn.hasNeighborSignal(pos))
+                worldIn.setBlockAndUpdate(pos, state.setValue(ACTIVE, true));
             else
-                worldIn.setBlockState(pos, state.with(ACTIVE, false));
+                worldIn.setBlockAndUpdate(pos, state.setValue(ACTIVE, false));
         if (mode == RedstoneMode.LOW)
-            if (worldIn.isBlockPowered(pos))
-                worldIn.setBlockState(pos, state.with(ACTIVE, false));
+            if (worldIn.hasNeighborSignal(pos))
+                worldIn.setBlockAndUpdate(pos, state.setValue(ACTIVE, false));
             else
-                worldIn.setBlockState(pos, state.with(ACTIVE, true));
+                worldIn.setBlockAndUpdate(pos, state.setValue(ACTIVE, true));
         if (mode == RedstoneMode.IGNORED)
-            worldIn.setBlockState(pos, state.with(ACTIVE, true));
+            worldIn.setBlockAndUpdate(pos, state.setValue(ACTIVE, true));
     }
 
 
     @Override
-    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+    public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
         updateRedstone(worldIn, state, pos);
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         updateRedstone(worldIn, state, pos);
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        super.fillStateContainer(builder);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
         builder.add(ACTIVE, MODE);
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return super.getStateForPlacement(context).with(ACTIVE, false).with(MODE, RedstoneMode.HIGH);
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        return super.getStateForPlacement(context).setValue(ACTIVE, false).setValue(MODE, RedstoneMode.HIGH);
     }
 
 

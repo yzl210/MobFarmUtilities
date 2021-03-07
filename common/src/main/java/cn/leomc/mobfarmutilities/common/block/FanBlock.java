@@ -2,104 +2,100 @@ package cn.leomc.mobfarmutilities.common.block;
 
 import cn.leomc.mobfarmutilities.common.api.InventoryWrapper;
 import cn.leomc.mobfarmutilities.common.api.blockstate.IHasDirection;
-import cn.leomc.mobfarmutilities.common.tileentity.FanTileEntity;
+import cn.leomc.mobfarmutilities.common.blockentity.FanBlockEntity;
 import me.shedaniel.architectury.platform.Platform;
 import me.shedaniel.architectury.registry.BlockProperties;
 import me.shedaniel.architectury.registry.MenuRegistry;
 import me.shedaniel.architectury.registry.ToolType;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.ISidedInventoryProvider;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.*;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
 
 import java.lang.reflect.InvocationTargetException;
 
 
-public class FanBlock extends ActivatableBlock implements ITileEntityProvider, IHasDirection, ISidedInventoryProvider {
+public class FanBlock extends ActivatableBlock implements EntityBlock, IHasDirection, WorldlyContainerHolder {
 
     public FanBlock() {
-        super(BlockProperties.of(Material.IRON)
+        super(BlockProperties.of(Material.METAL)
                 .tool(ToolType.PICKAXE, 1)
-                .setRequiresTool()
-                .hardnessAndResistance(1.5F, 6.0F)
+                .requiresCorrectToolForDrops()
+                .strength(1.5F, 6.0F)
         );
     }
 
-    public static FanTileEntity getTileEntity() {
+    public static FanBlockEntity getTileEntity() {
         if (Platform.isForge()) {
-            Class<FanTileEntity> tileEntityClass;
+            Class<FanBlockEntity> tileEntityClass;
             try {
-                tileEntityClass = (Class<FanTileEntity>) Class.forName("cn.leomc.mobfarmutilities.forge.ForgeFanTileEntity");
+                tileEntityClass = (Class<FanBlockEntity>) Class.forName("cn.leomc.mobfarmutilities.forge.ForgeFanBlockEntity");
                 return tileEntityClass.getConstructor().newInstance();
             } catch (ClassNotFoundException | ClassCastException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
                 e.printStackTrace();
             }
         }
-        return new FanTileEntity();
+        return new FanBlockEntity();
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (worldIn.isRemote || handIn != Hand.MAIN_HAND)
-            return ActionResultType.CONSUME;
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+        if (worldIn.isClientSide || handIn != InteractionHand.MAIN_HAND)
+            return InteractionResult.CONSUME;
 
-        TileEntity tileEntity = worldIn.getTileEntity(pos);
-        if (tileEntity instanceof INamedContainerProvider) {
-            if (player instanceof ServerPlayerEntity)
-                MenuRegistry.openExtendedMenu((ServerPlayerEntity) player, (INamedContainerProvider) tileEntity, packetBuffer -> packetBuffer.writeBlockPos(tileEntity.getPos()));
-            return ActionResultType.SUCCESS;
+        BlockEntity tileEntity = worldIn.getBlockEntity(pos);
+        if (tileEntity instanceof MenuProvider) {
+            if (player instanceof ServerPlayer)
+                MenuRegistry.openExtendedMenu((ServerPlayer) player, (MenuProvider) tileEntity, packetBuffer -> packetBuffer.writeBlockPos(tileEntity.getBlockPos()));
+            return InteractionResult.SUCCESS;
         } else
             throw new IllegalStateException("Named Container not found!");
 
     }
 
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() == newState.getBlock())
             return;
-        TileEntity tileEntity = worldIn.getTileEntity(pos);
-        if (tileEntity instanceof FanTileEntity) {
-            ((FanTileEntity) tileEntity).dropAllItems();
+        BlockEntity tileEntity = worldIn.getBlockEntity(pos);
+        if (tileEntity instanceof FanBlockEntity) {
+            ((FanBlockEntity) tileEntity).dropAllItems();
         }
-        super.onReplaced(state, worldIn, pos, newState, isMoving);
+        super.onRemove(state, worldIn, pos, newState, isMoving);
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         return getDirection(context, super.getStateForPlacement(context));
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        super.fillStateContainer(builder);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
         builder.add(FACING);
     }
 
     @Override
-    public TileEntity createNewTileEntity(IBlockReader worldIn) {
+    public BlockEntity newBlockEntity(BlockGetter worldIn) {
         return getTileEntity();
     }
 
     @Override
-    public ISidedInventory createInventory(BlockState state, IWorld world, BlockPos pos) {
-        TileEntity tileEntity = world.getTileEntity(pos);
-        if (tileEntity instanceof FanTileEntity) {
-            return new InventoryWrapper(((FanTileEntity) tileEntity).getUpgradeHandler().getInventory());
+    public WorldlyContainer getContainer(BlockState state, LevelAccessor world, BlockPos pos) {
+        BlockEntity tileEntity = world.getBlockEntity(pos);
+        if (tileEntity instanceof FanBlockEntity) {
+            return new InventoryWrapper(((FanBlockEntity) tileEntity).getUpgradeHandler().getInventory());
         }
         return null;
     }

@@ -4,14 +4,14 @@ import cn.leomc.mobfarmutilities.MobFarmUtilities;
 import cn.leomc.mobfarmutilities.common.fluid.LiquidExperienceFluid;
 import me.shedaniel.architectury.registry.DeferredRegister;
 import me.shedaniel.architectury.registry.RegistrySupplier;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.world.level.material.Fluid;
 
 import java.util.function.Supplier;
 
 public class FluidRegistry {
 
-    protected static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(MobFarmUtilities.MODID, Registry.FLUID_KEY);
+    protected static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(MobFarmUtilities.MODID, Registry.FLUID_REGISTRY);
 
 
     public static RegistrySupplier<Fluid> LIQUID_EXPERIENCE = register("liquid_experience", LiquidExperienceFluid.Still::getFluid);

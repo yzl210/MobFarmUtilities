@@ -1,8 +1,8 @@
 package cn.leomc.mobfarmutilities.forge;
 
+import cn.leomc.mobfarmutilities.common.blockentity.ExperienceCollectorBlockEntity;
 import cn.leomc.mobfarmutilities.common.registry.FluidRegistry;
-import cn.leomc.mobfarmutilities.common.tileentity.ExperienceCollectorTileEntity;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 
-public class ForgeExperienceCollectorTileEntity extends ExperienceCollectorTileEntity {
+public class ForgeExperienceCollectorBlockEntity extends ExperienceCollectorBlockEntity {
 
     protected FluidStack fluidStack = new FluidStack(FluidRegistry.LIQUID_EXPERIENCE.get(), getAmount()) {
         @Override
@@ -98,7 +98,7 @@ public class ForgeExperienceCollectorTileEntity extends ExperienceCollectorTileE
     });
 
 
-    public ForgeExperienceCollectorTileEntity() {
+    public ForgeExperienceCollectorBlockEntity() {
         super();
     }
 

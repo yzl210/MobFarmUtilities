@@ -12,9 +12,9 @@ import me.shedaniel.architectury.utils.Env;
 import me.shedaniel.architectury.utils.EnvExecutor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.texture.AtlasTexture;
-import net.minecraft.inventory.container.PlayerContainer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.InventoryMenu;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -39,15 +39,15 @@ public class MobFarmUtilities {
 
 
     @Environment(EnvType.CLIENT)
-    private void onPreTextureStitch(AtlasTexture atlasTexture, Consumer<ResourceLocation> spriteAdder) {
-        if (atlasTexture.getTextureLocation() == PlayerContainer.LOCATION_BLOCKS_TEXTURE) {
+    private void onPreTextureStitch(TextureAtlas atlasTexture, Consumer<ResourceLocation> spriteAdder) {
+        if (atlasTexture.location() == InventoryMenu.BLOCK_ATLAS) {
             Textures.REGISTRIES.forEach(spriteAdder);
         }
     }
 
     @Environment(EnvType.CLIENT)
-    private void onPostTextureStitch(AtlasTexture atlasTexture) {
-        if (atlasTexture.getTextureLocation() == PlayerContainer.LOCATION_BLOCKS_TEXTURE) {
+    private void onPostTextureStitch(TextureAtlas atlasTexture) {
+        if (atlasTexture.location() == InventoryMenu.BLOCK_ATLAS) {
             Textures.REGISTRIES.forEach(rl -> {
                 Textures.TEXTURE_MAP.put(rl, atlasTexture.getSprite(rl));
             });

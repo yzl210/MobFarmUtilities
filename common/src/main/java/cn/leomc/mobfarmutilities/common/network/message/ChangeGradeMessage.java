@@ -1,14 +1,14 @@
 package cn.leomc.mobfarmutilities.common.network.message;
 
 import cn.leomc.mobfarmutilities.common.api.blockstate.Upgradable;
-import cn.leomc.mobfarmutilities.common.container.BaseContainer;
 import cn.leomc.mobfarmutilities.common.item.upgrade.UpgradeType;
+import cn.leomc.mobfarmutilities.common.menu.BaseMenu;
 import me.shedaniel.architectury.networking.NetworkManager;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.function.Supplier;
 
@@ -24,25 +24,25 @@ public class ChangeGradeMessage {
         this.upgrade = upgrade;
     }
 
-    public static void encode(ChangeGradeMessage message, PacketBuffer packetBuffer) {
+    public static void encode(ChangeGradeMessage message, FriendlyByteBuf packetBuffer) {
         packetBuffer.writeBlockPos(message.pos);
-        packetBuffer.writeEnumValue(message.type);
+        packetBuffer.writeEnum(message.type);
         packetBuffer.writeInt(message.upgrade ? 0 : 1);
     }
 
-    public static ChangeGradeMessage decode(PacketBuffer packetBuffer) {
-        return new ChangeGradeMessage(packetBuffer.readBlockPos(), packetBuffer.readEnumValue(UpgradeType.class), packetBuffer.readInt() == 0);
+    public static ChangeGradeMessage decode(FriendlyByteBuf packetBuffer) {
+        return new ChangeGradeMessage(packetBuffer.readBlockPos(), packetBuffer.readEnum(UpgradeType.class), packetBuffer.readInt() == 0);
     }
 
     public static void handle(ChangeGradeMessage message, Supplier<NetworkManager.PacketContext> context) {
-        PlayerEntity playerEntity = context.get().getPlayer();
+        Player playerEntity = context.get().getPlayer();
         if (playerEntity == null)
             return;
         context.get().queue(() -> {
-            if (playerEntity.openContainer instanceof BaseContainer) {
-                World world = playerEntity.getEntityWorld();
-                if (world.isBlockLoaded(message.pos)) {
-                    TileEntity tileEntity = world.getTileEntity(message.pos);
+            if (playerEntity.containerMenu instanceof BaseMenu) {
+                Level world = playerEntity.getCommandSenderWorld();
+                if (world.hasChunkAt(message.pos)) {
+                    BlockEntity tileEntity = world.getBlockEntity(message.pos);
                     if (tileEntity instanceof Upgradable) {
                         if (message.upgrade)
                             ((Upgradable) tileEntity).getUpgradeHandler().upgrade(message.type);

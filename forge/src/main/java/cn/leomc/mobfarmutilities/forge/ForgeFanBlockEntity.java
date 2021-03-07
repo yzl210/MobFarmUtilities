@@ -1,7 +1,7 @@
 package cn.leomc.mobfarmutilities.forge;
 
-import cn.leomc.mobfarmutilities.common.tileentity.ItemCollectorTileEntity;
-import net.minecraft.util.Direction;
+import cn.leomc.mobfarmutilities.common.blockentity.FanBlockEntity;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -10,11 +10,11 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ForgeItemCollectorTileEntity extends ItemCollectorTileEntity {
+public class ForgeFanBlockEntity extends FanBlockEntity {
 
-    protected LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(inventory));
+    protected LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(upgradeHandler.getInventory()));
 
-    public ForgeItemCollectorTileEntity() {
+    public ForgeFanBlockEntity() {
         super();
     }
 
@@ -25,5 +25,4 @@ public class ForgeItemCollectorTileEntity extends ItemCollectorTileEntity {
             return itemHandler.cast();
         return super.getCapability(cap, side);
     }
-
 }

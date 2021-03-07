@@ -5,31 +5,31 @@ import cn.leomc.mobfarmutilities.common.api.RedstoneMode;
 import cn.leomc.mobfarmutilities.common.block.ActivatableBlock;
 import cn.leomc.mobfarmutilities.common.network.NetworkHandler;
 import cn.leomc.mobfarmutilities.common.network.message.RedstoneModeChangeMessage;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.inventory.container.PlayerContainer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.level.Level;
 
 public class RedstoneModeButton extends Button {
 
-    private static final IPressable NO_ACTION = (button) -> {
+    private static final OnPress NO_ACTION = (button) -> {
     };
     private final BlockPos pos;
-    private final World world;
-    private final ContainerScreen<?> screen;
+    private final Level world;
+    private final AbstractContainerScreen<?> screen;
     private RedstoneMode mode;
     private int updateCooldown = 0;
 
-    public RedstoneModeButton(ContainerScreen<?> screen, int guiLeft, int guiTop, BlockPos pos, World world) {
-        super(guiLeft + 5, guiTop + 5, 20, 20, StringTextComponent.EMPTY, NO_ACTION);
-        this.mode = world.getBlockState(pos).get(ActivatableBlock.MODE);
+    public RedstoneModeButton(AbstractContainerScreen<?> screen, int guiLeft, int guiTop, BlockPos pos, Level world) {
+        super(guiLeft + 5, guiTop + 5, 20, 20, TextComponent.EMPTY, NO_ACTION);
+        this.mode = world.getBlockState(pos).getValue(ActivatableBlock.MODE);
         this.pos = pos;
         this.world = world;
         this.screen = screen;
@@ -44,20 +44,20 @@ public class RedstoneModeButton extends Button {
     }
 
     @Override
-    public void renderToolTip(MatrixStack matrixStack, int mouseX, int mouseY) {
+    public void renderToolTip(PoseStack matrixStack, int mouseX, int mouseY) {
         if (mouseX >= x && mouseX <= x + 20 && mouseY >= y && mouseY <= y + 20)
-            screen.renderTooltip(matrixStack, new TranslationTextComponent(RedstoneMode.getModeTranslationKey(), new TranslationTextComponent(mode.getTranslationKey())), mouseX, mouseY);
+            screen.renderTooltip(matrixStack, new TranslatableComponent(RedstoneMode.getModeTranslationKey(), new TranslatableComponent(mode.getTranslationKey())), mouseX, mouseY);
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
         if (updateCooldown == 0) {
-            mode = world.getBlockState(pos).get(ActivatableBlock.MODE);
+            mode = world.getBlockState(pos).getValue(ActivatableBlock.MODE);
             updateCooldown = 5;
         } else
             updateCooldown--;
-        Minecraft.getInstance().getTextureManager().bindTexture(PlayerContainer.LOCATION_BLOCKS_TEXTURE);
+        Minecraft.getInstance().getTextureManager().bind(InventoryMenu.BLOCK_ATLAS);
         TextureAtlasSprite sprite = mode.getTextureAtlasSprite();
         Screen.blit(matrixStack, x + 2, y + 2, 1, 16, 16, sprite);
     }

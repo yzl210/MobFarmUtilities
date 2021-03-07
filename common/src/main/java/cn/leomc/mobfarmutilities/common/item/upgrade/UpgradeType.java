@@ -4,13 +4,13 @@ import cn.leomc.mobfarmutilities.MobFarmUtilities;
 import cn.leomc.mobfarmutilities.common.api.ITranslatable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.tags.ITag;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.tags.Tag;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,14 +26,14 @@ public enum UpgradeType implements ITranslatable {
     private final int requiredCount;
     private final Item delegate;
     private final ResourceLocation tagRL;
-    private final ITag<Item> tag;
+    private final Tag<Item> tag;
 
     UpgradeType(int maxLevel, int requiredCount, Item delegate, ResourceLocation tag) {
         this.maxLevel = maxLevel;
         this.requiredCount = requiredCount;
         this.delegate = delegate;
         this.tagRL = tag;
-        this.tag = ItemTags.getCollection().get(tag);
+        this.tag = ItemTags.getAllTags().getTag(tag);
     }
 
 
@@ -44,7 +44,7 @@ public enum UpgradeType implements ITranslatable {
     public List<Item> getSupportedItems() {
         List<Item> itemList = new ArrayList<>();
         if (tag != null)
-            itemList.addAll(tag.getAllElements());
+            itemList.addAll(tag.getValues());
         if (delegate != null && !itemList.contains(delegate))
             itemList.add(delegate);
         return itemList;
@@ -55,10 +55,10 @@ public enum UpgradeType implements ITranslatable {
     }
 
     public String getTagName() {
-        return tagRL == null ? "" : tagRL.toString();
+        return tagRL == null || getTag() == null ? "" : tagRL.toString();
     }
 
-    public ITag<Item> getTag() {
+    public Tag<Item> getTag() {
         return tag;
     }
 
@@ -82,7 +82,7 @@ public enum UpgradeType implements ITranslatable {
 
     @Environment(EnvType.CLIENT)
     public String getLocalizedName() {
-        return I18n.format(getTranslationKey());
+        return I18n.get(getTranslationKey());
     }
 
 

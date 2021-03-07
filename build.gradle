@@ -1,6 +1,6 @@
 plugins {
-    id "architectury-plugin" version "3.0.93"
-    id "forgified-fabric-loom" version "0.6.72" apply false
+    id "architectury-plugin" version "3.0.95"
+    id "forgified-fabric-loom" version "0.6.74" apply false
 }
 
 architectury {
@@ -17,8 +17,7 @@ subprojects {
     dependencies {
         minecraft "com.mojang:minecraft:${minecraft_version}"
 
-        mappings "de.oceanlabs.mcp:mcp_snapshot:${mappings_version}"
-
+        mappings loom.officialMojangMappings()
     }
 }
 

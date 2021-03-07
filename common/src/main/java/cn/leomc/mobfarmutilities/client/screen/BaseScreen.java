@@ -1,53 +1,53 @@
 package cn.leomc.mobfarmutilities.client.screen;
 
 import cn.leomc.mobfarmutilities.client.utils.Textures;
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.PlayerContainer;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.InventoryMenu;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BaseScreen<C extends Container> extends ContainerScreen<C> {
+public abstract class BaseScreen<C extends AbstractContainerMenu> extends AbstractContainerScreen<C> {
 
     protected List<Pair<Integer, Integer>> slots = new ArrayList<>();
 
-    public BaseScreen(C screenContainer, PlayerInventory inv, ITextComponent titleIn) {
+    public BaseScreen(C screenContainer, Inventory inv, Component titleIn) {
         super(screenContainer, inv, titleIn);
     }
 
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         renderBackground(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int x, int y) {
-        Minecraft.getInstance().fontRenderer.drawString(matrixStack, title.getString(), getCenteredOffset(title.getString()), 6, 0x404040);
-        Minecraft.getInstance().fontRenderer.drawString(matrixStack, playerInventory.getDisplayName().getString(), 8, ySize - 96 + 3, 0x404040);
+    protected void renderLabels(PoseStack matrixStack, int x, int y) {
+        Minecraft.getInstance().font.draw(matrixStack, title.getString(), getCenteredOffset(title.getString()), 6, 0x404040);
+        Minecraft.getInstance().font.draw(matrixStack, inventory.getDisplayName().getString(), 8, imageHeight - 96 + 3, 0x404040);
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int x, int y) {
+    protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        minecraft.getTextureManager().bindTexture(PlayerContainer.LOCATION_BLOCKS_TEXTURE);
-        int relX = (this.width - this.xSize) / 2;
-        int relY = (this.height - this.ySize) / 2;
-        blit(matrixStack, relX, relY, 0, this.xSize, this.xSize, Textures.GENERIC_GUI.get());
+        minecraft.getTextureManager().bind(InventoryMenu.BLOCK_ATLAS);
+        int relX = (this.width - this.imageWidth) / 2;
+        int relY = (this.height - this.imageHeight) / 2;
+        blit(matrixStack, relX, relY, 0, this.imageWidth, this.imageWidth, Textures.GENERIC_GUI.get());
         if (!slots.isEmpty()) {
             TextureAtlasSprite slot = Textures.SLOT_SMALL.get();
             for (Pair<Integer, Integer> pair : slots) {
-                blit(matrixStack, guiLeft + pair.getFirst(), guiTop + pair.getSecond(), 1, slot.getWidth(), slot.getHeight(), slot);
+                blit(matrixStack, leftPos + pair.getFirst(), topPos + pair.getSecond(), 1, slot.getWidth(), slot.getHeight(), slot);
             }
         }
     }
@@ -68,14 +68,14 @@ public abstract class BaseScreen<C extends Container> extends ContainerScreen<C>
     }
 
     public int getCenteredOffset(String string) {
-        return this.getCenteredOffset(string, xSize / 2);
+        return this.getCenteredOffset(string, imageWidth / 2);
     }
 
     public int getCenteredOffset(String string, int xPos) {
-        return ((xPos * 2) - font.getStringWidth(string)) / 2;
+        return ((xPos * 2) - font.width(string)) / 2;
     }
 
-    public FontRenderer getFont() {
+    public Font getFont() {
         return font;
     }
 

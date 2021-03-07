@@ -3,14 +3,14 @@ package cn.leomc.mobfarmutilities.common.api;
 import cn.leomc.mobfarmutilities.common.item.upgrade.UpgradeType;
 import com.google.common.collect.Lists;
 import me.shedaniel.architectury.extensions.BlockEntityExtension;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.Containers;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,14 +20,14 @@ import java.util.List;
 public class UpgradeHandler {
 
     protected HashMap<UpgradeType, Integer> upgrades;
-    protected Inventory inventory;
+    protected SimpleContainer inventory;
     protected BlockEntityExtension syncer;
 
     public UpgradeHandler(BlockEntityExtension extension, UpgradeType... types) {
         this.syncer = extension;
-        inventory = new Inventory(1) {
+        inventory = new SimpleContainer(1) {
             @Override
-            public boolean isItemValidForSlot(int index, ItemStack stack) {
+            public boolean canPlaceItem(int index, ItemStack stack) {
                 List<Item> item = new ArrayList<>();
                 for (UpgradeType type : upgrades.keySet()) {
                     item.addAll(type.getSupportedItems());
@@ -41,7 +41,7 @@ public class UpgradeHandler {
     }
 
 
-    public Inventory getInventory() {
+    public SimpleContainer getInventory() {
         return inventory;
     }
 
@@ -61,15 +61,15 @@ public class UpgradeHandler {
         return upgrades.get(type);
     }
 
-    public CompoundNBT write(CompoundNBT nbt) {
+    public CompoundTag write(CompoundTag nbt) {
         return write(nbt, true);
     }
 
-    public CompoundNBT write(CompoundNBT nbt, boolean includeInv) {
-        ListNBT listNBT = new ListNBT();
+    public CompoundTag write(CompoundTag nbt, boolean includeInv) {
+        ListTag listNBT = new ListTag();
 
         for (UpgradeType type : upgrades.keySet()) {
-            CompoundNBT compoundNBT = new CompoundNBT();
+            CompoundTag compoundNBT = new CompoundTag();
             compoundNBT.putString("Upgrade", type.name());
             compoundNBT.putInt("Level", getUpgradeLevel(type));
             listNBT.add(compoundNBT);
@@ -80,20 +80,20 @@ public class UpgradeHandler {
         }
 
         if (includeInv)
-            nbt.put("inventory", inventory.write());
+            nbt.put("inventory", inventory.createTag());
 
         return nbt;
     }
 
-    public void read(CompoundNBT nbt) {
-        ListNBT listNBT = nbt.getList("Upgrades", 10);
+    public void read(CompoundTag nbt) {
+        ListTag listNBT = nbt.getList("Upgrades", 10);
         for (int i = 0; i < listNBT.size(); ++i) {
-            CompoundNBT compoundNBT = listNBT.getCompound(i);
+            CompoundTag compoundNBT = listNBT.getCompound(i);
             UpgradeType type = UpgradeType.valueOf(compoundNBT.getString("Upgrade"));
             upgrades.put(type, compoundNBT.getInt("Level"));
         }
         if (nbt.contains("inventory"))
-            inventory.read(nbt.getList("inventory", 10));
+            inventory.fromTag(nbt.getList("inventory", 10));
 
     }
 
@@ -103,8 +103,8 @@ public class UpgradeHandler {
 
     public void upgrade(UpgradeType type) {
         validateUpgradeType(type);
-        if (type.isEnough(inventory.getStackInSlot(0)) && getUpgradeLevel(type) < type.getMaxLevel()) {
-            inventory.getStackInSlot(0).shrink(type.getRequiredCount());
+        if (type.isEnough(inventory.getItem(0)) && getUpgradeLevel(type) < type.getMaxLevel()) {
+            inventory.getItem(0).shrink(type.getRequiredCount());
             int newLevel = upgrades.get(type) + 1;
             if (newLevel > type.getMaxLevel())
                 newLevel = type.getMaxLevel();
@@ -136,19 +136,19 @@ public class UpgradeHandler {
     }
 
 
-    public void dropAllItem(World world, BlockPos pos) {
-        InventoryHelper.dropInventoryItems(world, pos, inventory);
-        inventory.clear();
-        Inventory inventory = new Inventory(100);
+    public void dropAllItem(Level world, BlockPos pos) {
+        Containers.dropContents(world, pos, inventory);
+        inventory.clearContent();
+        SimpleContainer inventory = new SimpleContainer(100);
         upgrades.forEach((type, count) -> {
             inventory.addItem(new ItemStack(type.getDelegate(), type.getRequiredCount() * count));
             upgrades.put(type, 0);
         });
-        InventoryHelper.dropInventoryItems(world, pos, inventory);
+        Containers.dropContents(world, pos, inventory);
     }
 
     public boolean canHold(ItemStack itemStack) {
-        return inventory.func_233541_b_(itemStack) && inventory.getStackInSlot(0).getMaxStackSize() - inventory.getStackInSlot(0).getCount() >= itemStack.getCount();
+        return inventory.canAddItem(itemStack) && inventory.getItem(0).getMaxStackSize() - inventory.getItem(0).getCount() >= itemStack.getCount();
     }
 
 }

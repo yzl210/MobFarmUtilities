@@ -1,15 +1,15 @@
 package cn.leomc.mobfarmutilities.common.utils;
 
 import me.shedaniel.architectury.platform.Platform;
-import net.minecraft.block.Block;
-import net.minecraft.block.FlowingFluidBlock;
-import net.minecraft.fluid.FlowingFluid;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.BucketItem;
-import net.minecraft.item.Item;
-import net.minecraft.tags.ITag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.tags.Tag;
+import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.material.Fluid;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -30,10 +30,10 @@ public class PlatformCompatibility {
         return new BucketItem(fluid.get(), properties);
     }
 
-    public static FlowingFluidBlock getFlowingFluidBlock(Supplier<Fluid> fluid, Block.Properties properties) {
+    public static LiquidBlock getFlowingFluidBlock(Supplier<Fluid> fluid, Block.Properties properties) {
         if (Platform.isForge()) {
             try {
-                return FlowingFluidBlock.class.getConstructor(Supplier.class, Block.Properties.class).newInstance(fluid, properties);
+                return LiquidBlock.class.getConstructor(Supplier.class, Block.Properties.class).newInstance(fluid, properties);
             } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
             }
@@ -44,11 +44,11 @@ public class PlatformCompatibility {
     public static Supplier<List<Item>> getTagItems(ResourceLocation resourceLocation, Item... items) {
         return () -> {
             List<Item> itemList = new ArrayList<>();
-            ITag<Item> tag = ItemTags.getCollection().get(resourceLocation);
+            Tag<Item> tag = ItemTags.getAllTags().getTag(resourceLocation);
             if (tag == null)
                 Collections.addAll(itemList, items);
             else
-                itemList.addAll(tag.getAllElements());
+                itemList.addAll(tag.getValues());
 
 
             return itemList;

@@ -1,41 +1,41 @@
 package cn.leomc.mobfarmutilities.common.api;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.world.Container;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-public class InventoryWrapper implements ISidedInventory {
+public class InventoryWrapper implements WorldlyContainer {
 
-    protected IInventory inventory;
+    protected Container inventory;
 
-    public InventoryWrapper(IInventory iInventory) {
+    public InventoryWrapper(Container iInventory) {
         this.inventory = iInventory;
     }
 
     @Override
     public int[] getSlotsForFace(Direction side) {
-        int[] slots = new int[inventory.getSizeInventory()];
-        for (int i = 0; i < inventory.getSizeInventory(); i++)
+        int[] slots = new int[inventory.getContainerSize()];
+        for (int i = 0; i < inventory.getContainerSize(); i++)
             slots[i] = i;
         return slots;
     }
 
     @Override
-    public boolean canInsertItem(int index, ItemStack itemStackIn, @Nullable Direction direction) {
-        return inventory.isItemValidForSlot(index, itemStackIn);
+    public boolean canPlaceItemThroughFace(int index, ItemStack itemStackIn, @Nullable Direction direction) {
+        return inventory.canPlaceItem(index, itemStackIn);
     }
 
     @Override
-    public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
+    public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
         return true;
     }
 
     @Override
-    public int getSizeInventory() {
-        return inventory.getSizeInventory();
+    public int getContainerSize() {
+        return inventory.getContainerSize();
     }
 
     @Override
@@ -44,37 +44,37 @@ public class InventoryWrapper implements ISidedInventory {
     }
 
     @Override
-    public ItemStack getStackInSlot(int index) {
-        return inventory.getStackInSlot(index);
+    public ItemStack getItem(int index) {
+        return inventory.getItem(index);
     }
 
     @Override
-    public ItemStack decrStackSize(int index, int count) {
-        return inventory.decrStackSize(index, count);
+    public ItemStack removeItem(int index, int count) {
+        return inventory.removeItem(index, count);
     }
 
     @Override
-    public ItemStack removeStackFromSlot(int index) {
-        return inventory.removeStackFromSlot(index);
+    public ItemStack removeItemNoUpdate(int index) {
+        return inventory.removeItemNoUpdate(index);
     }
 
     @Override
-    public void setInventorySlotContents(int index, ItemStack stack) {
-        inventory.setInventorySlotContents(index, stack);
+    public void setItem(int index, ItemStack stack) {
+        inventory.setItem(index, stack);
     }
 
     @Override
-    public void markDirty() {
-        inventory.markDirty();
+    public void setChanged() {
+        inventory.setChanged();
     }
 
     @Override
-    public boolean isUsableByPlayer(PlayerEntity player) {
-        return inventory.isUsableByPlayer(player);
+    public boolean stillValid(Player player) {
+        return inventory.stillValid(player);
     }
 
     @Override
-    public void clear() {
-        inventory.clear();
+    public void clearContent() {
+        inventory.clearContent();
     }
 }
