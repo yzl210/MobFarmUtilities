@@ -3,15 +3,10 @@ package cn.leomc.mobfarmutilities.common.utils;
 public class Utils {
 
     public static int getPointsForNextLevel(int level) {
-        int needed = 0;
-        if (level >= 0 && level < 15)
-            needed = 2 * level + 7;
-        else if (level >= 15 && level < 30)
-            needed = 5 * level - 38;
-        else if (level >= 30)
-            needed = 9 * level - 158;
-
-        return needed;
+        if (level >= 30)
+            return 112 + (level - 30) * 9;
+        else
+            return level >= 15 ? 37 + (level - 15) * 5 : 7 + level * 2;
     }
 
     public static int getPointsForNextLevel(int currentLevel, int levels) {

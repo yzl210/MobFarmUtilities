@@ -28,7 +28,7 @@
   "text.mobfarmutilities.scroll": "Scroll to Select",
   "text.mobfarmutilities.how_to_upgrade.1": "Left Click to Upgrade",
   "text.mobfarmutilities.how_to_upgrade.2": "Right Click to Downgrade",
-  "text.mobfarmutilities.how_to_store_get_experience": "Scroll to Store/Get Experience (WIP!)",
+  "text.mobfarmutilities.how_to_store_get_experience": "Scroll to Get Experience",
   "text.mobfarmutilities.fluid_tank": "%s: %s mB",
   "text.mobfarmutilities.info.upgrade": "%s: %s/%s",
   "itemGroup.mobfarmutilities.default": "Mob Farm Helpers"

@@ -28,7 +28,7 @@
   "text.mobfarmutilities.tag": "标签: %s",
   "text.mobfarmutilities.how_to_upgrade.1": "左键升级",
   "text.mobfarmutilities.how_to_upgrade.2": "右键降级",
-  "text.mobfarmutilities.how_to_store_get_experience": "使用鼠标滚轮来存储/取出经验 (未实现!)",
+  "text.mobfarmutilities.how_to_store_get_experience": "使用鼠标滚轮来取出经验",
   "text.mobfarmutilities.scroll": "使用鼠标滚轮来选择",
   "text.mobfarmutilities.info.upgrade": "%s: %s/%s",
   "itemGroup.mobfarmutilities.default": "刷怪塔小帮手"

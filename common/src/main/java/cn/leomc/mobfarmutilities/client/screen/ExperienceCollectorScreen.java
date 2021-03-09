@@ -51,12 +51,10 @@ public class ExperienceCollectorScreen extends BaseScreen<ExperienceCollectorMen
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        if (true)
-            return super.mouseScrolled(mouseX, mouseY, delta);
         if (mouseX >= leftPos + 75 && mouseX <= leftPos + 75 + 17 && mouseY >= topPos + 15 && mouseY <= topPos + 15 + 61) {
             BlockEntity tileEntity = menu.getTileEntity();
-            if (tileEntity instanceof ExperienceCollectorBlockEntity)
-                NetworkHandler.INSTANCE.sendToServer(new ChangeExperienceMessage(tileEntity.getBlockPos(), (int) (delta > 0 ? delta : -delta), hasShiftDown(), !(delta > 0)));
+            if (delta < 0 && tileEntity instanceof ExperienceCollectorBlockEntity)
+                NetworkHandler.INSTANCE.sendToServer(new ChangeExperienceMessage(tileEntity.getBlockPos(), (int) -delta, hasShiftDown()));
             return true;
         }
         return false;

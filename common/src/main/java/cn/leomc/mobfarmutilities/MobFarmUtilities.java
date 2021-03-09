@@ -1,15 +1,11 @@
 package cn.leomc.mobfarmutilities;
 
-import cn.leomc.mobfarmutilities.client.ClientProxy;
 import cn.leomc.mobfarmutilities.client.utils.Textures;
-import cn.leomc.mobfarmutilities.common.api.IProxy;
 import cn.leomc.mobfarmutilities.common.registry.FluidRegistry;
 import cn.leomc.mobfarmutilities.common.registry.ModRegistry;
-import cn.leomc.mobfarmutilities.server.ServerProxy;
 import me.shedaniel.architectury.event.events.TextureStitchEvent;
 import me.shedaniel.architectury.platform.Platform;
 import me.shedaniel.architectury.utils.Env;
-import me.shedaniel.architectury.utils.EnvExecutor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -26,7 +22,6 @@ public class MobFarmUtilities {
 
     public static final Logger LOGGER = LogManager.getLogger();
 
-    public static IProxy PROXY = EnvExecutor.getEnvSpecific(() -> ClientProxy::new, () -> ServerProxy::new);
 
     public MobFarmUtilities() {
         FluidRegistry.register();
