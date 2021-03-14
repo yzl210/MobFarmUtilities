@@ -4,6 +4,7 @@ import cn.leomc.mobfarmutilities.MobFarmUtilities;
 import cn.leomc.mobfarmutilities.common.block.ExperienceCollectorBlock;
 import cn.leomc.mobfarmutilities.common.block.FanBlock;
 import cn.leomc.mobfarmutilities.common.block.ItemCollectorBlock;
+import cn.leomc.mobfarmutilities.common.block.SlaughtererBlock;
 import cn.leomc.mobfarmutilities.common.utils.PlatformCompatibility;
 import me.shedaniel.architectury.registry.DeferredRegister;
 import me.shedaniel.architectury.registry.RegistrySupplier;
@@ -23,6 +24,8 @@ public class BlockRegistry {
     public static final RegistrySupplier<Block> ITEM_COLLECTOR = register("item_collector", ItemCollectorBlock::new);
 
     public static final RegistrySupplier<Block> EXPERIENCE_COLLECTOR = register("experience_collector", ExperienceCollectorBlock::new);
+
+    public static final RegistrySupplier<Block> SLAUGHTERER = register("slaughterer", SlaughtererBlock::new);
 
 
     //Fluid

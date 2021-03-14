@@ -4,10 +4,13 @@ import cn.leomc.mobfarmutilities.MobFarmUtilities;
 import cn.leomc.mobfarmutilities.common.blockentity.ExperienceCollectorBlockEntity;
 import cn.leomc.mobfarmutilities.common.blockentity.FanBlockEntity;
 import cn.leomc.mobfarmutilities.common.blockentity.ItemCollectorBlockEntity;
+import cn.leomc.mobfarmutilities.common.blockentity.SlaughtererBlockEntity;
 import cn.leomc.mobfarmutilities.common.menu.ExperienceCollectorMenu;
 import cn.leomc.mobfarmutilities.common.menu.FanMenu;
 import cn.leomc.mobfarmutilities.common.menu.ItemCollectorMenu;
+import cn.leomc.mobfarmutilities.common.menu.SlaughtererMenu;
 import me.shedaniel.architectury.registry.DeferredRegister;
+import me.shedaniel.architectury.registry.MenuRegistry;
 import me.shedaniel.architectury.registry.RegistrySupplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
@@ -20,7 +23,7 @@ public class ContainerMenuRegistry {
 
 
     public static final RegistrySupplier<MenuType<FanMenu>> FAN = CONTAINER_MENUS.register("fan",
-            () -> me.shedaniel.architectury.registry.MenuRegistry.ofExtended((id, inventory, data) -> {
+            () -> MenuRegistry.ofExtended((id, inventory, data) -> {
                 BlockPos pos = data.readBlockPos();
                 BlockEntity tileEntity = inventory.player.getCommandSenderWorld().getBlockEntity(pos);
                 if (!(tileEntity instanceof FanBlockEntity)) {
@@ -30,7 +33,7 @@ public class ContainerMenuRegistry {
             }));
 
     public static final RegistrySupplier<MenuType<ItemCollectorMenu>> ITEM_COLLECTOR = CONTAINER_MENUS.register("item_collector",
-            () -> me.shedaniel.architectury.registry.MenuRegistry.ofExtended((id, inventory, data) -> {
+            () -> MenuRegistry.ofExtended((id, inventory, data) -> {
                 BlockPos pos = data.readBlockPos();
                 BlockEntity tileEntity = inventory.player.getCommandSenderWorld().getBlockEntity(pos);
                 if (!(tileEntity instanceof ItemCollectorBlockEntity)) {
@@ -41,13 +44,24 @@ public class ContainerMenuRegistry {
 
 
     public static final RegistrySupplier<MenuType<ExperienceCollectorMenu>> EXPERIENCE_COLLECTOR = CONTAINER_MENUS.register("experience_collector",
-            () -> me.shedaniel.architectury.registry.MenuRegistry.ofExtended((id, inventory, data) -> {
+            () -> MenuRegistry.ofExtended((id, inventory, data) -> {
                 BlockPos pos = data.readBlockPos();
                 BlockEntity tileEntity = inventory.player.getCommandSenderWorld().getBlockEntity(pos);
                 if (!(tileEntity instanceof ExperienceCollectorBlockEntity)) {
                     return null;
                 }
                 return new ExperienceCollectorMenu(tileEntity, inventory.player, inventory, id);
+            }));
+
+
+    public static final RegistrySupplier<MenuType<SlaughtererMenu>> SLAUGHTERER = CONTAINER_MENUS.register("slaughterer",
+            () -> MenuRegistry.ofExtended((id, inventory, data) -> {
+                BlockPos pos = data.readBlockPos();
+                BlockEntity tileEntity = inventory.player.getCommandSenderWorld().getBlockEntity(pos);
+                if (!(tileEntity instanceof SlaughtererBlockEntity)) {
+                    return null;
+                }
+                return new SlaughtererMenu(tileEntity, inventory.player, inventory, id);
             }));
 
     public static void register() {

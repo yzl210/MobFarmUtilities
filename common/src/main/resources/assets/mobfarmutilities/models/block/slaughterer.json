@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "mobfarmutilities:block/slaughterer/side",
+    "down": "mobfarmutilities:block/slaughterer/down",
+    "up": "mobfarmutilities:block/slaughterer/top",
+    "east": "mobfarmutilities:block/slaughterer/side",
+    "west": "mobfarmutilities:block/slaughterer/side",
+    "north": "mobfarmutilities:block/slaughterer/side",
+    "south": "mobfarmutilities:block/slaughterer/side"
+  }
+}

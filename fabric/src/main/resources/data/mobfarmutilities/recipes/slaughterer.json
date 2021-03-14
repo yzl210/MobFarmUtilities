@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "DRD",
+    "RBR",
+    "DRD"
+  ],
+  "key": {
+    "B": {
+      "item": "mobfarmutilities:blade"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    }
+  },
+  "result": {
+    "item": "mobfarmutilities:slaughterer"
+  }
+}

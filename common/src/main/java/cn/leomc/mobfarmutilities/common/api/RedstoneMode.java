@@ -82,4 +82,9 @@ public enum RedstoneMode implements ITranslatable, StringRepresentable {
         return sprite;
     }
 
+    @Environment(EnvType.CLIENT)
+    public void resetTextureAtlasSprite() {
+        this.sprite = null;
+    }
+
 }

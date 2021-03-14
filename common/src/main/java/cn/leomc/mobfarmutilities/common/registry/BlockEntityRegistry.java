@@ -4,9 +4,11 @@ import cn.leomc.mobfarmutilities.MobFarmUtilities;
 import cn.leomc.mobfarmutilities.common.block.ExperienceCollectorBlock;
 import cn.leomc.mobfarmutilities.common.block.FanBlock;
 import cn.leomc.mobfarmutilities.common.block.ItemCollectorBlock;
+import cn.leomc.mobfarmutilities.common.block.SlaughtererBlock;
 import cn.leomc.mobfarmutilities.common.blockentity.ExperienceCollectorBlockEntity;
 import cn.leomc.mobfarmutilities.common.blockentity.FanBlockEntity;
 import cn.leomc.mobfarmutilities.common.blockentity.ItemCollectorBlockEntity;
+import cn.leomc.mobfarmutilities.common.blockentity.SlaughtererBlockEntity;
 import me.shedaniel.architectury.registry.DeferredRegister;
 import me.shedaniel.architectury.registry.RegistrySupplier;
 import net.minecraft.core.Registry;
@@ -27,6 +29,8 @@ public class BlockEntityRegistry {
     public static final RegistrySupplier<BlockEntityType<ExperienceCollectorBlockEntity>> EXPERIENCE_COLLECTOR = BLOCK_ENTITIES.register("experience_collector",
             () -> BlockEntityType.Builder.of(ExperienceCollectorBlock::getBlockEntity, BlockRegistry.EXPERIENCE_COLLECTOR.get()).build(null));
 
+    public static final RegistrySupplier<BlockEntityType<SlaughtererBlockEntity>> SLAUGHTERER = BLOCK_ENTITIES.register("slaughterer",
+            () -> BlockEntityType.Builder.of(SlaughtererBlock::getBlockEntity, BlockRegistry.SLAUGHTERER.get()).build(null));
 
     public static void register() {
         BLOCK_ENTITIES.register();

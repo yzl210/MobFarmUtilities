@@ -13,6 +13,9 @@
   },
   "license": "GPLv3",
   "environment": "*",
+  "mixins": [
+    "mobfarmutilities.mixins.json"
+  ],
   "entrypoints": {
     "main": [
       "cn.leomc.mobfarmutilities.fabric.MobFarmUtilitiesFabric"

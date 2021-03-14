@@ -1,7 +1,6 @@
-package cn.leomc.mobfarmutilities.common.item.upgrade;
+package cn.leomc.mobfarmutilities.common.api;
 
 import cn.leomc.mobfarmutilities.MobFarmUtilities;
-import cn.leomc.mobfarmutilities.common.api.ITranslatable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.resources.language.I18n;
@@ -20,7 +19,13 @@ public enum UpgradeType implements ITranslatable {
     FAN_DISTANCE(10, 2, Items.SUGAR, null),
     FAN_WIDTH(10, 4, Items.IRON_INGOT, new ResourceLocation("forge", "ingots/iron")),
     FAN_HEIGHT(10, 4, Items.REDSTONE, new ResourceLocation("forge", "dusts/redstone")),
-    FAN_SPEED(5, 4, Items.FEATHER, new ResourceLocation("forge", "feathers"));
+    FAN_SPEED(5, 4, Items.FEATHER, new ResourceLocation("forge", "feathers")),
+
+    SLAUGHTERER_SHARPNESS(15, 1, Items.IRON_SWORD, null),
+    SLAUGHTERER_LOOTING(10, 2, Items.LAPIS_BLOCK, new ResourceLocation("forge", "storage_blocks/lapis")),
+    SLAUGHTERER_FIRE_ASPECT(1, 1, Items.FLINT_AND_STEEL, null),
+    SLAUGHTERER_AREA(10, 8, Items.IRON_INGOT, new ResourceLocation("forge", "ingots/iron"));
+
 
     private final int maxLevel;
     private final int requiredCount;
@@ -71,9 +76,8 @@ public enum UpgradeType implements ITranslatable {
     }
 
     public boolean isEnough(ItemStack itemStack) {
-        return getSupportedItems().contains(itemStack.getItem()) && itemStack.getCount() >= getRequiredCount();
+        return getSupportedItems().contains(itemStack.getItem()) && itemStack.getCount() >= getRequiredCount() && !itemStack.isDamaged();
     }
-
 
     @Override
     public String getTranslationKey() {

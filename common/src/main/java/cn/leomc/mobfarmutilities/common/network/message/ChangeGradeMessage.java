@@ -1,7 +1,7 @@
 package cn.leomc.mobfarmutilities.common.network.message;
 
+import cn.leomc.mobfarmutilities.common.api.UpgradeType;
 import cn.leomc.mobfarmutilities.common.api.blockstate.Upgradable;
-import cn.leomc.mobfarmutilities.common.item.upgrade.UpgradeType;
 import cn.leomc.mobfarmutilities.common.menu.BaseMenu;
 import me.shedaniel.architectury.networking.NetworkManager;
 import net.minecraft.core.BlockPos;

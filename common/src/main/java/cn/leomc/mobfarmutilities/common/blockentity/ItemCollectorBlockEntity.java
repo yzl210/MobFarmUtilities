@@ -29,7 +29,6 @@ public class ItemCollectorBlockEntity extends BlockEntity implements TickableBlo
 
     protected SimpleContainer inventory;
 
-
     public ItemCollectorBlockEntity() {
         super(BlockEntityRegistry.ITEM_COLLECTOR.get());
         inventory = new SimpleContainer(18);

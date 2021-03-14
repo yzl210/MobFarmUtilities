@@ -1,0 +1,14 @@
+{
+  "minVersion": "0.8",
+  "required": true,
+  "compatibilityLevel": "JAVA_8",
+  "package": "cn.leomc.mobfarmutilities.common.mixin",
+  "mixins": [
+    "PlayerListMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

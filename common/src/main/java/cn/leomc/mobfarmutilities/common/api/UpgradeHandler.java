@@ -1,6 +1,5 @@
 package cn.leomc.mobfarmutilities.common.api;
 
-import cn.leomc.mobfarmutilities.common.item.upgrade.UpgradeType;
 import com.google.common.collect.Lists;
 import me.shedaniel.architectury.extensions.BlockEntityExtension;
 import net.minecraft.core.BlockPos;
@@ -98,7 +97,7 @@ public class UpgradeHandler {
     }
 
     public List<UpgradeType> getSupportedUpgrades() {
-        return Lists.newArrayList(upgrades.keySet());
+        return Lists.newLinkedList(upgrades.keySet());
     }
 
     public void upgrade(UpgradeType type) {
@@ -139,9 +138,10 @@ public class UpgradeHandler {
     public void dropAllItem(Level world, BlockPos pos) {
         Containers.dropContents(world, pos, inventory);
         inventory.clearContent();
-        SimpleContainer inventory = new SimpleContainer(100);
+        SimpleContainer inventory = new SimpleContainer(200);
         upgrades.forEach((type, count) -> {
-            inventory.addItem(new ItemStack(type.getDelegate(), type.getRequiredCount() * count));
+            for (int i = 0; i < type.getRequiredCount() * count; i++)
+                inventory.addItem(new ItemStack(type.getDelegate(), 1));
             upgrades.put(type, 0);
         });
         Containers.dropContents(world, pos, inventory);

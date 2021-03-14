@@ -3,6 +3,7 @@ package cn.leomc.mobfarmutilities.fabric;
 import cn.leomc.mobfarmutilities.client.screen.ExperienceCollectorScreen;
 import cn.leomc.mobfarmutilities.client.screen.FanScreen;
 import cn.leomc.mobfarmutilities.client.screen.ItemCollectorScreen;
+import cn.leomc.mobfarmutilities.client.screen.SlaughtererScreen;
 import cn.leomc.mobfarmutilities.client.utils.Textures;
 import cn.leomc.mobfarmutilities.common.registry.BlockRegistry;
 import cn.leomc.mobfarmutilities.common.registry.ContainerMenuRegistry;
@@ -30,6 +31,7 @@ public class MobFarmUtilitiesFabricClient implements ClientModInitializer {
         ScreenRegistry.register(ContainerMenuRegistry.FAN.get(), FanScreen::new);
         ScreenRegistry.register(ContainerMenuRegistry.ITEM_COLLECTOR.get(), ItemCollectorScreen::new);
         ScreenRegistry.register(ContainerMenuRegistry.EXPERIENCE_COLLECTOR.get(), ExperienceCollectorScreen::new);
+        ScreenRegistry.register(ContainerMenuRegistry.SLAUGHTERER.get(), SlaughtererScreen::new);
         registerFluid(FluidRegistry.LIQUID_EXPERIENCE.get(), FluidRegistry.FLOWING_LIQUID_EXPERIENCE.get(), new Supplier[]{Textures.STILL_LIQUID_EXPERIENCE, Textures.FLOWING_LIQUID_EXPERIENCE}, -1);
         BlockRenderLayerMap.INSTANCE.putBlock(BlockRegistry.LIQUID_EXPERIENCE.get(), RenderType.translucent());
         BlockRenderLayerMap.INSTANCE.putFluids(RenderType.translucent(), FluidRegistry.LIQUID_EXPERIENCE.get(), FluidRegistry.FLOWING_LIQUID_EXPERIENCE.get());

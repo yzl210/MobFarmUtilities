@@ -1,8 +1,11 @@
 package cn.leomc.mobfarmutilities;
 
 import cn.leomc.mobfarmutilities.client.utils.Textures;
+import cn.leomc.mobfarmutilities.common.api.RedstoneMode;
 import cn.leomc.mobfarmutilities.common.registry.FluidRegistry;
 import cn.leomc.mobfarmutilities.common.registry.ModRegistry;
+import cn.leomc.mobfarmutilities.common.utils.FakePlayers;
+import me.shedaniel.architectury.event.events.LifecycleEvent;
 import me.shedaniel.architectury.event.events.TextureStitchEvent;
 import me.shedaniel.architectury.platform.Platform;
 import me.shedaniel.architectury.utils.Env;
@@ -26,6 +29,7 @@ public class MobFarmUtilities {
     public MobFarmUtilities() {
         FluidRegistry.register();
         ModRegistry.register();
+        LifecycleEvent.SERVER_WORLD_UNLOAD.register(FakePlayers::onWorldUnloaded);
         if (Platform.getEnvironment() == Env.CLIENT) {
             TextureStitchEvent.PRE.register(this::onPreTextureStitch);
             TextureStitchEvent.POST.register(this::onPostTextureStitch);
@@ -43,10 +47,11 @@ public class MobFarmUtilities {
     @Environment(EnvType.CLIENT)
     private void onPostTextureStitch(TextureAtlas atlasTexture) {
         if (atlasTexture.location() == InventoryMenu.BLOCK_ATLAS) {
-            Textures.REGISTRIES.forEach(rl -> {
-                Textures.TEXTURE_MAP.put(rl, atlasTexture.getSprite(rl));
-            });
+            Textures.TEXTURE_MAP.clear();
+            Textures.REGISTRIES.forEach(rl -> Textures.TEXTURE_MAP.put(rl, atlasTexture.getSprite(rl)));
         }
+        for (RedstoneMode mode : RedstoneMode.values())
+            mode.resetTextureAtlasSprite();
     }
 
 

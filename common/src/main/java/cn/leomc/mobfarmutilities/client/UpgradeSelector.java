@@ -3,7 +3,7 @@ package cn.leomc.mobfarmutilities.client;
 import cn.leomc.mobfarmutilities.MobFarmUtilities;
 import cn.leomc.mobfarmutilities.client.screen.BaseScreen;
 import cn.leomc.mobfarmutilities.common.api.UpgradeHandler;
-import cn.leomc.mobfarmutilities.common.item.upgrade.UpgradeType;
+import cn.leomc.mobfarmutilities.common.api.UpgradeType;
 import cn.leomc.mobfarmutilities.common.menu.BaseMenu;
 import cn.leomc.mobfarmutilities.common.network.NetworkHandler;
 import cn.leomc.mobfarmutilities.common.network.message.ChangeGradeMessage;

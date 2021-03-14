@@ -3,10 +3,10 @@ package cn.leomc.mobfarmutilities.common.blockentity;
 import cn.leomc.mobfarmutilities.MobFarmUtilities;
 import cn.leomc.mobfarmutilities.common.api.RedstoneMode;
 import cn.leomc.mobfarmutilities.common.api.UpgradeHandler;
+import cn.leomc.mobfarmutilities.common.api.UpgradeType;
 import cn.leomc.mobfarmutilities.common.api.blockstate.Upgradable;
 import cn.leomc.mobfarmutilities.common.block.ActivatableBlock;
 import cn.leomc.mobfarmutilities.common.compat.IInfoProvider;
-import cn.leomc.mobfarmutilities.common.item.upgrade.UpgradeType;
 import cn.leomc.mobfarmutilities.common.menu.FanMenu;
 import cn.leomc.mobfarmutilities.common.network.NetworkHandler;
 import cn.leomc.mobfarmutilities.common.network.message.MotionChangeMessage;
@@ -144,7 +144,6 @@ public class FanBlockEntity extends BlockEntity implements TickableBlockEntity, 
 
     @Override
     public List<Component> getInfo() {
-
         List<Component> components = new ArrayList<>();
         upgradeHandler.getSupportedUpgrades().forEach(type -> components.add(new TranslatableComponent("text.mobfarmutilities.info.upgrade", new TranslatableComponent(type.getTranslationKey()), upgradeHandler.getUpgradeLevel(type), type.getMaxLevel())));
         return components;

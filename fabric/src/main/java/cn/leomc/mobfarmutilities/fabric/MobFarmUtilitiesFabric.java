@@ -8,4 +8,5 @@ public class MobFarmUtilitiesFabric implements ModInitializer {
     public void onInitialize() {
         new MobFarmUtilities();
     }
+
 }

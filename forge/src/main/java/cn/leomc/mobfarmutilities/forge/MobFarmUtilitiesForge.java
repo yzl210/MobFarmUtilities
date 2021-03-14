@@ -4,6 +4,7 @@ import cn.leomc.mobfarmutilities.MobFarmUtilities;
 import cn.leomc.mobfarmutilities.client.screen.ExperienceCollectorScreen;
 import cn.leomc.mobfarmutilities.client.screen.FanScreen;
 import cn.leomc.mobfarmutilities.client.screen.ItemCollectorScreen;
+import cn.leomc.mobfarmutilities.client.screen.SlaughtererScreen;
 import cn.leomc.mobfarmutilities.common.registry.BlockRegistry;
 import cn.leomc.mobfarmutilities.common.registry.ContainerMenuRegistry;
 import cn.leomc.mobfarmutilities.common.registry.FluidRegistry;
@@ -38,6 +39,7 @@ public class MobFarmUtilitiesForge {
         MenuScreens.register(ContainerMenuRegistry.FAN.get(), FanScreen::new);
         MenuScreens.register(ContainerMenuRegistry.ITEM_COLLECTOR.get(), ItemCollectorScreen::new);
         MenuScreens.register(ContainerMenuRegistry.EXPERIENCE_COLLECTOR.get(), ExperienceCollectorScreen::new);
+        MenuScreens.register(ContainerMenuRegistry.SLAUGHTERER.get(), SlaughtererScreen::new);
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.LIQUID_EXPERIENCE.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(FluidRegistry.LIQUID_EXPERIENCE.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(FluidRegistry.FLOWING_LIQUID_EXPERIENCE.get(), RenderType.translucent());

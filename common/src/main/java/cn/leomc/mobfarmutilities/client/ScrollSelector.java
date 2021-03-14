@@ -2,7 +2,6 @@ package cn.leomc.mobfarmutilities.client;
 
 
 import cn.leomc.mobfarmutilities.client.screen.BaseScreen;
-import cn.leomc.mobfarmutilities.client.utils.Textures;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -52,7 +51,10 @@ public class ScrollSelector<T> {
 
     public void onScroll(double mouseX, double mouseY, double delta) {
         if (checkInBound((int) mouseX, (int) mouseY)) {
-            selectedIndex -= delta;
+            if (delta < 0)
+                selectedIndex += 1;
+            else if (delta > 0)
+                selectedIndex -= 1;
             if (!restrictIndex())
                 Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 2.0F));
         }
@@ -64,7 +66,12 @@ public class ScrollSelector<T> {
     }
 
     public boolean checkInBound(int mouseX, int mouseY) {
-        return mouseX >= x + guiLeft - 48 && mouseX <= x + guiLeft + 48 - 1 && mouseY >= y + guiTop - 5 && mouseY <= y + height + guiTop + 2;
+        int width = parent.getFont().width(title);
+        int minX = guiLeft + x - width / 2 - 3;
+        int minY = guiTop + y - 3;
+        int maxX = guiLeft + x + width / 2 + 2;
+        int maxY = guiTop + y + parent.getFont().lineHeight + 2;
+        return mouseX >= minX && mouseX <= maxX && mouseY >= minY && mouseY <= maxY;
     }
 
     public void updateSize() {
@@ -87,7 +94,21 @@ public class ScrollSelector<T> {
 
     public void renderBackground(PoseStack matrixStack) {
         Minecraft.getInstance().getTextureManager().bind(InventoryMenu.BLOCK_ATLAS);
-        GuiComponent.blit(matrixStack, guiLeft + x - 48, guiTop + y - 5, 0, 96, 16, Textures.TEXTFIELD.get());
+        int width = parent.getFont().width(title);
+        int minX = guiLeft + x - width / 2 - 3;
+        int minY = guiTop + y - 3;
+        int maxX = guiLeft + x + width / 2 + 2;
+        int maxY = guiTop + y + parent.getFont().lineHeight + 2;
+        GuiComponent.fill(matrixStack, minX, minY, maxX, maxY, 0xff8b8b8b);
+        GuiComponent.fill(matrixStack, minX - 1, maxY + 1, minX, maxY, 0xff8b8b8b);
+        GuiComponent.fill(matrixStack, minX - 1, maxY, minX, minY, 0xff373737);
+        GuiComponent.fill(matrixStack, minX - 1, minY, maxX, minY - 1, 0xff373737);
+        GuiComponent.fill(matrixStack, maxX, minY, maxX + 1, minY - 1, 0xff8b8b8b);
+        GuiComponent.fill(matrixStack, maxX, minY, maxX + 1, maxY + 1, 0xffffffff);
+        GuiComponent.fill(matrixStack, minX, maxY, maxX, maxY + 1, 0xffffffff);
+
+
+        //GuiComponent.blit(matrixStack, guiLeft + x - 48, guiTop + y - 5, 0, 96, 16, Textures.TEXTFIELD.get());
     }
 
     public void renderForeground(PoseStack matrixStack) {

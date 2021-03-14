@@ -1,6 +1,6 @@
 package cn.leomc.mobfarmutilities.forge;
 
-import cn.leomc.mobfarmutilities.common.blockentity.FanBlockEntity;
+import cn.leomc.mobfarmutilities.common.blockentity.SlaughtererBlockEntity;
 import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -10,7 +10,7 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ForgeFanBlockEntity extends FanBlockEntity {
+public class ForgeSlaughtererBlockEntity extends SlaughtererBlockEntity {
 
     protected LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(upgradeHandler.getInventory()));
 
@@ -21,4 +21,5 @@ public class ForgeFanBlockEntity extends FanBlockEntity {
             return itemHandler.cast();
         return super.getCapability(cap, side);
     }
+
 }
