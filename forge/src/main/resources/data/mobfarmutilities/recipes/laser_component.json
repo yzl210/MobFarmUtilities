@@ -13,7 +13,7 @@
       "tag": "forge:storage_blocks/redstone"
     },
     "G": {
-      "tag": "forge:glass"
+      "tag": "forge:glass/colorless"
     }
   },
   "result": {

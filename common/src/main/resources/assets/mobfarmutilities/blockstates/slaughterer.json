@@ -1,7 +1,10 @@
 {
   "variants": {
-    "": {
-      "model": "mobfarmutilities:block/slaughterer"
+    "active=false": {
+      "model": "mobfarmutilities:block/slaughterer/inactive"
+    },
+    "active=true": {
+      "model": "mobfarmutilities:block/slaughterer/active"
     }
   }
 }
