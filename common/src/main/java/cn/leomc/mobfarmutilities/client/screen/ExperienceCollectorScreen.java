@@ -81,7 +81,8 @@ public class ExperienceCollectorScreen extends BaseScreen<ExperienceCollectorMen
             List<FormattedCharSequence> reorderingProcessorList = new ArrayList<>();
             Component liquid = new TranslatableComponent("text.mobfarmutilities.fluid_tank", new TranslatableComponent(BlockRegistry.LIQUID_EXPERIENCE.get().getDescriptionId()), amount);
             reorderingProcessorList.add(FormattedCharSequence.forward(liquid.getString(), Style.EMPTY));
-            reorderingProcessorList.add(FormattedCharSequence.forward(I18n.get("text.mobfarmutilities.how_to_store_get_experience"), Style.EMPTY.applyFormat(ChatFormatting.DARK_GRAY)));
+            reorderingProcessorList.add(FormattedCharSequence.forward(I18n.get("text.mobfarmutilities.how_to_store_get_experience.1"), Style.EMPTY.applyFormat(ChatFormatting.DARK_GRAY)));
+            reorderingProcessorList.add(FormattedCharSequence.forward(I18n.get("text.mobfarmutilities.how_to_store_get_experience.2"), Style.EMPTY.applyFormat(ChatFormatting.DARK_GRAY)));
             renderTooltip(matrixStack, reorderingProcessorList, x, y);
         }
     }

@@ -1,5 +1,6 @@
 package cn.leomc.mobfarmutilities.common.utils;
 
+import cn.leomc.mobfarmutilities.common.api.FlowingFluidBlock;
 import me.shedaniel.architectury.platform.Platform;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
@@ -32,7 +33,7 @@ public class PlatformCompatibility {
                 e.printStackTrace();
             }
         }
-        return new cn.leomc.mobfarmutilities.common.api.FlowingFluidBlock((FlowingFluid) fluid.get(), properties);
+        return new FlowingFluidBlock((FlowingFluid) fluid.get(), properties);
     }
 
 

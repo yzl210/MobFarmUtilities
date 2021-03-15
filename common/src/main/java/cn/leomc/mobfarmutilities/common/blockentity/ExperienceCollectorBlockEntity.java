@@ -69,10 +69,10 @@ public class ExperienceCollectorBlockEntity extends BlockEntity implements Ticka
                 .offset(1, 1, 1));
         List<ExperienceOrb> entities = level.getEntitiesOfClass(ExperienceOrb.class, area);
         for (ExperienceOrb experienceOrbEntity : entities) {
-            if (experienceOrbEntity.removed)
+            if (!experienceOrbEntity.isAlive())
                 continue;
             int xpValue = experienceOrbEntity.getValue();
-            if (xpValue >= 0) {
+            if (xpValue >= 0 && xpValue <= limit - amount) {
                 experienceOrbEntity.remove();
                 addAmount(xpValue);
             }

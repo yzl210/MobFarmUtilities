@@ -94,8 +94,9 @@ public class SlaughtererBlockEntity extends BlockEntity implements TickableBlock
         );
 
         ItemStack itemStack = new ItemStack(Items.WOODEN_SWORD);
+        itemStack.getOrCreateTag().putBoolean("Unbreakable", true);
         if (upgradeHandler.getUpgradeLevel(UpgradeType.SLAUGHTERER_SHARPNESS) > 0)
-            itemStack.enchant(Enchantments.SHARPNESS, upgradeHandler.getUpgradeLevel(UpgradeType.SLAUGHTERER_SHARPNESS));
+            itemStack.enchant(Enchantments.SHARPNESS, upgradeHandler.getUpgradeLevel(UpgradeType.SLAUGHTERER_SHARPNESS) * 2);
         if (upgradeHandler.getUpgradeLevel(UpgradeType.SLAUGHTERER_LOOTING) > 0)
             itemStack.enchant(Enchantments.MOB_LOOTING, upgradeHandler.getUpgradeLevel(UpgradeType.SLAUGHTERER_LOOTING));
         if (upgradeHandler.getUpgradeLevel(UpgradeType.SLAUGHTERER_FIRE_ASPECT) > 0)
