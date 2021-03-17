@@ -1,6 +1,8 @@
 package cn.leomc.mobfarmutilities.client.screen;
 
 import cn.leomc.mobfarmutilities.client.RedstoneModeButton;
+import cn.leomc.mobfarmutilities.client.ShowAreaButton;
+import cn.leomc.mobfarmutilities.common.api.IHasArea;
 import cn.leomc.mobfarmutilities.common.menu.ItemCollectorMenu;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
@@ -11,6 +13,7 @@ public class ItemCollectorScreen extends BaseScreen<ItemCollectorMenu> {
     protected Component title;
 
     protected RedstoneModeButton redstoneModeButton;
+    protected ShowAreaButton showAreaButton;
 
     public ItemCollectorScreen(ItemCollectorMenu container, Inventory playerInventory, Component titleIn) {
         super(container, playerInventory, titleIn);
@@ -21,6 +24,8 @@ public class ItemCollectorScreen extends BaseScreen<ItemCollectorMenu> {
     protected void init() {
         super.init();
         redstoneModeButton = addButton(new RedstoneModeButton(this, leftPos, topPos, menu.getTileEntity().getBlockPos(), menu.getTileEntity().getLevel()));
+        if (menu.getTileEntity() instanceof IHasArea)
+            showAreaButton = addButton(new ShowAreaButton(this, leftPos, topPos, (IHasArea) menu.getTileEntity()));
         addSlotBox(8, 34, 9, 18, 2, 18);
     }
 

@@ -2,7 +2,9 @@ package cn.leomc.mobfarmutilities.client.screen;
 
 import cn.leomc.mobfarmutilities.MobFarmUtilities;
 import cn.leomc.mobfarmutilities.client.RedstoneModeButton;
+import cn.leomc.mobfarmutilities.client.ShowAreaButton;
 import cn.leomc.mobfarmutilities.client.UpgradeSelector;
+import cn.leomc.mobfarmutilities.common.api.IHasArea;
 import cn.leomc.mobfarmutilities.common.blockentity.FanBlockEntity;
 import cn.leomc.mobfarmutilities.common.menu.FanMenu;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -15,6 +17,7 @@ public class FanScreen extends BaseScreen<FanMenu> {
     protected Component title;
 
     protected RedstoneModeButton redstoneModeButton;
+    protected ShowAreaButton showAreaButton;
 
     protected UpgradeSelector upgradeSelector;
 
@@ -28,6 +31,8 @@ public class FanScreen extends BaseScreen<FanMenu> {
     protected void init() {
         super.init();
         redstoneModeButton = addButton(new RedstoneModeButton(this, leftPos, topPos, menu.getTileEntity().getBlockPos(), menu.getTileEntity().getLevel()));
+        if (menu.getTileEntity() instanceof IHasArea)
+            showAreaButton = addButton(new ShowAreaButton(this, leftPos, topPos, (IHasArea) menu.getTileEntity()));
         if (menu.getTileEntity() instanceof FanBlockEntity) {
             String title = I18n.get("text." + MobFarmUtilities.MODID + ".upgrade.fan");
             upgradeSelector = new UpgradeSelector(this, getCenteredOffset(""), 30, title, leftPos, topPos, ((FanBlockEntity) menu.getTileEntity()).getUpgradeHandler(), ((FanBlockEntity) menu.getTileEntity()).getUpgradeHandler().getSupportedUpgrades());

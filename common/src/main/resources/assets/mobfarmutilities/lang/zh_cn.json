@@ -39,5 +39,7 @@
   "text.mobfarmutilities.death.slaughterer.0": "%s被撕碎了",
   "text.mobfarmutilities.death.slaughterer.1": "%s被切成了碎片",
   "text.mobfarmutilities.death.slaughterer.2": "%s被宰了",
+  "text.mobfarmutilities.show_area.false": "显示区域",
+  "text.mobfarmutilities.show_area.true": "隐藏区域",
   "itemGroup.mobfarmutilities.default": "刷怪塔小帮手"
 }

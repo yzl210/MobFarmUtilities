@@ -3,16 +3,22 @@ package cn.leomc.mobfarmutilities.client.utils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
 import me.shedaniel.architectury.hooks.FluidStackHooks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.phys.AABB;
 import org.lwjgl.opengl.GL11;
 
 @Environment(EnvType.CLIENT)
@@ -128,4 +134,10 @@ public class TextureUtils {
     }
 
 
+    public static void drawAABB(PoseStack poseStack, MultiBufferSource multiBufferSource, AABB aabb) {
+        VertexConsumer vertexConsumer = multiBufferSource.getBuffer(RenderType.lines());
+        poseStack.pushPose();
+        LevelRenderer.renderLineBox(poseStack, vertexConsumer, aabb, 1.0F, 1.0F, 1.0F, 1.0F);
+        poseStack.popPose();
+    }
 }

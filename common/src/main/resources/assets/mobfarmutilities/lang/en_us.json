@@ -39,5 +39,7 @@
   "text.mobfarmutilities.death.slaughterer.0": "%s has been torn apart",
   "text.mobfarmutilities.death.slaughterer.1": "%s has been cut into pieces",
   "text.mobfarmutilities.death.slaughterer.2": "%s was slaughtered",
+  "text.mobfarmutilities.show_area.false": "Show Area",
+  "text.mobfarmutilities.show_area.true": "Hide Area",
   "itemGroup.mobfarmutilities.default": "Mob Farm Helpers"
 }

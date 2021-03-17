@@ -1,6 +1,7 @@
 package cn.leomc.mobfarmutilities.common.blockentity;
 
 import cn.leomc.mobfarmutilities.MobFarmUtilities;
+import cn.leomc.mobfarmutilities.common.api.IHasArea;
 import cn.leomc.mobfarmutilities.common.api.RedstoneMode;
 import cn.leomc.mobfarmutilities.common.api.UpgradeHandler;
 import cn.leomc.mobfarmutilities.common.api.UpgradeType;
@@ -33,10 +34,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FanBlockEntity extends BlockEntity implements TickableBlockEntity, MenuProvider, Upgradable, BlockEntityExtension, IInfoProvider {
+public class FanBlockEntity extends BlockEntity implements TickableBlockEntity, MenuProvider, Upgradable, BlockEntityExtension, IInfoProvider, IHasArea {
 
 
     protected final UpgradeHandler upgradeHandler = new UpgradeHandler(this, UpgradeType.FAN_SPEED, UpgradeType.FAN_DISTANCE, UpgradeType.FAN_WIDTH, UpgradeType.FAN_HEIGHT);
+    protected boolean renderArea = false;
 
 
     public FanBlockEntity() {
@@ -51,25 +53,9 @@ public class FanBlockEntity extends BlockEntity implements TickableBlockEntity, 
         RedstoneMode.updateRedstone(state, level, worldPosition);
         if (!state.getValue(ActivatableBlock.ACTIVE))
             return;
+
         Direction facing = state.getValue(DirectionalBlock.FACING);
-        Direction widthDirection;
-        Direction heightDirection;
-        if (facing == Direction.UP || facing == Direction.DOWN) {
-            widthDirection = Direction.EAST;
-            heightDirection = Direction.NORTH;
-        } else {
-            widthDirection = facing.getClockWise();
-            heightDirection = Direction.UP;
-        }
-        AABB axisAlignedBB = new AABB(worldPosition
-                .relative(widthDirection.getOpposite(), upgradeHandler.getUpgradeLevel(UpgradeType.FAN_WIDTH))
-                .relative(heightDirection.getOpposite(), upgradeHandler.getUpgradeLevel(UpgradeType.FAN_HEIGHT))
-                , worldPosition
-                .relative(facing, 5 + upgradeHandler.getUpgradeLevel(UpgradeType.FAN_DISTANCE))
-                .relative(widthDirection, upgradeHandler.getUpgradeLevel(UpgradeType.FAN_WIDTH))
-                .relative(heightDirection, upgradeHandler.getUpgradeLevel(UpgradeType.FAN_HEIGHT))
-                .offset(1, 1, 1));
-        List<Entity> entities = level.getEntitiesOfClass(Entity.class, axisAlignedBB);
+        List<Entity> entities = level.getEntitiesOfClass(Entity.class, getAABB());
         double speed = 0.9 - (upgradeHandler.getUpgradeLevel(UpgradeType.FAN_SPEED) * 0.25);
         double x = facing.getStepX();
         if (x == 1)
@@ -147,5 +133,43 @@ public class FanBlockEntity extends BlockEntity implements TickableBlockEntity, 
         List<Component> components = new ArrayList<>();
         upgradeHandler.getSupportedUpgrades().forEach(type -> components.add(new TranslatableComponent("text.mobfarmutilities.info.upgrade", new TranslatableComponent(type.getTranslationKey()), upgradeHandler.getUpgradeLevel(type), type.getMaxLevel())));
         return components;
+    }
+
+    @Override
+    public AABB getAABB() {
+        BlockState state = level.getBlockState(worldPosition);
+        Direction facing = state.getValue(DirectionalBlock.FACING);
+        Direction widthDirection;
+        Direction heightDirection;
+        if (facing == Direction.UP || facing == Direction.DOWN) {
+            widthDirection = Direction.EAST;
+            heightDirection = Direction.NORTH;
+        } else {
+            widthDirection = facing.getClockWise();
+            heightDirection = Direction.UP;
+        }
+        return new AABB(worldPosition
+                .relative(widthDirection.getOpposite(), upgradeHandler.getUpgradeLevel(UpgradeType.FAN_WIDTH))
+                .relative(heightDirection.getOpposite(), upgradeHandler.getUpgradeLevel(UpgradeType.FAN_HEIGHT))
+                , worldPosition
+                .relative(facing, 5 + upgradeHandler.getUpgradeLevel(UpgradeType.FAN_DISTANCE))
+                .relative(widthDirection, upgradeHandler.getUpgradeLevel(UpgradeType.FAN_WIDTH))
+                .relative(heightDirection, upgradeHandler.getUpgradeLevel(UpgradeType.FAN_HEIGHT))
+                .offset(1, 1, 1));
+    }
+
+    @Override
+    public AABB getRenderAABB() {
+        return getAABB().move(-worldPosition.getX(), -worldPosition.getY(), -worldPosition.getZ());
+    }
+
+    @Override
+    public boolean doRenderArea() {
+        return renderArea;
+    }
+
+    @Override
+    public void setRenderArea(boolean renderArea) {
+        this.renderArea = renderArea;
     }
 }

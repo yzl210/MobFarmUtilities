@@ -1,6 +1,5 @@
 package cn.leomc.mobfarmutilities.common.utils;
 
-import cn.leomc.mobfarmutilities.MobFarmUtilities;
 import cn.leomc.mobfarmutilities.common.api.FakePlayer;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.server.level.ServerLevel;

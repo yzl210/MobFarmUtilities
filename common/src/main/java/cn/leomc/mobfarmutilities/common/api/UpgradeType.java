@@ -42,6 +42,12 @@ public enum UpgradeType implements ITranslatable {
         this.tag = ItemTags.getAllTags().getTag(tag);
     }
 
+    public static ResourceLocation of(String name) {
+        if (name.contains(":"))
+            return ResourceLocation.tryParse(name);
+        else
+            return ResourceLocation.tryParse("forge:" + name);
+    }
 
     public int getMaxLevel() {
         return maxLevel;
@@ -88,13 +94,6 @@ public enum UpgradeType implements ITranslatable {
     @Environment(EnvType.CLIENT)
     public String getLocalizedName() {
         return I18n.get(getTranslationKey());
-    }
-
-    public static ResourceLocation of(String name){
-        if(name.contains(":"))
-            return ResourceLocation.tryParse(name);
-        else
-            return ResourceLocation.tryParse("forge:" + name);
     }
 
 }
