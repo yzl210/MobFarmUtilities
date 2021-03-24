@@ -2,7 +2,9 @@ package cn.leomc.mobfarmutilities.client.screen;
 
 import cn.leomc.mobfarmutilities.MobFarmUtilities;
 import cn.leomc.mobfarmutilities.client.RedstoneModeButton;
+import cn.leomc.mobfarmutilities.client.ShowAreaButton;
 import cn.leomc.mobfarmutilities.client.UpgradeSelector;
+import cn.leomc.mobfarmutilities.common.api.IHasArea;
 import cn.leomc.mobfarmutilities.common.blockentity.SlaughtererBlockEntity;
 import cn.leomc.mobfarmutilities.common.menu.SlaughtererMenu;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -15,6 +17,7 @@ public class SlaughtererScreen extends BaseScreen<SlaughtererMenu> {
     protected Component title;
 
     protected RedstoneModeButton redstoneModeButton;
+    protected ShowAreaButton showAreaButton;
 
     protected UpgradeSelector upgradeSelector;
 
@@ -28,6 +31,8 @@ public class SlaughtererScreen extends BaseScreen<SlaughtererMenu> {
     protected void init() {
         super.init();
         redstoneModeButton = addButton(new RedstoneModeButton(this, leftPos, topPos, menu.getTileEntity().getBlockPos(), menu.getTileEntity().getLevel()));
+        if (menu.getTileEntity() instanceof IHasArea)
+            showAreaButton = addButton(new ShowAreaButton(this, leftPos, topPos, (IHasArea) menu.getTileEntity()));
         if (menu.getTileEntity() instanceof SlaughtererBlockEntity) {
             String title = I18n.get("text." + MobFarmUtilities.MODID + ".upgrade.slaughterer");
             upgradeSelector = new UpgradeSelector(this, getCenteredOffset(""), 30, title, leftPos, topPos, ((SlaughtererBlockEntity) menu.getTileEntity()).getUpgradeHandler(), ((SlaughtererBlockEntity) menu.getTileEntity()).getUpgradeHandler().getSupportedUpgrades());

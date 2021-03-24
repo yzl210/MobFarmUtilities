@@ -1,8 +1,10 @@
 package cn.leomc.mobfarmutilities.client.screen;
 
 import cn.leomc.mobfarmutilities.client.RedstoneModeButton;
+import cn.leomc.mobfarmutilities.client.ShowAreaButton;
 import cn.leomc.mobfarmutilities.client.utils.TextureUtils;
 import cn.leomc.mobfarmutilities.client.utils.Textures;
+import cn.leomc.mobfarmutilities.common.api.IHasArea;
 import cn.leomc.mobfarmutilities.common.blockentity.ExperienceCollectorBlockEntity;
 import cn.leomc.mobfarmutilities.common.menu.ExperienceCollectorMenu;
 import cn.leomc.mobfarmutilities.common.network.NetworkHandler;
@@ -30,6 +32,7 @@ public class ExperienceCollectorScreen extends BaseScreen<ExperienceCollectorMen
     protected Component title;
 
     protected RedstoneModeButton redstoneModeButton;
+    protected ShowAreaButton showAreaButton;
 
 
     public ExperienceCollectorScreen(ExperienceCollectorMenu container, Inventory playerInventory, Component titleIn) {
@@ -41,6 +44,8 @@ public class ExperienceCollectorScreen extends BaseScreen<ExperienceCollectorMen
     protected void init() {
         super.init();
         redstoneModeButton = addButton(new RedstoneModeButton(this, leftPos, topPos, menu.getTileEntity().getBlockPos(), menu.getTileEntity().getLevel()));
+        if (menu.getTileEntity() instanceof IHasArea)
+            showAreaButton = addButton(new ShowAreaButton(this, leftPos, topPos, (IHasArea) menu.getTileEntity()));
     }
 
     @Override
@@ -81,7 +86,8 @@ public class ExperienceCollectorScreen extends BaseScreen<ExperienceCollectorMen
             List<FormattedCharSequence> reorderingProcessorList = new ArrayList<>();
             Component liquid = new TranslatableComponent("text.mobfarmutilities.fluid_tank", new TranslatableComponent(BlockRegistry.LIQUID_EXPERIENCE.get().getDescriptionId()), amount);
             reorderingProcessorList.add(FormattedCharSequence.forward(liquid.getString(), Style.EMPTY));
-            reorderingProcessorList.add(FormattedCharSequence.forward(I18n.get("text.mobfarmutilities.how_to_store_get_experience"), Style.EMPTY.applyFormat(ChatFormatting.DARK_GRAY)));
+            reorderingProcessorList.add(FormattedCharSequence.forward(I18n.get("text.mobfarmutilities.how_to_store_get_experience.1"), Style.EMPTY.applyFormat(ChatFormatting.DARK_GRAY)));
+            reorderingProcessorList.add(FormattedCharSequence.forward(I18n.get("text.mobfarmutilities.how_to_store_get_experience.2"), Style.EMPTY.applyFormat(ChatFormatting.DARK_GRAY)));
             renderTooltip(matrixStack, reorderingProcessorList, x, y);
         }
     }

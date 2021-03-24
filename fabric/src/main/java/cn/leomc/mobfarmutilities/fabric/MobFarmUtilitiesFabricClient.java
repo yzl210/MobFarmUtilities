@@ -28,10 +28,6 @@ public class MobFarmUtilitiesFabricClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        ScreenRegistry.register(ContainerMenuRegistry.FAN.get(), FanScreen::new);
-        ScreenRegistry.register(ContainerMenuRegistry.ITEM_COLLECTOR.get(), ItemCollectorScreen::new);
-        ScreenRegistry.register(ContainerMenuRegistry.EXPERIENCE_COLLECTOR.get(), ExperienceCollectorScreen::new);
-        ScreenRegistry.register(ContainerMenuRegistry.SLAUGHTERER.get(), SlaughtererScreen::new);
         registerFluid(FluidRegistry.LIQUID_EXPERIENCE.get(), FluidRegistry.FLOWING_LIQUID_EXPERIENCE.get(), new Supplier[]{Textures.STILL_LIQUID_EXPERIENCE, Textures.FLOWING_LIQUID_EXPERIENCE}, -1);
         BlockRenderLayerMap.INSTANCE.putBlock(BlockRegistry.LIQUID_EXPERIENCE.get(), RenderType.translucent());
         BlockRenderLayerMap.INSTANCE.putFluids(RenderType.translucent(), FluidRegistry.LIQUID_EXPERIENCE.get(), FluidRegistry.FLOWING_LIQUID_EXPERIENCE.get());

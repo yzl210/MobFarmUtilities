@@ -1,6 +1,5 @@
 package cn.leomc.mobfarmutilities.common.utils;
 
-import cn.leomc.mobfarmutilities.MobFarmUtilities;
 import cn.leomc.mobfarmutilities.common.api.FakePlayer;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.server.level.ServerLevel;
@@ -19,7 +18,6 @@ public class FakePlayers {
     public static FakePlayer getOrCreate(ServerLevel level, GameProfile gameProfile, Vec3 pos) {
         if (!FAKE_PLAYERS.containsKey(gameProfile))
             FAKE_PLAYERS.put(gameProfile, new FakePlayer(level, gameProfile, pos));
-        MobFarmUtilities.LOGGER.info(FAKE_PLAYERS.toString());
         return get(gameProfile);
     }
 

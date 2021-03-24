@@ -1,6 +1,7 @@
 package cn.leomc.mobfarmutilities.common.blockentity;
 
 import cn.leomc.mobfarmutilities.MobFarmUtilities;
+import cn.leomc.mobfarmutilities.common.api.IHasArea;
 import cn.leomc.mobfarmutilities.common.api.RedstoneMode;
 import cn.leomc.mobfarmutilities.common.block.ActivatableBlock;
 import cn.leomc.mobfarmutilities.common.menu.ItemCollectorMenu;
@@ -25,9 +26,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ItemCollectorBlockEntity extends BlockEntity implements TickableBlockEntity, MenuProvider {
+public class ItemCollectorBlockEntity extends BlockEntity implements TickableBlockEntity, MenuProvider, IHasArea {
 
     protected SimpleContainer inventory;
+    protected boolean renderArea = false;
 
     public ItemCollectorBlockEntity() {
         super(BlockEntityRegistry.ITEM_COLLECTOR.get());
@@ -52,17 +54,8 @@ public class ItemCollectorBlockEntity extends BlockEntity implements TickableBlo
         RedstoneMode.updateRedstone(state, level, worldPosition);
         if (!state.getValue(ActivatableBlock.ACTIVE))
             return;
-        AABB area = new AABB(worldPosition
-                .relative(Direction.NORTH, 5)
-                .relative(Direction.WEST, 5)
-                .relative(Direction.UP, 2)
-                , worldPosition
-                .relative(Direction.SOUTH, 5)
-                .relative(Direction.EAST, 5)
-                .relative(Direction.DOWN, 2)
-                .offset(1, 1, 1));
 
-        List<ItemEntity> entities = level.getEntitiesOfClass(ItemEntity.class, area);
+        List<ItemEntity> entities = level.getEntitiesOfClass(ItemEntity.class, getAABB());
         for (ItemEntity itemEntity : entities) {
             ItemStack itemStack = inventory.addItem(itemEntity.getItem());
             itemEntity.setItem(itemStack);
@@ -89,6 +82,34 @@ public class ItemCollectorBlockEntity extends BlockEntity implements TickableBlo
     public void dropAllItems() {
         Containers.dropContents(level, worldPosition, inventory);
         inventory.clearContent();
+    }
+
+    @Override
+    public AABB getAABB() {
+        return new AABB(worldPosition
+                .relative(Direction.NORTH, 5)
+                .relative(Direction.WEST, 5)
+                .relative(Direction.UP, 2)
+                , worldPosition
+                .relative(Direction.SOUTH, 5)
+                .relative(Direction.EAST, 5)
+                .relative(Direction.DOWN, 2)
+                .offset(1, 1, 1));
+    }
+
+    @Override
+    public AABB getRenderAABB() {
+        return getAABB().move(-worldPosition.getX(), -worldPosition.getY(), -worldPosition.getZ());
+    }
+
+    @Override
+    public boolean doRenderArea() {
+        return renderArea;
+    }
+
+    @Override
+    public void setRenderArea(boolean renderArea) {
+        this.renderArea = renderArea;
     }
 
 }

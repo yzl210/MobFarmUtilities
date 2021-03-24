@@ -2,6 +2,7 @@ package cn.leomc.mobfarmutilities.common.blockentity;
 
 import cn.leomc.mobfarmutilities.MobFarmUtilities;
 import cn.leomc.mobfarmutilities.common.api.FakePlayer;
+import cn.leomc.mobfarmutilities.common.api.IHasArea;
 import cn.leomc.mobfarmutilities.common.api.RedstoneMode;
 import cn.leomc.mobfarmutilities.common.api.UpgradeHandler;
 import cn.leomc.mobfarmutilities.common.api.UpgradeType;
@@ -40,12 +41,13 @@ import java.util.List;
 import java.util.UUID;
 
 
-public class SlaughtererBlockEntity extends BlockEntity implements TickableBlockEntity, MenuProvider, Upgradable, BlockEntityExtension, IInfoProvider {
+public class SlaughtererBlockEntity extends BlockEntity implements TickableBlockEntity, MenuProvider, Upgradable, BlockEntityExtension, IInfoProvider, IHasArea {
 
 
     protected final UpgradeHandler upgradeHandler = new UpgradeHandler(this, UpgradeType.SLAUGHTERER_AREA, UpgradeType.SLAUGHTERER_SHARPNESS, UpgradeType.SLAUGHTERER_LOOTING, UpgradeType.SLAUGHTERER_FIRE_ASPECT);
     protected int coolDown;
     protected FakePlayer fakePlayer;
+    protected boolean renderArea = false;
 
     public SlaughtererBlockEntity() {
         super(BlockEntityRegistry.SLAUGHTERER.get());
@@ -79,29 +81,23 @@ public class SlaughtererBlockEntity extends BlockEntity implements TickableBlock
         RedstoneMode.updateRedstone(state, level, worldPosition);
         if (!state.getValue(ActivatableBlock.ACTIVE))
             return;
-        int increase = upgradeHandler.getUpgradeLevel(UpgradeType.SLAUGHTERER_AREA);
-        AABB area = new AABB(worldPosition
-                .relative(Direction.NORTH, 2)
-                .relative(Direction.WEST, 2)
-                .relative(Direction.UP, 2)
-                .offset(-increase, 0, -increase)
-                , worldPosition
-                .relative(Direction.SOUTH, 2)
-                .relative(Direction.EAST, 2)
-                .relative(Direction.DOWN, 2)
-                .offset(1, 1, 1)
-                .offset(increase, 0, increase)
-        );
 
-        ItemStack itemStack = new ItemStack(Items.WOODEN_SWORD);
-        if (upgradeHandler.getUpgradeLevel(UpgradeType.SLAUGHTERER_SHARPNESS) > 0)
-            itemStack.enchant(Enchantments.SHARPNESS, upgradeHandler.getUpgradeLevel(UpgradeType.SLAUGHTERER_SHARPNESS));
+
+        ItemStack itemStack = new ItemStack(Items.WOODEN_SHOVEL);
+        itemStack.getOrCreateTag().putBoolean("Unbreakable", true);
         if (upgradeHandler.getUpgradeLevel(UpgradeType.SLAUGHTERER_LOOTING) > 0)
             itemStack.enchant(Enchantments.MOB_LOOTING, upgradeHandler.getUpgradeLevel(UpgradeType.SLAUGHTERER_LOOTING));
         if (upgradeHandler.getUpgradeLevel(UpgradeType.SLAUGHTERER_FIRE_ASPECT) > 0)
             itemStack.enchant(Enchantments.FIRE_ASPECT, upgradeHandler.getUpgradeLevel(UpgradeType.SLAUGHTERER_FIRE_ASPECT));
         fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, itemStack);
-        level.getEntitiesOfClass(LivingEntity.class, area).forEach(fakePlayer::attack);
+        level.getEntitiesOfClass(LivingEntity.class, getAABB()).forEach(entity -> {
+            float damage = 1.0F;
+            damage += upgradeHandler.getUpgradeLevel(UpgradeType.SLAUGHTERER_SHARPNESS);
+            damage -= Math.sqrt(entity.distanceToSqr(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ()));
+            if (damage <= 0)
+                damage = 0.5F;
+            fakePlayer.attack(entity, damage);
+        });
         fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
     }
 
@@ -142,5 +138,37 @@ public class SlaughtererBlockEntity extends BlockEntity implements TickableBlock
         List<Component> components = new ArrayList<>();
         upgradeHandler.getSupportedUpgrades().forEach(type -> components.add(new TranslatableComponent("text.mobfarmutilities.info.upgrade", new TranslatableComponent(type.getTranslationKey()), upgradeHandler.getUpgradeLevel(type), type.getMaxLevel())));
         return components;
+    }
+
+    @Override
+    public AABB getAABB() {
+        int increase = upgradeHandler.getUpgradeLevel(UpgradeType.SLAUGHTERER_AREA);
+        return new AABB(worldPosition
+                .relative(Direction.NORTH, 2)
+                .relative(Direction.WEST, 2)
+                .relative(Direction.UP, 2)
+                .offset(-increase, 0, -increase)
+                , worldPosition
+                .relative(Direction.SOUTH, 2)
+                .relative(Direction.EAST, 2)
+                .relative(Direction.DOWN, 2)
+                .offset(1, 1, 1)
+                .offset(increase, 0, increase)
+        );
+    }
+
+    @Override
+    public AABB getRenderAABB() {
+        return getAABB().move(-worldPosition.getX(), -worldPosition.getY(), -worldPosition.getZ());
+    }
+
+    @Override
+    public boolean doRenderArea() {
+        return renderArea;
+    }
+
+    @Override
+    public void setRenderArea(boolean renderArea) {
+        this.renderArea = renderArea;
     }
 }

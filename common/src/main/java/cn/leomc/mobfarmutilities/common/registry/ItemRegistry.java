@@ -24,7 +24,7 @@ public class ItemRegistry {
 
     public static final RegistrySupplier<Item> EXPERIENCE_COLLECTOR = register("experience_collector", () -> new BlockItem(BlockRegistry.EXPERIENCE_COLLECTOR.get(), new Item.Properties().tab(ModRegistry.ITEM_GROUP)));
 
-    public static final RegistrySupplier<Item> BLADE = register("blade", () -> new Item(new Item.Properties().tab(ModRegistry.ITEM_GROUP)));
+    public static final RegistrySupplier<Item> LASER_COMPONENT = register("laser_component", () -> new Item(new Item.Properties().tab(ModRegistry.ITEM_GROUP)));
 
     public static final RegistrySupplier<Item> SLAUGHTERER = register("slaughterer", () -> new BlockItem(BlockRegistry.SLAUGHTERER.get(), new Item.Properties().tab(ModRegistry.ITEM_GROUP)));
 

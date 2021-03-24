@@ -20,7 +20,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobType;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.boss.EnderDragonPart;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DiggerItem;
@@ -33,10 +32,14 @@ import net.minecraft.world.phys.Vec3;
 import java.util.UUID;
 
 public class FakePlayer extends ServerPlayer {
+
+    private float damage;
+
     public FakePlayer(ServerLevel level, GameProfile gameProfile, Vec3 pos) {
         super(level.getServer(), level, gameProfile, new ServerPlayerGameMode(level));
         setPos(pos.x, pos.y, pos.z);
         gameMode.setGameModeForPlayer(GameType.CREATIVE);
+        damage = 1.0F;
     }
 
 
@@ -76,7 +79,7 @@ public class FakePlayer extends ServerPlayer {
     public void attack(Entity entity) {
         if (entity.isAttackable()) {
             if (!entity.skipAttackInteraction(this)) {
-                float f = (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE);
+                float f = damage;
                 float h;
                 if (entity instanceof LivingEntity) {
                     h = EnchantmentHelper.getDamageBonus(this.getMainHandItem(), ((LivingEntity) entity).getMobType());
@@ -166,6 +169,11 @@ public class FakePlayer extends ServerPlayer {
 
             }
         }
+    }
+
+    public void attack(Entity entity, float damage) {
+        this.damage = damage;
+        attack(entity);
     }
 
     @Override

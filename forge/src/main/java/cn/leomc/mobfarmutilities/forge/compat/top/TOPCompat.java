@@ -2,7 +2,11 @@ package cn.leomc.mobfarmutilities.forge.compat.top;
 
 import cn.leomc.mobfarmutilities.MobFarmUtilities;
 import cn.leomc.mobfarmutilities.common.compat.IInfoProvider;
-import mcjty.theoneprobe.api.*;
+import mcjty.theoneprobe.api.IProbeHitData;
+import mcjty.theoneprobe.api.IProbeInfo;
+import mcjty.theoneprobe.api.IProbeInfoProvider;
+import mcjty.theoneprobe.api.ITheOneProbe;
+import mcjty.theoneprobe.api.ProbeMode;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;

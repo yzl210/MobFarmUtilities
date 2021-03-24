@@ -1,6 +1,7 @@
 package cn.leomc.mobfarmutilities.common.api;
 
 import cn.leomc.mobfarmutilities.MobFarmUtilities;
+import cn.leomc.mobfarmutilities.common.registry.ItemRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.resources.language.I18n;
@@ -17,14 +18,14 @@ import java.util.List;
 public enum UpgradeType implements ITranslatable {
 
     FAN_DISTANCE(10, 2, Items.SUGAR, null),
-    FAN_WIDTH(10, 4, Items.IRON_INGOT, new ResourceLocation("forge", "ingots/iron")),
-    FAN_HEIGHT(10, 4, Items.REDSTONE, new ResourceLocation("forge", "dusts/redstone")),
-    FAN_SPEED(5, 4, Items.FEATHER, new ResourceLocation("forge", "feathers")),
+    FAN_WIDTH(10, 4, Items.IRON_INGOT, of("ingots/iron")),
+    FAN_HEIGHT(10, 4, Items.REDSTONE, of("dusts/redstone")),
+    FAN_SPEED(5, 4, Items.FEATHER, of("feathers")),
 
-    SLAUGHTERER_SHARPNESS(15, 1, Items.IRON_SWORD, null),
-    SLAUGHTERER_LOOTING(10, 2, Items.LAPIS_BLOCK, new ResourceLocation("forge", "storage_blocks/lapis")),
+    SLAUGHTERER_SHARPNESS(15, 1, ItemRegistry.LASER_COMPONENT.get(), null),
+    SLAUGHTERER_LOOTING(10, 2, Items.LAPIS_BLOCK, of("storage_blocks/lapis")),
     SLAUGHTERER_FIRE_ASPECT(1, 1, Items.FLINT_AND_STEEL, null),
-    SLAUGHTERER_AREA(10, 8, Items.IRON_INGOT, new ResourceLocation("forge", "ingots/iron"));
+    SLAUGHTERER_AREA(10, 1, Items.REDSTONE_BLOCK, of("storage_blocks/redstone"));
 
 
     private final int maxLevel;
@@ -41,6 +42,12 @@ public enum UpgradeType implements ITranslatable {
         this.tag = ItemTags.getAllTags().getTag(tag);
     }
 
+    public static ResourceLocation of(String name) {
+        if (name.contains(":"))
+            return ResourceLocation.tryParse(name);
+        else
+            return ResourceLocation.tryParse("forge:" + name);
+    }
 
     public int getMaxLevel() {
         return maxLevel;
@@ -88,6 +95,5 @@ public enum UpgradeType implements ITranslatable {
     public String getLocalizedName() {
         return I18n.get(getTranslationKey());
     }
-
 
 }

@@ -14,7 +14,7 @@ public class InfoProvider {
 
     public void appendInfo(List<Component> tooltip, BlockEntity blockEntity) {
         if (syncCount <= 0 && blockEntity instanceof BlockEntityExtension) {
-            NetworkHandler.INSTANCE.sendToServer(new SyncDataMessage(blockEntity.getBlockPos()));
+            NetworkHandler.syncData(blockEntity.getBlockPos());
             syncCount = 20;
         }
         syncCount--;

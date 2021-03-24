@@ -1,6 +1,7 @@
 package cn.leomc.mobfarmutilities.common.blockentity;
 
 import cn.leomc.mobfarmutilities.MobFarmUtilities;
+import cn.leomc.mobfarmutilities.common.api.IHasArea;
 import cn.leomc.mobfarmutilities.common.api.RedstoneMode;
 import cn.leomc.mobfarmutilities.common.block.ActivatableBlock;
 import cn.leomc.mobfarmutilities.common.menu.ExperienceCollectorMenu;
@@ -26,11 +27,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ExperienceCollectorBlockEntity extends BlockEntity implements TickableBlockEntity, MenuProvider, BlockEntityExtension {
+public class ExperienceCollectorBlockEntity extends BlockEntity implements TickableBlockEntity, MenuProvider, BlockEntityExtension, IHasArea {
 
     protected int limit = 5000;
     private int amount;
-
+    protected boolean renderArea = false;
 
     public ExperienceCollectorBlockEntity() {
         super(BlockEntityRegistry.EXPERIENCE_COLLECTOR.get());
@@ -58,21 +59,13 @@ public class ExperienceCollectorBlockEntity extends BlockEntity implements Ticka
             return;
         if (amount >= limit)
             return;
-        AABB area = new AABB(worldPosition
-                .relative(Direction.NORTH, 5)
-                .relative(Direction.WEST, 5)
-                .relative(Direction.UP, 2)
-                , worldPosition
-                .relative(Direction.SOUTH, 5)
-                .relative(Direction.EAST, 5)
-                .relative(Direction.DOWN, 2)
-                .offset(1, 1, 1));
-        List<ExperienceOrb> entities = level.getEntitiesOfClass(ExperienceOrb.class, area);
+
+        List<ExperienceOrb> entities = level.getEntitiesOfClass(ExperienceOrb.class, getAABB());
         for (ExperienceOrb experienceOrbEntity : entities) {
-            if (experienceOrbEntity.removed)
+            if (!experienceOrbEntity.isAlive())
                 continue;
             int xpValue = experienceOrbEntity.getValue();
-            if (xpValue >= 0) {
+            if (xpValue >= 0 && xpValue <= limit - amount) {
                 experienceOrbEntity.remove();
                 addAmount(xpValue);
             }
@@ -140,4 +133,33 @@ public class ExperienceCollectorBlockEntity extends BlockEntity implements Ticka
         tag.putInt("Experience", amount);
         return tag;
     }
+
+    @Override
+    public AABB getAABB() {
+        return new AABB(worldPosition
+                .relative(Direction.NORTH, 5)
+                .relative(Direction.WEST, 5)
+                .relative(Direction.UP, 2)
+                , worldPosition
+                .relative(Direction.SOUTH, 5)
+                .relative(Direction.EAST, 5)
+                .relative(Direction.DOWN, 2)
+                .offset(1, 1, 1));
+    }
+
+    @Override
+    public AABB getRenderAABB() {
+        return getAABB().move(-worldPosition.getX(), -worldPosition.getY(), -worldPosition.getZ());
+    }
+
+    @Override
+    public boolean doRenderArea() {
+        return renderArea;
+    }
+
+    @Override
+    public void setRenderArea(boolean renderArea) {
+        this.renderArea = renderArea;
+    }
+
 }
