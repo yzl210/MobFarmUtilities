@@ -2,7 +2,7 @@
 
 ![Centered logo](/images/logo_centered.png)
 
-MobFarmUtilities is a Minecraft mod that adds mob farm utilities, such as Fan, Mob Slaughterer, XP collector and Item Collector, all of which can work with redstone and can be upgraded with appropriate resources to enhance their working areas and effectiveness. <br>
+MobFarmUtilities is a Minecraft mod that adds mob farm utilities, such as **Fan, Mob Slaughterer, XP collector and Item Collector**, all of which support redstone  with redstone and can be upgraded with appropriate resources to enhance their working areas and effectiveness. <br> <br>
 ![Machines](/images/machines.png)
 
 ___
