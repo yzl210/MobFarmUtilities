@@ -33,6 +33,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class FanBlockEntity extends BlockEntity implements TickableBlockEntity, MenuProvider, Upgradable, BlockEntityExtension, IInfoProvider, IHasArea {
 
@@ -138,7 +139,10 @@ public class FanBlockEntity extends BlockEntity implements TickableBlockEntity, 
     @Override
     public AABB getAABB() {
         BlockState state = level.getBlockState(worldPosition);
-        Direction facing = state.getValue(DirectionalBlock.FACING);
+        Optional<Direction> facingOptional = state.getOptionalValue(DirectionalBlock.FACING);
+        if (!facingOptional.isPresent())
+            return null;
+        Direction facing = facingOptional.get();
         Direction widthDirection;
         Direction heightDirection;
         if (facing == Direction.UP || facing == Direction.DOWN) {
@@ -160,7 +164,8 @@ public class FanBlockEntity extends BlockEntity implements TickableBlockEntity, 
 
     @Override
     public AABB getRenderAABB() {
-        return getAABB().move(-worldPosition.getX(), -worldPosition.getY(), -worldPosition.getZ());
+        AABB aabb = getAABB();
+        return aabb == null ? null : aabb.move(-worldPosition.getX(), -worldPosition.getY(), -worldPosition.getZ());
     }
 
     @Override

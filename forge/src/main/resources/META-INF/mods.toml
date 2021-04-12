@@ -1,14 +1,16 @@
 modLoader = "javafml"
 loaderVersion = "[34,)"
+issueTrackerURL = "https://github.com/yzl210/MobFarmUtilities/issues"
+logoFile="logo.png"
 license = "GNU GPLv3"
 [[mods]]
 modId = "mobfarmutilities"
 version = "${version}"
 displayName = "Mob Farm Helpers"
-issueTrackerURL = "https://github.com/yzl210/MobFarmUtilities/issues"
 authors = "6LeoMC"
+credits = "Thanks to temhotaokeaha for the textures"
 description = '''
-Add some useful mob farm utilities
+Add some useful mob farm helpers
 '''
 
 [[dependencies.mobfarmutilities]]

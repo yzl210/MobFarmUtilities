@@ -3,9 +3,13 @@
   "id": "mobfarmutilities",
   "version": "${version}",
   "name": "Mob Farm Helpers",
-  "description": "Add some useful mob farm utilities",
+  "description": "Add some useful mob farm helpers",
+  "icon": "logo.png",
   "authors": [
     "6LeoMC"
+  ],
+  "contributors": [
+    "Thanks to temhotaokeaha for the textures"
   ],
   "contact": {
     "issues": "https://github.com/yzl210/MobFarmUtilities/issues",

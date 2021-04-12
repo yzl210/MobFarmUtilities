@@ -12,11 +12,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 
 public class AreaRenderer<T extends BlockEntity> extends BlockEntityRenderer<T> {
+    int syncCount = 0;
+
     public AreaRenderer(BlockEntityRenderDispatcher blockEntityRenderDispatcher) {
         super(blockEntityRenderDispatcher);
     }
-
-    int syncCount = 0;
 
     @Override
     public void render(T blockEntity, float f, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, int j) {
@@ -27,7 +27,9 @@ public class AreaRenderer<T extends BlockEntity> extends BlockEntityRenderer<T> 
             }
             syncCount--;
             AABB aabb = ((IHasArea) blockEntity).getRenderAABB();
-            TextureUtils.drawAABB(poseStack, multiBufferSource, aabb);
+            if (aabb != null)
+                TextureUtils.drawAABB(poseStack, multiBufferSource, aabb);
+
         }
     }
 }
