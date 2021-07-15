@@ -37,6 +37,7 @@ public class FakePlayer extends ServerPlayer {
 
     public FakePlayer(ServerLevel level, GameProfile gameProfile, Vec3 pos) {
         super(level.getServer(), level, gameProfile, new ServerPlayerGameMode(level));
+        connection = new FakeConnection(level.getServer(), this);
         setPos(pos.x, pos.y, pos.z);
         gameMode.setGameModeForPlayer(GameType.CREATIVE);
         damage = 1.0F;

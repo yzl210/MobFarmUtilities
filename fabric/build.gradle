@@ -17,6 +17,10 @@ repositories {
         url = "https://maven.shedaniel.me/"
     }
     maven {
+        name = "fabric maven"
+        url = "https://maven.fabricmc.net"
+    }
+    maven {
         name = "ModMenu Maven"
         url = "https://maven.terraformersmc.com/releases/"
     }
