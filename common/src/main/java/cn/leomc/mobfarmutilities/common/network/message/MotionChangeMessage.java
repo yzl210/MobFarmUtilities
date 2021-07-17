@@ -25,7 +25,7 @@ public class MotionChangeMessage {
     }
 
     public static MotionChangeMessage decode(FriendlyByteBuf packetBuffer) {
-        StringTokenizer st = new StringTokenizer(packetBuffer.readUtf());
+        StringTokenizer st = new StringTokenizer(packetBuffer.readUtf(32767));
         return new MotionChangeMessage(Double.parseDouble(st.nextToken()), Double.parseDouble(st.nextToken()), Double.parseDouble(st.nextToken()));
     }
 

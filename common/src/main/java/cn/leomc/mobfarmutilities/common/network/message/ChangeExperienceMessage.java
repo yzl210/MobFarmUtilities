@@ -32,7 +32,7 @@ public class ChangeExperienceMessage {
     }
 
     public static ChangeExperienceMessage decode(FriendlyByteBuf packetBuffer) {
-        return new ChangeExperienceMessage(packetBuffer.readBlockPos(), packetBuffer.readInt(), Boolean.parseBoolean(packetBuffer.readUtf()));
+        return new ChangeExperienceMessage(packetBuffer.readBlockPos(), packetBuffer.readInt(), Boolean.parseBoolean(packetBuffer.readUtf(32767)));
     }
 
 

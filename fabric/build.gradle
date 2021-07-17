@@ -21,8 +21,8 @@ repositories {
         url = "https://maven.fabricmc.net"
     }
     maven {
-        name = "ModMenu Maven"
-        url = "https://maven.terraformersmc.com/releases/"
+        name = "TerraformersMC Archive"
+        url = "https://raw.githubusercontent.com/TerraformersMC/Archive/main/releases"
     }
     maven {
         name = "Curse Maven"
