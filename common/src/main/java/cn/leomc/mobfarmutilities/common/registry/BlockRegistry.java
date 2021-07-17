@@ -30,7 +30,7 @@ public class BlockRegistry {
 
     //Fluid
 
-    public static final RegistrySupplier<Block> LIQUID_EXPERIENCE = register("liquid_experience", () -> PlatformCompatibility.getFlowingFluidBlock(FluidRegistry.LIQUID_EXPERIENCE, BlockBehaviour.Properties.of(Material.WATER).strength(100F).noDrops()));
+    public static final RegistrySupplier<Block> LIQUID_EXPERIENCE = register("liquid_experience", () -> PlatformCompatibility.getLiquidBlock(FluidRegistry.LIQUID_EXPERIENCE, BlockBehaviour.Properties.of(Material.WATER).strength(100F).noDrops()));
 
 
     public static void register() {

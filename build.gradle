@@ -1,6 +1,6 @@
 plugins {
-    id "architectury-plugin" version "3.0.99"
-    id "forgified-fabric-loom" version "0.6.79" apply false
+    id "architectury-plugin" version "3.2.112"
+    id "dev.architectury.loom" version "0.7.3.151" apply false
 }
 
 architectury {
@@ -8,7 +8,7 @@ architectury {
 }
 
 subprojects {
-    apply plugin: "forgified-fabric-loom"
+    apply plugin: "dev.architectury.loom"
 
     loom {
         mixinConfig "mobfarmutilities.mixins.json"
@@ -18,7 +18,10 @@ subprojects {
     dependencies {
         minecraft "com.mojang:minecraft:${minecraft_version}"
 
-        mappings loom.officialMojangMappings()
+        mappings loom.layered {
+            officialMojangMappings()
+            crane("dev.architectury:crane:1.16.5+build.16")
+        }
     }
 }
 
@@ -43,4 +46,8 @@ allprojects {
         }
     }
 
+    java {
+        withSourcesJar()
+    }
 }
+

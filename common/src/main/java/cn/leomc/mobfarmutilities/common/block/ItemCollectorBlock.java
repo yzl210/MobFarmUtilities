@@ -2,6 +2,7 @@ package cn.leomc.mobfarmutilities.common.block;
 
 import cn.leomc.mobfarmutilities.common.api.InventoryWrapper;
 import cn.leomc.mobfarmutilities.common.blockentity.ItemCollectorBlockEntity;
+import cn.leomc.mobfarmutilities.common.registry.BlockRegistry;
 import me.shedaniel.architectury.platform.Platform;
 import me.shedaniel.architectury.registry.BlockProperties;
 import me.shedaniel.architectury.registry.MenuRegistry;
