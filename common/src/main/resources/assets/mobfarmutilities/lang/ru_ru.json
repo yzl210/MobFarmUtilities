@@ -7,7 +7,7 @@
   "fluid.mobfarmutilities.liquid_experience": "Жидкий опыт",
   "item.mobfarmutilities.fan_blade": "Лопасть вентилятора",
   "item.mobfarmutilities.liquid_experience_bucket": "Ведро жидкого опыта",
-  "item.mobfarmutilities.laser_component": "Лазер",
+  "item.mobfarmutilities.laser_emitter": "Лазер",
   "container.mobfarmutilities.fan": "Вентилятор",
   "container.mobfarmutilities.item_collector": "Сборщик предметов",
   "container.mobfarmutilities.experience_collector": "Сборщик опыта",

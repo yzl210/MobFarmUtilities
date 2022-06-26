@@ -5,6 +5,7 @@ import cn.leomc.mobfarmutilities.common.api.RedstoneMode;
 import cn.leomc.mobfarmutilities.common.block.ActivatableBlock;
 import cn.leomc.mobfarmutilities.common.network.NetworkHandler;
 import cn.leomc.mobfarmutilities.common.network.message.RedstoneModeChangeMessage;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -50,15 +51,14 @@ public class RedstoneModeButton extends Button {
     }
 
     @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
+    protected void renderBg(PoseStack poseStack, Minecraft minecraft, int mouseX, int mouseY) {
         if (updateCooldown == 0) {
             mode = world.getBlockState(pos).getValue(ActivatableBlock.MODE);
             updateCooldown = 5;
         } else
             updateCooldown--;
-        Minecraft.getInstance().getTextureManager().bind(InventoryMenu.BLOCK_ATLAS);
+        RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
         TextureAtlasSprite sprite = mode.getTextureAtlasSprite();
-        Screen.blit(matrixStack, x + 2, y + 2, 1, 16, 16, sprite);
+        Screen.blit(poseStack, x + 2, y + 2, 1, 16, 16, sprite);
     }
 }

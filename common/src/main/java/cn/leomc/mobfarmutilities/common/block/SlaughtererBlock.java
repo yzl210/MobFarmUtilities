@@ -1,47 +1,33 @@
 package cn.leomc.mobfarmutilities.common.block;
 
+import cn.leomc.mobfarmutilities.common.api.InventoryWrapper;
 import cn.leomc.mobfarmutilities.common.blockentity.SlaughtererBlockEntity;
-import me.shedaniel.architectury.platform.Platform;
-import me.shedaniel.architectury.registry.BlockProperties;
-import me.shedaniel.architectury.registry.MenuRegistry;
-import me.shedaniel.architectury.registry.ToolType;
+import cn.leomc.mobfarmutilities.common.utils.PlatformCompatibility;
+import dev.architectury.registry.menu.MenuRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.MenuProvider;
+import net.minecraft.world.*;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.InvocationTargetException;
-
-public class SlaughtererBlock extends ActivatableBlock implements EntityBlock {
+public class SlaughtererBlock extends ActivatableBlock implements EntityBlock, WorldlyContainerHolder {
     public SlaughtererBlock() {
-        super(BlockProperties.of(Material.METAL)
-                .tool(ToolType.PICKAXE, 1)
+        super(Properties.of(Material.METAL)
                 .strength(1.5F, 6.0F)
                 .requiresCorrectToolForDrops()
         );
     }
 
-    public static SlaughtererBlockEntity getBlockEntity() {
-        if (Platform.isForge()) {
-            Class<SlaughtererBlockEntity> tileEntityClass;
-            try {
-                tileEntityClass = (Class<SlaughtererBlockEntity>) Class.forName("cn.leomc.mobfarmutilities.forge.ForgeSlaughtererBlockEntity");
-                return tileEntityClass.getConstructor().newInstance();
-            } catch (ClassNotFoundException | ClassCastException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
-        }
-        return new SlaughtererBlockEntity();
+    public static SlaughtererBlockEntity getBlockEntity(BlockPos pos, BlockState state) {
+        return (SlaughtererBlockEntity) PlatformCompatibility.getBlockEntity(PlatformCompatibility.BlockEntityType.SLAUGHTERER, pos, state);
     }
 
     @Override
@@ -71,7 +57,16 @@ public class SlaughtererBlock extends ActivatableBlock implements EntityBlock {
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockGetter blockGetter) {
-        return getBlockEntity();
+    public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
+        return getBlockEntity(pos, state);
+    }
+
+    @Override
+    public WorldlyContainer getContainer(@NotNull BlockState state, LevelAccessor accessor, @NotNull BlockPos pos) {
+        BlockEntity blockEntity = accessor.getBlockEntity(pos);
+        if (blockEntity instanceof SlaughtererBlockEntity slaughterer) {
+            return new InventoryWrapper(slaughterer.getUpgradeHandler().getInventory());
+        }
+        return null;
     }
 }

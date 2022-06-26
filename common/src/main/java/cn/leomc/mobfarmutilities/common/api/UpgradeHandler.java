@@ -1,7 +1,7 @@
 package cn.leomc.mobfarmutilities.common.api;
 
+import cn.leomc.mobfarmutilities.common.blockentity.BaseBlockEntity;
 import com.google.common.collect.Lists;
-import me.shedaniel.architectury.extensions.BlockEntityExtension;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -11,19 +11,16 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class UpgradeHandler {
 
-    protected HashMap<UpgradeType, Integer> upgrades;
+    protected Map<UpgradeType, Integer> upgrades;
     protected SimpleContainer inventory;
-    protected BlockEntityExtension syncer;
+    protected BaseBlockEntity syncer;
 
-    public UpgradeHandler(BlockEntityExtension extension, UpgradeType... types) {
-        this.syncer = extension;
+    public UpgradeHandler(BaseBlockEntity blockEntity, UpgradeType... types) {
+        this.syncer = blockEntity;
         inventory = new SimpleContainer(1) {
             @Override
             public boolean canPlaceItem(int index, ItemStack stack) {
@@ -34,7 +31,7 @@ public class UpgradeHandler {
                 return item.contains(stack.getItem());
             }
         };
-        upgrades = new HashMap<>();
+        upgrades = new EnumMap<>(UpgradeType.class);
         for (UpgradeType type : types)
             upgrades.put(type, 0);
     }

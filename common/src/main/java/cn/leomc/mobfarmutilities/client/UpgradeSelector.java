@@ -52,19 +52,16 @@ public class UpgradeSelector extends ScrollSelector<UpgradeType> {
         if (checkInBound((int) mouseX, (int) mouseY))
             if (parent.getMenu() instanceof BaseMenu) {
                 switch (clickType) {
-                    case 0:
+                    case 0 -> {
                         NetworkHandler.INSTANCE.sendToServer(new ChangeGradeMessage(((BaseMenu) parent.getMenu()).getTileEntity().getBlockPos(), elements.get(selectedIndex), true));
                         Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-                        break;
-                    case 1:
+                    }
+                    case 1 -> {
                         NetworkHandler.INSTANCE.sendToServer(new ChangeGradeMessage(((BaseMenu) parent.getMenu()).getTileEntity().getBlockPos(), elements.get(selectedIndex), false));
                         Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-                        break;
-                    case 3:
-                        onScroll(mouseX, mouseY, -1D);
-                        break;
-                    case 4:
-                        onScroll(mouseX, mouseY, 1D);
+                    }
+                    case 3 -> onScroll(mouseX, mouseY, -1D);
+                    case 4 -> onScroll(mouseX, mouseY, 1D);
                 }
             }
     }

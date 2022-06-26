@@ -9,16 +9,13 @@ import cn.leomc.mobfarmutilities.client.utils.Textures;
 import cn.leomc.mobfarmutilities.common.api.RedstoneMode;
 import cn.leomc.mobfarmutilities.common.registry.BlockEntityRegistry;
 import cn.leomc.mobfarmutilities.common.registry.ContainerMenuRegistry;
-import cn.leomc.mobfarmutilities.common.registry.FluidRegistry;
 import cn.leomc.mobfarmutilities.common.registry.ModRegistry;
-import cn.leomc.mobfarmutilities.common.utils.FakePlayers;
-import me.shedaniel.architectury.event.events.LifecycleEvent;
-import me.shedaniel.architectury.event.events.TextureStitchEvent;
-import me.shedaniel.architectury.event.events.client.ClientLifecycleEvent;
-import me.shedaniel.architectury.platform.Platform;
-import me.shedaniel.architectury.registry.BlockEntityRenderers;
-import me.shedaniel.architectury.registry.MenuRegistry;
-import me.shedaniel.architectury.utils.Env;
+import dev.architectury.event.events.client.ClientLifecycleEvent;
+import dev.architectury.event.events.client.ClientTextureStitchEvent;
+import dev.architectury.platform.Platform;
+import dev.architectury.registry.client.rendering.BlockEntityRendererRegistry;
+import dev.architectury.registry.menu.MenuRegistry;
+import dev.architectury.utils.Env;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -38,12 +35,10 @@ public class MobFarmUtilities {
 
 
     public MobFarmUtilities() {
-        FluidRegistry.register();
         ModRegistry.register();
-        LifecycleEvent.SERVER_WORLD_UNLOAD.register(FakePlayers::onWorldUnloaded);
         if (Platform.getEnvironment() == Env.CLIENT) {
-            TextureStitchEvent.PRE.register(this::onPreTextureStitch);
-            TextureStitchEvent.POST.register(this::onPostTextureStitch);
+            ClientTextureStitchEvent.PRE.register(this::onPreTextureStitch);
+            ClientTextureStitchEvent.POST.register(this::onPostTextureStitch);
             ClientLifecycleEvent.CLIENT_SETUP.register(this::onClientSetup);
         }
     }
@@ -54,12 +49,11 @@ public class MobFarmUtilities {
         MenuRegistry.registerScreenFactory(ContainerMenuRegistry.ITEM_COLLECTOR.get(), ItemCollectorScreen::new);
         MenuRegistry.registerScreenFactory(ContainerMenuRegistry.EXPERIENCE_COLLECTOR.get(), ExperienceCollectorScreen::new);
         MenuRegistry.registerScreenFactory(ContainerMenuRegistry.SLAUGHTERER.get(), SlaughtererScreen::new);
-        BlockEntityRenderers.registerRenderer(BlockEntityRegistry.FAN.get(), AreaRenderer::new);
-        BlockEntityRenderers.registerRenderer(BlockEntityRegistry.ITEM_COLLECTOR.get(), AreaRenderer::new);
-        BlockEntityRenderers.registerRenderer(BlockEntityRegistry.EXPERIENCE_COLLECTOR.get(), AreaRenderer::new);
-        BlockEntityRenderers.registerRenderer(BlockEntityRegistry.SLAUGHTERER.get(), AreaRenderer::new);
+        BlockEntityRendererRegistry.register(BlockEntityRegistry.FAN.get(), AreaRenderer::new);
+        BlockEntityRendererRegistry.register(BlockEntityRegistry.ITEM_COLLECTOR.get(), AreaRenderer::new);
+        BlockEntityRendererRegistry.register(BlockEntityRegistry.EXPERIENCE_COLLECTOR.get(), AreaRenderer::new);
+        BlockEntityRendererRegistry.register(BlockEntityRegistry.SLAUGHTERER.get(), AreaRenderer::new);
     }
-
 
     @Environment(EnvType.CLIENT)
     private void onPreTextureStitch(TextureAtlas atlasTexture, Consumer<ResourceLocation> spriteAdder) {

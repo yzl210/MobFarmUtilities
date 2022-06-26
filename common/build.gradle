@@ -1,14 +1,12 @@
+architectury {
+    common(rootProject.enabled_platforms.split(","))
+}
+
 dependencies {
     // Remove the next line if you don't want to depend on the API
-    modApi "me.shedaniel:architectury:${rootProject.architectury_version}"
+    modApi "dev.architectury:architectury:${rootProject.architectury_version}"
     // We depend on fabric loader here to use the fabric @Environment annotations
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
-}
 
-architectury {
-    common()
-}
-
-java {
-    withSourcesJar()
+   // modCompileOnly "mcp.mobius.waila:wthit-api:fabric-${rootProject.wthit_version}"
 }

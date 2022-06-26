@@ -3,7 +3,7 @@ package cn.leomc.mobfarmutilities.common.network.message;
 import cn.leomc.mobfarmutilities.common.blockentity.ExperienceCollectorBlockEntity;
 import cn.leomc.mobfarmutilities.common.menu.BaseMenu;
 import cn.leomc.mobfarmutilities.common.utils.Utils;
-import me.shedaniel.architectury.networking.NetworkManager;
+import dev.architectury.networking.NetworkManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.Mth;
@@ -45,8 +45,7 @@ public class ChangeExperienceMessage {
                 Level world = playerEntity.getCommandSenderWorld();
                 if (world.hasChunkAt(message.pos)) {
                     BlockEntity blockEntityO = world.getBlockEntity(message.pos);
-                    if (blockEntityO instanceof ExperienceCollectorBlockEntity) {
-                        ExperienceCollectorBlockEntity blockEntity = (ExperienceCollectorBlockEntity) blockEntityO;
+                    if (blockEntityO instanceof ExperienceCollectorBlockEntity blockEntity) {
                         if (message.level) {
                             int neededPoints = Utils.getPointsForNextLevel(playerEntity.experienceLevel);
                             neededPoints = neededPoints - Mth.floor(playerEntity.experienceProgress * (float) playerEntity.getXpNeededForNextLevel());

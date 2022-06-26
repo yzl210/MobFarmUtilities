@@ -11,7 +11,7 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public enum RedstoneMode implements ITranslatable, StringRepresentable {
+public enum RedstoneMode implements StringRepresentable {
     IGNORED,
     HIGH,
     LOW;
@@ -40,16 +40,11 @@ public enum RedstoneMode implements ITranslatable, StringRepresentable {
     }
 
     public RedstoneMode next() {
-        switch (this) {
-            case HIGH:
-                return LOW;
-            case LOW:
-                return IGNORED;
-            case IGNORED:
-                return HIGH;
-            default:
-                throw new IllegalStateException("What am I?");
-        }
+        return switch (this) {
+            case HIGH -> LOW;
+            case LOW -> IGNORED;
+            case IGNORED -> HIGH;
+        };
     }
 
     @Override
@@ -57,22 +52,20 @@ public enum RedstoneMode implements ITranslatable, StringRepresentable {
         return toString().toLowerCase();
     }
 
-    @Override
     public String getTranslationKey() {
         return "text." + MobFarmUtilities.MODID + ".mode." + getSerializedName();
     }
 
     public ResourceLocation getTextureResourceLocation() {
-        switch (this) {
-            case HIGH:
-                return new ResourceLocation("minecraft", "block/redstone_torch");
-            case LOW:
-                return new ResourceLocation("minecraft", "block/redstone_torch_off");
-            case IGNORED:
-                return new ResourceLocation("minecraft", "item/gunpowder");
-            default:
-                throw new IllegalStateException("What am I?");
-        }
+
+        String str = new String("");
+
+
+        return switch (this) {
+            case HIGH -> new ResourceLocation("minecraft", "block/redstone_torch");
+            case LOW -> new ResourceLocation("minecraft", "block/redstone_torch_off");
+            case IGNORED -> new ResourceLocation("minecraft", "item/gunpowder");
+        };
     }
 
     @Environment(EnvType.CLIENT)

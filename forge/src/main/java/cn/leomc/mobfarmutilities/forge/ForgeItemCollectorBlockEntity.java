@@ -1,7 +1,9 @@
 package cn.leomc.mobfarmutilities.forge;
 
 import cn.leomc.mobfarmutilities.common.blockentity.ItemCollectorBlockEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -14,8 +16,8 @@ public class ForgeItemCollectorBlockEntity extends ItemCollectorBlockEntity {
 
     protected LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(inventory));
 
-    public ForgeItemCollectorBlockEntity() {
-        super();
+    public ForgeItemCollectorBlockEntity(BlockPos pos, BlockState state) {
+        super(pos, state);
     }
 
     @NotNull

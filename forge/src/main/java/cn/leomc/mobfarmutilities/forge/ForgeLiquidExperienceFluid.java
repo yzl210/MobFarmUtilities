@@ -6,12 +6,13 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.fluids.FluidAttributes;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class ForgeLiquidExperienceFluid extends LiquidExperienceFluid {
 
 
     @Override
-    protected FluidAttributes createAttributes() {
+    protected @NotNull FluidAttributes createAttributes() {
 
         ResourceLocation still = LiquidExperienceFluid.Still.getResourceLocation();
         ResourceLocation flowing = LiquidExperienceFluid.Flowing.getResourceLocation();
@@ -29,7 +30,7 @@ public abstract class ForgeLiquidExperienceFluid extends LiquidExperienceFluid {
         }
 
         @Override
-        public boolean isSource(FluidState state) {
+        public boolean isSource(@NotNull FluidState state) {
             return false;
         }
 
@@ -43,12 +44,12 @@ public abstract class ForgeLiquidExperienceFluid extends LiquidExperienceFluid {
 
     public static class Still extends ForgeLiquidExperienceFluid {
         @Override
-        public boolean isSource(FluidState state) {
+        public boolean isSource(@NotNull FluidState state) {
             return true;
         }
 
         @Override
-        public int getAmount(FluidState fluidState) {
+        public int getAmount(@NotNull FluidState fluidState) {
             return 8;
         }
 

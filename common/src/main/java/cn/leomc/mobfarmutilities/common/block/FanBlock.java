@@ -1,22 +1,15 @@
 package cn.leomc.mobfarmutilities.common.block;
 
+import cn.leomc.mobfarmutilities.common.api.IHasDirection;
 import cn.leomc.mobfarmutilities.common.api.InventoryWrapper;
-import cn.leomc.mobfarmutilities.common.api.blockstate.IHasDirection;
 import cn.leomc.mobfarmutilities.common.blockentity.FanBlockEntity;
-import me.shedaniel.architectury.platform.Platform;
-import me.shedaniel.architectury.registry.BlockProperties;
-import me.shedaniel.architectury.registry.MenuRegistry;
-import me.shedaniel.architectury.registry.ToolType;
+import cn.leomc.mobfarmutilities.common.utils.PlatformCompatibility;
+import dev.architectury.registry.menu.MenuRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.WorldlyContainer;
-import net.minecraft.world.WorldlyContainerHolder;
+import net.minecraft.world.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
@@ -26,31 +19,21 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
-
-import java.lang.reflect.InvocationTargetException;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 public class FanBlock extends ActivatableBlock implements EntityBlock, IHasDirection, WorldlyContainerHolder {
 
     public FanBlock() {
-        super(BlockProperties.of(Material.METAL)
-                .tool(ToolType.PICKAXE, 1)
+        super(Properties.of(Material.METAL)
                 .requiresCorrectToolForDrops()
                 .strength(1.5F, 6.0F)
         );
     }
 
-    public static FanBlockEntity getBlockEntity() {
-        if (Platform.isForge()) {
-            Class<FanBlockEntity> tileEntityClass;
-            try {
-                tileEntityClass = (Class<FanBlockEntity>) Class.forName("cn.leomc.mobfarmutilities.forge.ForgeFanBlockEntity");
-                return tileEntityClass.getConstructor().newInstance();
-            } catch (ClassNotFoundException | ClassCastException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
-        }
-        return new FanBlockEntity();
+    public static FanBlockEntity getBlockEntity(BlockPos pos, BlockState state) {
+        return (FanBlockEntity) PlatformCompatibility.getBlockEntity(PlatformCompatibility.BlockEntityType.FAN, pos, state);
     }
 
     @Override
@@ -90,9 +73,10 @@ public class FanBlock extends ActivatableBlock implements EntityBlock, IHasDirec
         builder.add(FACING);
     }
 
+    @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockGetter worldIn) {
-        return getBlockEntity();
+    public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
+        return getBlockEntity(pos, state);
     }
 
     @Override

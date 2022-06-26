@@ -7,7 +7,7 @@
   ],
   "key": {
     "B": {
-      "item": "mobfarmutilities:laser_component"
+      "item": "mobfarmutilities:laser_emitter"
     },
     "R": {
       "item": "minecraft:redstone"

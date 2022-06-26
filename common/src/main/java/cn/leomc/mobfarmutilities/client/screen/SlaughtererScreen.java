@@ -30,9 +30,9 @@ public class SlaughtererScreen extends BaseScreen<SlaughtererMenu> {
     @Override
     protected void init() {
         super.init();
-        redstoneModeButton = addButton(new RedstoneModeButton(this, leftPos, topPos, menu.getTileEntity().getBlockPos(), menu.getTileEntity().getLevel()));
+        redstoneModeButton = addRenderableWidget(new RedstoneModeButton(this, leftPos, topPos, menu.getTileEntity().getBlockPos(), menu.getTileEntity().getLevel()));
         if (menu.getTileEntity() instanceof IHasArea)
-            showAreaButton = addButton(new ShowAreaButton(this, leftPos, topPos, (IHasArea) menu.getTileEntity()));
+            showAreaButton = addRenderableWidget(new ShowAreaButton(this, leftPos, topPos, (IHasArea) menu.getTileEntity()));
         if (menu.getTileEntity() instanceof SlaughtererBlockEntity) {
             String title = I18n.get("text." + MobFarmUtilities.MODID + ".upgrade.slaughterer");
             upgradeSelector = new UpgradeSelector(this, getCenteredOffset(""), 30, title, leftPos, topPos, ((SlaughtererBlockEntity) menu.getTileEntity()).getUpgradeHandler(), ((SlaughtererBlockEntity) menu.getTileEntity()).getUpgradeHandler().getSupportedUpgrades());

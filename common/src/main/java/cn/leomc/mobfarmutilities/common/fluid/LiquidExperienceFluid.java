@@ -4,7 +4,7 @@ import cn.leomc.mobfarmutilities.MobFarmUtilities;
 import cn.leomc.mobfarmutilities.common.registry.BlockRegistry;
 import cn.leomc.mobfarmutilities.common.registry.FluidRegistry;
 import cn.leomc.mobfarmutilities.common.registry.ItemRegistry;
-import me.shedaniel.architectury.platform.Platform;
+import cn.leomc.mobfarmutilities.common.utils.PlatformCompatibility;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.LiquidBlock;
@@ -12,8 +12,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-
-import java.lang.reflect.InvocationTargetException;
 
 
 public abstract class LiquidExperienceFluid extends BaseFlowingFluid {
@@ -44,16 +42,7 @@ public abstract class LiquidExperienceFluid extends BaseFlowingFluid {
     public static class Flowing extends LiquidExperienceFluid {
 
         public static LiquidExperienceFluid getFluid() {
-            if (Platform.isForge()) {
-                Class<LiquidExperienceFluid> fluidClass;
-                try {
-                    fluidClass = (Class<LiquidExperienceFluid>) Class.forName("cn.leomc.mobfarmutilities.forge.ForgeLiquidExperienceFluid$Flowing");
-                    return fluidClass.getConstructor().newInstance();
-                } catch (ClassNotFoundException | ClassCastException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
-                    e.printStackTrace();
-                }
-            }
-            return new Flowing();
+            return PlatformCompatibility.getFluid(true);
         }
 
         public static ResourceLocation getResourceLocation() {
@@ -81,16 +70,7 @@ public abstract class LiquidExperienceFluid extends BaseFlowingFluid {
     public static class Still extends LiquidExperienceFluid {
 
         public static LiquidExperienceFluid getFluid() {
-            if (Platform.isForge()) {
-                Class<LiquidExperienceFluid> fluidClass;
-                try {
-                    fluidClass = (Class<LiquidExperienceFluid>) Class.forName("cn.leomc.mobfarmutilities.forge.ForgeLiquidExperienceFluid$Still");
-                    return fluidClass.getConstructor().newInstance();
-                } catch (ClassNotFoundException | ClassCastException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
-                    e.printStackTrace();
-                }
-            }
-            return new Still();
+            return PlatformCompatibility.getFluid(false);
         }
 
         public static ResourceLocation getResourceLocation() {

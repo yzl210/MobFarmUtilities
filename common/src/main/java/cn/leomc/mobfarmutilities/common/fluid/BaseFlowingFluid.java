@@ -6,7 +6,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
@@ -26,8 +25,7 @@ public abstract class BaseFlowingFluid extends FlowingFluid {
 
     @Override
     protected void beforeDestroyingBlock(LevelAccessor world, BlockPos pos, BlockState state) {
-        BlockEntity tileEntity = state.getBlock().isEntityBlock() ? world.getBlockEntity(pos) : null;
-        Block.dropResources(state, world, pos, tileEntity);
+        Block.dropResources(state, world, pos,  world.getBlockEntity(pos));
     }
 
     @Override

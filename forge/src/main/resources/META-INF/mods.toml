@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[34,)"
+loaderVersion = "[40,)"
 issueTrackerURL = "https://github.com/yzl210/MobFarmUtilities/issues"
 logoFile="logo.png"
 license = "GNU GPLv3"
@@ -16,6 +16,6 @@ Add some useful mob farm helpers
 [[dependencies.mobfarmutilities]]
 modId = "architectury"
 mandatory = true
-versionRange = "[1.8.130,)"
+versionRange = "[4.4.70,)"
 ordering = "AFTER"
 side = "BOTH"

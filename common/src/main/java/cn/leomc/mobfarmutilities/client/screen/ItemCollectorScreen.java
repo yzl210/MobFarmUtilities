@@ -23,9 +23,9 @@ public class ItemCollectorScreen extends BaseScreen<ItemCollectorMenu> {
     @Override
     protected void init() {
         super.init();
-        redstoneModeButton = addButton(new RedstoneModeButton(this, leftPos, topPos, menu.getTileEntity().getBlockPos(), menu.getTileEntity().getLevel()));
+        redstoneModeButton = addRenderableWidget(new RedstoneModeButton(this, leftPos, topPos, menu.getTileEntity().getBlockPos(), menu.getTileEntity().getLevel()));
         if (menu.getTileEntity() instanceof IHasArea)
-            showAreaButton = addButton(new ShowAreaButton(this, leftPos, topPos, (IHasArea) menu.getTileEntity()));
+            showAreaButton = addRenderableWidget(new ShowAreaButton(this, leftPos, topPos, (IHasArea) menu.getTileEntity()));
         addSlotBox(8, 34, 9, 18, 2, 18);
     }
 

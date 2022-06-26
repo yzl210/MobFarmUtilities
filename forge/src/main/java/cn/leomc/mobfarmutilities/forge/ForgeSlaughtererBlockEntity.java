@@ -1,7 +1,9 @@
 package cn.leomc.mobfarmutilities.forge;
 
 import cn.leomc.mobfarmutilities.common.blockentity.SlaughtererBlockEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -13,6 +15,10 @@ import org.jetbrains.annotations.Nullable;
 public class ForgeSlaughtererBlockEntity extends SlaughtererBlockEntity {
 
     protected LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(upgradeHandler.getInventory()));
+
+    public ForgeSlaughtererBlockEntity(BlockPos pos, BlockState state) {
+        super(pos, state);
+    }
 
     @NotNull
     @Override

@@ -12,9 +12,9 @@ import cn.leomc.mobfarmutilities.common.network.NetworkHandler;
 import cn.leomc.mobfarmutilities.common.network.message.ChangeExperienceMessage;
 import cn.leomc.mobfarmutilities.common.registry.BlockRegistry;
 import cn.leomc.mobfarmutilities.common.registry.FluidRegistry;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -44,9 +44,9 @@ public class ExperienceCollectorScreen extends BaseScreen<ExperienceCollectorMen
     @Override
     protected void init() {
         super.init();
-        redstoneModeButton = addButton(new RedstoneModeButton(this, leftPos, topPos, menu.getTileEntity().getBlockPos(), menu.getTileEntity().getLevel()));
+        redstoneModeButton = addRenderableWidget(new RedstoneModeButton(this, leftPos, topPos, menu.getTileEntity().getBlockPos(), menu.getTileEntity().getLevel()));
         if (menu.getTileEntity() instanceof IHasArea)
-            showAreaButton = addButton(new ShowAreaButton(this, leftPos, topPos, (IHasArea) menu.getTileEntity()));
+            showAreaButton = addRenderableWidget(new ShowAreaButton(this, leftPos, topPos, (IHasArea) menu.getTileEntity()));
     }
 
     @Override
@@ -73,7 +73,7 @@ public class ExperienceCollectorScreen extends BaseScreen<ExperienceCollectorMen
         int height = 62;
         int posX = 75;
         int posY = 15;
-        Minecraft.getInstance().getTextureManager().bind(InventoryMenu.BLOCK_ATLAS);
+        RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
         int amount = ((ExperienceCollectorBlockEntity) menu.getTileEntity()).getAmount();
         AbstractContainerScreen.blit(matrixStack, leftPos + posX, topPos + posY, 0, width, height, Textures.VERTICAL_FLUID_TANK.get());
         TextureUtils.drawVerticalFluidTank(matrixStack.last().pose(), FluidRegistry.LIQUID_EXPERIENCE.get(), amount, 5000, leftPos + posX + 1, topPos + posY + 1, width - 2, height - 2);

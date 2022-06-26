@@ -2,7 +2,7 @@ package cn.leomc.mobfarmutilities.forge.compat.jade;
 
 import cn.leomc.mobfarmutilities.MobFarmUtilities;
 import cn.leomc.mobfarmutilities.common.compat.InfoList;
-import mcp.mobius.waila.api.IRegistrar;
+import mcp.mobius.waila.api.IWailaClientRegistration;
 import mcp.mobius.waila.api.IWailaPlugin;
 import mcp.mobius.waila.api.TooltipPosition;
 import mcp.mobius.waila.api.WailaPlugin;
@@ -11,7 +11,8 @@ import mcp.mobius.waila.api.WailaPlugin;
 public class JadePlugin implements IWailaPlugin {
 
     @Override
-    public void register(IRegistrar registrar) {
-        InfoList.INFO_PROVIDERS.forEach(blockClass -> registrar.registerComponentProvider(new ComponentProvider(), TooltipPosition.BODY, blockClass));
+    public void registerClient(IWailaClientRegistration registration) {
+        InfoList.INFO_PROVIDERS.forEach(clazz -> registration.registerComponentProvider(new ComponentProvider(), TooltipPosition.BODY, clazz));
     }
+
 }

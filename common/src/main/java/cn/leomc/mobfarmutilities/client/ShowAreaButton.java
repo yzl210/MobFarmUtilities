@@ -3,6 +3,7 @@ package cn.leomc.mobfarmutilities.client;
 import cn.leomc.mobfarmutilities.MobFarmUtilities;
 import cn.leomc.mobfarmutilities.client.utils.TextureUtils;
 import cn.leomc.mobfarmutilities.common.api.IHasArea;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -42,15 +43,10 @@ public class ShowAreaButton extends Button {
     }
 
     @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
-        Minecraft.getInstance().getTextureManager().bind(InventoryMenu.BLOCK_ATLAS);
-        TextureAtlasSprite sprite;
-        if (iHasArea.doRenderArea())
-            sprite = TextureUtils.getAtlasTexture(new ResourceLocation("minecraft", "block/lime_wool"));
-        else
-            sprite = TextureUtils.getAtlasTexture(new ResourceLocation("minecraft", "block/red_wool"));
-
-        Screen.blit(matrixStack, x + 2, y + 2, 0, 16, 16, sprite);
+    protected void renderBg(PoseStack poseStack, Minecraft minecraft, int mouseX, int mouseY) {
+        super.renderBg(poseStack, minecraft, mouseX, mouseY);
+        RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
+        TextureAtlasSprite sprite = TextureUtils.getAtlasTexture(new ResourceLocation("minecraft", iHasArea.doRenderArea() ? "block/lime_wool" : "block/red_wool"));
+        Screen.blit(poseStack, x + 2, y + 2, 0, 16, 16, sprite);
     }
 }

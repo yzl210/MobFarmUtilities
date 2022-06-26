@@ -2,10 +2,8 @@ package cn.leomc.mobfarmutilities.common.block;
 
 import cn.leomc.mobfarmutilities.common.blockentity.ExperienceCollectorBlockEntity;
 import cn.leomc.mobfarmutilities.common.registry.ItemRegistry;
-import me.shedaniel.architectury.platform.Platform;
-import me.shedaniel.architectury.registry.BlockProperties;
-import me.shedaniel.architectury.registry.MenuRegistry;
-import me.shedaniel.architectury.registry.ToolType;
+import cn.leomc.mobfarmutilities.common.utils.PlatformCompatibility;
+import dev.architectury.registry.menu.MenuRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -16,38 +14,26 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.lang.reflect.InvocationTargetException;
 
 public class ExperienceCollectorBlock extends ActivatableBlock implements EntityBlock {
 
     public ExperienceCollectorBlock() {
-        super(BlockProperties.of(Material.METAL)
-                .tool(ToolType.PICKAXE, 1)
+        super(Properties.of(Material.METAL)
                 .strength(1.5F, 6.0F)
                 .requiresCorrectToolForDrops()
         );
     }
 
-    public static ExperienceCollectorBlockEntity getBlockEntity() {
-        if (Platform.isForge()) {
-            Class<ExperienceCollectorBlockEntity> tileEntityClass;
-            try {
-                tileEntityClass = (Class<ExperienceCollectorBlockEntity>) Class.forName("cn.leomc.mobfarmutilities.forge.ForgeExperienceCollectorBlockEntity");
-                return tileEntityClass.getConstructor().newInstance();
-            } catch (ClassNotFoundException | ClassCastException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
-        }
-        return new ExperienceCollectorBlockEntity();
+    public static ExperienceCollectorBlockEntity getBlockEntity(BlockPos pos, BlockState state) {
+        return (ExperienceCollectorBlockEntity) PlatformCompatibility.getBlockEntity(PlatformCompatibility.BlockEntityType.EXPERIENCE_COLLECTOR, pos, state);
     }
 
     @Override
@@ -57,22 +43,22 @@ public class ExperienceCollectorBlock extends ActivatableBlock implements Entity
 
         BlockEntity tileEntity = worldIn.getBlockEntity(pos);
 
-        if (player.getItemInHand(InteractionHand.MAIN_HAND).getItem() == Items.BUCKET && tileEntity instanceof ExperienceCollectorBlockEntity && !player.isShiftKeyDown())
-            if (((ExperienceCollectorBlockEntity) tileEntity).getAmount() >= 1000) {
+        if (player.getItemInHand(InteractionHand.MAIN_HAND).getItem() == Items.BUCKET && tileEntity instanceof ExperienceCollectorBlockEntity experienceCollector && !player.isShiftKeyDown())
+            if (experienceCollector.getAmount() >= 1000) {
                 if (player.isCreative())
                     player.addItem(new ItemStack(ItemRegistry.LIQUID_EXPERIENCE_BUCKET.get()));
                 else
                     player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ItemRegistry.LIQUID_EXPERIENCE_BUCKET.get()));
-                ((ExperienceCollectorBlockEntity) tileEntity).addAmount(-1000);
+                experienceCollector.addAmount(-1000);
                 worldIn.playSound(null, pos, SoundEvents.BUCKET_FILL, SoundSource.PLAYERS, 1.0F, 1.0F);
                 return InteractionResult.SUCCESS;
             }
 
-        if (player.getItemInHand(InteractionHand.MAIN_HAND).getItem() == ItemRegistry.LIQUID_EXPERIENCE_BUCKET.get() && tileEntity instanceof ExperienceCollectorBlockEntity && !player.isShiftKeyDown())
-            if (((ExperienceCollectorBlockEntity) tileEntity).getAmount() <= ((ExperienceCollectorBlockEntity) tileEntity).getLimit() - 1000) {
+        if (player.getItemInHand(InteractionHand.MAIN_HAND).getItem() == ItemRegistry.LIQUID_EXPERIENCE_BUCKET.get() && tileEntity instanceof ExperienceCollectorBlockEntity experienceCollector && !player.isShiftKeyDown())
+            if (experienceCollector.getAmount() <= experienceCollector.getLimit() - 1000) {
                 if (!player.isCreative())
                     player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.BUCKET));
-                ((ExperienceCollectorBlockEntity) tileEntity).addAmount(1000);
+                experienceCollector.addAmount(1000);
                 worldIn.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.PLAYERS, 1.0F, 1.0F);
                 return InteractionResult.SUCCESS;
             }
@@ -86,20 +72,20 @@ public class ExperienceCollectorBlock extends ActivatableBlock implements Entity
     }
 
     @Override
-    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() == newState.getBlock())
             return;
-        BlockEntity tileEntity = worldIn.getBlockEntity(pos);
+        BlockEntity tileEntity = level.getBlockEntity(pos);
         if (tileEntity instanceof ExperienceCollectorBlockEntity) {
-            ((ExperienceCollectorBlockEntity) tileEntity).dropAllExperience();
+            ((ExperienceCollectorBlockEntity) tileEntity).dropAllExperience(level);
         }
-        super.onRemove(state, worldIn, pos, newState, isMoving);
+        super.onRemove(state, level, pos, newState, isMoving);
     }
 
 
     @Override
-    public @Nullable BlockEntity newBlockEntity(BlockGetter worldIn) {
-        return getBlockEntity();
+    public @Nullable BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
+        return getBlockEntity(pos, state);
     }
 
 }

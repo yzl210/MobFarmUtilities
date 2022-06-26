@@ -17,9 +17,6 @@
   },
   "license": "GPLv3",
   "environment": "*",
-  "mixins": [
-    "mobfarmutilities.mixins.json"
-  ],
   "entrypoints": {
     "main": [
       "cn.leomc.mobfarmutilities.fabric.MobFarmUtilitiesFabric"
@@ -29,18 +26,15 @@
     ]
   },
   "depends": {
-    "fabricloader": ">=0.7.4",
+    "fabricloader": ">=0.14.0",
     "fabric": "*",
-    "minecraft": ">=1.16.3",
-    "architectury": ">=1.8.130"
-  },
-  "suggests": {
-    "flamingo": "*"
+    "minecraft": ">=1.18.2",
+    "architectury": ">=4.4.70"
   },
   "custom": {
     "waila:plugins": {
       "id": "mobfarmutilities:wthit_plugin",
-      "initializer": "cn.leomc.mobfarmutilities.fabric.compat.WTHITCompat"
+      "initializer": "cn.leomc.mobfarmutilities.fabric.compat.wthit.WTHITCompat"
     }
   }
 }

@@ -1,7 +1,7 @@
 package cn.leomc.mobfarmutilities.common.network.message;
 
-import me.shedaniel.architectury.extensions.BlockEntityExtension;
-import me.shedaniel.architectury.networking.NetworkManager;
+import cn.leomc.mobfarmutilities.common.blockentity.BaseBlockEntity;
+import dev.architectury.networking.NetworkManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
@@ -31,11 +31,11 @@ public class SyncDataMessage {
         if (playerEntity == null)
             return;
         context.get().queue(() -> {
-            Level world = playerEntity.getCommandSenderWorld();
+            Level world = playerEntity.getLevel();
             if (world.hasChunkAt(message.pos)) {
                 BlockEntity blockEntity = world.getBlockEntity(message.pos);
-                if (blockEntity instanceof BlockEntityExtension)
-                    ((BlockEntityExtension) blockEntity).syncData();
+                if (blockEntity instanceof BaseBlockEntity be)
+                    be.syncData();
             }
         });
     }

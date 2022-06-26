@@ -2,6 +2,7 @@ package cn.leomc.mobfarmutilities.client;
 
 
 import cn.leomc.mobfarmutilities.client.screen.BaseScreen;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -30,7 +31,6 @@ public class ScrollSelector<T> {
     protected int guiTop;
     protected List<T> elements;
     protected int selectedIndex;
-
     protected String title;
 
     @SafeVarargs
@@ -93,7 +93,7 @@ public class ScrollSelector<T> {
     }
 
     public void renderBackground(PoseStack matrixStack) {
-        Minecraft.getInstance().getTextureManager().bind(InventoryMenu.BLOCK_ATLAS);
+        RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
         int width = parent.getFont().width(title);
         int minX = guiLeft + x - width / 2 - 3;
         int minY = guiTop + y - 3;
@@ -106,9 +106,6 @@ public class ScrollSelector<T> {
         GuiComponent.fill(matrixStack, maxX, minY, maxX + 1, minY - 1, 0xff8b8b8b);
         GuiComponent.fill(matrixStack, maxX, minY, maxX + 1, maxY + 1, 0xffffffff);
         GuiComponent.fill(matrixStack, minX, maxY, maxX, maxY + 1, 0xffffffff);
-
-
-        //GuiComponent.blit(matrixStack, guiLeft + x - 48, guiTop + y - 5, 0, 96, 16, Textures.TEXTFIELD.get());
     }
 
     public void renderForeground(PoseStack matrixStack) {

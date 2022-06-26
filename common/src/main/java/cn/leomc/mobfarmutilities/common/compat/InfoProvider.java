@@ -1,26 +1,24 @@
 package cn.leomc.mobfarmutilities.common.compat;
 
+import cn.leomc.mobfarmutilities.common.blockentity.BaseBlockEntity;
 import cn.leomc.mobfarmutilities.common.network.NetworkHandler;
-import cn.leomc.mobfarmutilities.common.network.message.SyncDataMessage;
-import me.shedaniel.architectury.extensions.BlockEntityExtension;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public class InfoProvider {
 
-    int syncCount = 0;
+    private int syncCount = 0;
 
-    public void appendInfo(List<Component> tooltip, BlockEntity blockEntity) {
-        if (syncCount <= 0 && blockEntity instanceof BlockEntityExtension) {
+    public final void appendInfo(Consumer<Component> tooltip, BlockEntity blockEntity) {
+        if (syncCount <= 0 && blockEntity instanceof BaseBlockEntity) {
             NetworkHandler.syncData(blockEntity.getBlockPos());
             syncCount = 20;
         }
         syncCount--;
-        if (blockEntity instanceof IInfoProvider)
-            tooltip.addAll(((IInfoProvider) blockEntity).getInfo());
-
+        if (blockEntity instanceof IInfoProvider infoProvider)
+            infoProvider.getInfo().forEach(tooltip);
     }
 
 }

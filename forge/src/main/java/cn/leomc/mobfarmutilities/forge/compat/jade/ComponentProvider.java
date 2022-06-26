@@ -1,17 +1,15 @@
 package cn.leomc.mobfarmutilities.forge.compat.jade;
 
 import cn.leomc.mobfarmutilities.common.compat.InfoProvider;
+import mcp.mobius.waila.api.BlockAccessor;
 import mcp.mobius.waila.api.IComponentProvider;
-import mcp.mobius.waila.api.IDataAccessor;
-import mcp.mobius.waila.api.IPluginConfig;
-import net.minecraft.network.chat.Component;
-
-import java.util.List;
+import mcp.mobius.waila.api.ITooltip;
+import mcp.mobius.waila.api.config.IPluginConfig;
 
 public class ComponentProvider extends InfoProvider implements IComponentProvider {
 
     @Override
-    public void appendBody(List<Component> tooltip, IDataAccessor accessor, IPluginConfig config) {
-        appendInfo(tooltip, accessor.getTileEntity());
+    public void appendTooltip(ITooltip iTooltip, BlockAccessor accessor, IPluginConfig iPluginConfig) {
+        appendInfo(iTooltip::add, accessor.getBlockEntity());
     }
 }

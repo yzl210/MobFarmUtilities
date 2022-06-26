@@ -1,5 +1,8 @@
 package cn.leomc.mobfarmutilities.common.utils;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
 public class Utils {
 
     public static int getPointsForNextLevel(int level) {
@@ -14,6 +17,11 @@ public class Utils {
         for (int i = currentLevel; i < currentLevel + levels; i++)
             needed += getPointsForNextLevel(i);
         return needed;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public static net.minecraft.client.player.LocalPlayer getLocalPlayer() {
+        return net.minecraft.client.Minecraft.getInstance().player;
     }
 
 }

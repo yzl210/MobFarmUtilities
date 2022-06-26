@@ -6,8 +6,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-
-import java.util.Random;
+import org.apache.commons.lang3.RandomUtils;
 
 public class SlaughtererDamageSource extends EntityDamageSource {
 
@@ -18,7 +17,7 @@ public class SlaughtererDamageSource extends EntityDamageSource {
 
     @Override
     public Component getLocalizedDeathMessage(LivingEntity livingEntity) {
-        String string = "text." + MobFarmUtilities.MODID + ".death." + this.msgId + "." + new Random().nextInt(3);
+        String string = "text." + MobFarmUtilities.MODID + ".death." + this.msgId + "." + RandomUtils.nextInt(0, 3);
         return new TranslatableComponent(string, livingEntity.getDisplayName());
     }
 

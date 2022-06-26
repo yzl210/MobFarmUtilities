@@ -2,21 +2,12 @@ package cn.leomc.mobfarmutilities.common.block;
 
 import cn.leomc.mobfarmutilities.common.api.InventoryWrapper;
 import cn.leomc.mobfarmutilities.common.blockentity.ItemCollectorBlockEntity;
-import cn.leomc.mobfarmutilities.common.registry.BlockRegistry;
-import me.shedaniel.architectury.platform.Platform;
-import me.shedaniel.architectury.registry.BlockProperties;
-import me.shedaniel.architectury.registry.MenuRegistry;
-import me.shedaniel.architectury.registry.ToolType;
+import cn.leomc.mobfarmutilities.common.utils.PlatformCompatibility;
+import dev.architectury.registry.menu.MenuRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.WorldlyContainer;
-import net.minecraft.world.WorldlyContainerHolder;
+import net.minecraft.world.*;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.EntityBlock;
@@ -26,29 +17,17 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.InvocationTargetException;
-
 public class ItemCollectorBlock extends ActivatableBlock implements EntityBlock, WorldlyContainerHolder {
 
     public ItemCollectorBlock() {
-        super(BlockProperties.of(Material.METAL)
-                .tool(ToolType.PICKAXE, 1)
+        super(Properties.of(Material.METAL)
                 .strength(1.5F, 6.0F)
                 .requiresCorrectToolForDrops()
         );
     }
 
-    public static ItemCollectorBlockEntity getBlockEntity() {
-        if (Platform.isForge()) {
-            Class<ItemCollectorBlockEntity> tileEntityClass;
-            try {
-                tileEntityClass = (Class<ItemCollectorBlockEntity>) Class.forName("cn.leomc.mobfarmutilities.forge.ForgeItemCollectorBlockEntity");
-                return tileEntityClass.getConstructor().newInstance();
-            } catch (ClassNotFoundException | ClassCastException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
-        }
-        return new ItemCollectorBlockEntity();
+    public static ItemCollectorBlockEntity getBlockEntity(BlockPos pos, BlockState state) {
+        return (ItemCollectorBlockEntity) PlatformCompatibility.getBlockEntity(PlatformCompatibility.BlockEntityType.ITEM_COLLECTOR, pos, state);
     }
 
     @Override
@@ -86,9 +65,10 @@ public class ItemCollectorBlock extends ActivatableBlock implements EntityBlock,
         return null;
     }
 
-    @Override
-    public @Nullable BlockEntity newBlockEntity(BlockGetter worldIn) {
-        return getBlockEntity();
-    }
 
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return getBlockEntity(pos, state);
+    }
 }

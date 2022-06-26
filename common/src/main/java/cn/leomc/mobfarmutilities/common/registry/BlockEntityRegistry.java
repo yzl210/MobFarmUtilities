@@ -9,8 +9,8 @@ import cn.leomc.mobfarmutilities.common.blockentity.ExperienceCollectorBlockEnti
 import cn.leomc.mobfarmutilities.common.blockentity.FanBlockEntity;
 import cn.leomc.mobfarmutilities.common.blockentity.ItemCollectorBlockEntity;
 import cn.leomc.mobfarmutilities.common.blockentity.SlaughtererBlockEntity;
-import me.shedaniel.architectury.registry.DeferredRegister;
-import me.shedaniel.architectury.registry.RegistrySupplier;
+import dev.architectury.registry.registries.DeferredRegister;
+import dev.architectury.registry.registries.RegistrySupplier;
 import net.minecraft.core.Registry;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 

@@ -5,9 +5,9 @@ import cn.leomc.mobfarmutilities.common.block.ExperienceCollectorBlock;
 import cn.leomc.mobfarmutilities.common.block.FanBlock;
 import cn.leomc.mobfarmutilities.common.block.ItemCollectorBlock;
 import cn.leomc.mobfarmutilities.common.block.SlaughtererBlock;
-import cn.leomc.mobfarmutilities.common.utils.PlatformCompatibility;
-import me.shedaniel.architectury.registry.DeferredRegister;
-import me.shedaniel.architectury.registry.RegistrySupplier;
+import dev.architectury.core.block.ArchitecturyLiquidBlock;
+import dev.architectury.registry.registries.DeferredRegister;
+import dev.architectury.registry.registries.RegistrySupplier;
 import net.minecraft.core.Registry;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -30,7 +30,7 @@ public class BlockRegistry {
 
     //Fluid
 
-    public static final RegistrySupplier<Block> LIQUID_EXPERIENCE = register("liquid_experience", () -> PlatformCompatibility.getLiquidBlock(FluidRegistry.LIQUID_EXPERIENCE, BlockBehaviour.Properties.of(Material.WATER).strength(100F).noDrops()));
+    public static final RegistrySupplier<Block> LIQUID_EXPERIENCE = register("liquid_experience", () -> new ArchitecturyLiquidBlock(FluidRegistry.LIQUID_EXPERIENCE, BlockBehaviour.Properties.of(Material.WATER).strength(100F).noDrops()));
 
 
     public static void register() {

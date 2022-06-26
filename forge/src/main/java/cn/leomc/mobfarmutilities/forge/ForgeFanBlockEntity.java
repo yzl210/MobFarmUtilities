@@ -1,9 +1,9 @@
 package cn.leomc.mobfarmutilities.forge;
 
 import cn.leomc.mobfarmutilities.common.blockentity.FanBlockEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.LiquidBlock;
-import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -16,12 +16,15 @@ public class ForgeFanBlockEntity extends FanBlockEntity {
 
     protected LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(upgradeHandler.getInventory()));
 
+    public ForgeFanBlockEntity(BlockPos pos, BlockState state) {
+        super(pos, state);
+    }
+
     @NotNull
     @Override
     public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
         if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
             return itemHandler.cast();
         return super.getCapability(cap, side);
-
     }
 }

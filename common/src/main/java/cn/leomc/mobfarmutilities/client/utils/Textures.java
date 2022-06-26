@@ -10,13 +10,14 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
 public class Textures {
 
     public static final List<ResourceLocation> REGISTRIES = new ArrayList<>();
-    public static final HashMap<ResourceLocation, TextureAtlasSprite> TEXTURE_MAP = new HashMap<>();
+    public static final Map<ResourceLocation, TextureAtlasSprite> TEXTURE_MAP = new HashMap<>();
 
     public static Supplier<TextureAtlasSprite> GENERIC_GUI = register("gui/generic");
 

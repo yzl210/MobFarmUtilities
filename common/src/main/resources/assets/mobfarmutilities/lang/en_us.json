@@ -7,7 +7,7 @@
   "fluid.mobfarmutilities.liquid_experience": "Liquid Experience",
   "item.mobfarmutilities.fan_blade": "Fan Blade",
   "item.mobfarmutilities.liquid_experience_bucket": "Liquid Experience Bucket",
-  "item.mobfarmutilities.laser_component": "Laser Component",
+  "item.mobfarmutilities.laser_emitter": "Laser Emitter",
   "container.mobfarmutilities.fan": "Fan",
   "container.mobfarmutilities.item_collector": "Item Collector",
   "container.mobfarmutilities.experience_collector": "Experience Collector",
@@ -39,7 +39,10 @@
   "text.mobfarmutilities.death.slaughterer.0": "%s has been torn apart",
   "text.mobfarmutilities.death.slaughterer.1": "%s has been cut into pieces",
   "text.mobfarmutilities.death.slaughterer.2": "%s was slaughtered",
+  "death.attack.mobfarmutilities_laser": "%s has been cut into pieces by %s",
+  "death.attack.mobfarmutilities_laser.item": "%s has been cut into pieces by %s using %s",
   "text.mobfarmutilities.show_area.false": "Show Area",
   "text.mobfarmutilities.show_area.true": "Hide Area",
+  "text.mobfarmutilities.laser_emitter_refuel_tip": "Craft With %s to Refuel",
   "itemGroup.mobfarmutilities.default": "Mob Farm Helpers"
 }

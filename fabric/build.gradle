@@ -1,15 +1,20 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "5.0.0"
-}
-
-configurations {
-    shadowCommon
+    id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
 architectury {
     platformSetupLoomIde()
     fabric()
 }
+
+configurations {
+    common
+    shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentFabric.extendsFrom common
+}
+
 
 repositories {
     maven {
@@ -28,27 +33,33 @@ repositories {
         name = "Curse Maven"
         url = "https://www.cursemaven.com"
     }
+    maven {
+        url = 'https://maven.cafeteria.dev'
+        content {
+            includeGroup 'dev.cafeteria'
+        }
+    }
 }
 
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
-    // Remove the next line if you don't want to depend on the API
-    modApi "me.shedaniel:architectury-fabric:${rootProject.architectury_version}"
+    modApi "dev.architectury:architectury-fabric:${rootProject.architectury_version}"
 
-    modImplementation "me.shedaniel:RoughlyEnoughItems:${rootProject.rei_version}"
-    modRuntime "com.terraformersmc:modmenu:${rootProject.modmenu_version}"
-    modImplementation "curse.maven:wthit-440979:${rootProject.wthit_version}"
+    modRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:${rootProject.rei_version}"
+    modRuntimeOnly "com.terraformersmc:modmenu:${rootProject.modmenu_version}"
 
-    implementation(project(path: ":common")) {
-        transitive = false
-    }
-    developmentFabric(project(path: ":common")) {
-        transitive = false
-    }
-    shadow(project(path: ":common", configuration: "transformProductionFabric")) {
-        transitive = false
-    }
+   // modImplementation "curse.maven:jade-324717:${rootProject.jade_fabric_version}"
+
+    modCompileOnly "mcp.mobius.waila:wthit-api:fabric-${rootProject.wthit_version}"
+    modRuntimeOnly "mcp.mobius.waila:wthit:fabric-${rootProject.wthit_version}"
+    modRuntimeOnly "lol.bai:badpackets:fabric-0.1.2"
+
+    modImplementation ("dev.cafeteria:fake-player-api:0.3.0") { transitive false }
+    include ("dev.cafeteria:fake-player-api:0.3.0") { transitive false }
+
+    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 }
 
 processResources {
@@ -60,27 +71,31 @@ processResources {
 }
 
 shadowJar {
+    exclude "architectury.common.json"
+
     configurations = [project.configurations.shadowCommon]
     classifier "dev-shadow"
 }
 
-
 remapJar {
+    injectAccessWidener = true
     input.set shadowJar.archiveFile
     dependsOn shadowJar
-    classifier "fabric"
+    classifier null
 }
 
 jar {
     classifier "dev"
 }
 
-java {
-    withSourcesJar()
-}
-
 sourcesJar {
     def commonSources = project(":common").sourcesJar
     dependsOn commonSources
     from commonSources.archiveFile.map { zipTree(it) }
+}
+
+components.java {
+    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+        skip()
+    }
 }

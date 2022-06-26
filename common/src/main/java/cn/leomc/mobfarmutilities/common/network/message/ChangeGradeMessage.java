@@ -1,9 +1,9 @@
 package cn.leomc.mobfarmutilities.common.network.message;
 
+import cn.leomc.mobfarmutilities.common.api.Upgradable;
 import cn.leomc.mobfarmutilities.common.api.UpgradeType;
-import cn.leomc.mobfarmutilities.common.api.blockstate.Upgradable;
 import cn.leomc.mobfarmutilities.common.menu.BaseMenu;
-import me.shedaniel.architectury.networking.NetworkManager;
+import dev.architectury.networking.NetworkManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
@@ -43,11 +43,11 @@ public class ChangeGradeMessage {
                 Level world = playerEntity.getCommandSenderWorld();
                 if (world.hasChunkAt(message.pos)) {
                     BlockEntity tileEntity = world.getBlockEntity(message.pos);
-                    if (tileEntity instanceof Upgradable) {
+                    if (tileEntity instanceof Upgradable upgradable) {
                         if (message.upgrade)
-                            ((Upgradable) tileEntity).getUpgradeHandler().upgrade(message.type);
+                            upgradable.getUpgradeHandler().upgrade(message.type);
                         else
-                            ((Upgradable) tileEntity).getUpgradeHandler().downgrade(message.type);
+                            upgradable.getUpgradeHandler().downgrade(message.type);
                     }
                 }
             }

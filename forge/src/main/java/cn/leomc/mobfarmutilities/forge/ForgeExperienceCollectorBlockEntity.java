@@ -2,7 +2,9 @@ package cn.leomc.mobfarmutilities.forge;
 
 import cn.leomc.mobfarmutilities.common.blockentity.ExperienceCollectorBlockEntity;
 import cn.leomc.mobfarmutilities.common.registry.FluidRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -15,26 +17,17 @@ import javax.annotation.Nonnull;
 
 public class ForgeExperienceCollectorBlockEntity extends ExperienceCollectorBlockEntity {
 
-    protected FluidStack fluidStack = new FluidStack(FluidRegistry.LIQUID_EXPERIENCE.get(), getAmount()) {
-        @Override
-        protected void updateEmpty() {
-            super.updateEmpty();
-            if (super.getAmount() != getAmount())
-                setAmount(super.getAmount());
-        }
-    };
-
     public LazyOptional<IFluidHandler> fluid = LazyOptional.of(() -> new IFluidHandler() {
 
         @Override
         public int getTanks() {
-            return getAmount();
+            return 1;
         }
 
         @NotNull
         @Override
         public FluidStack getFluidInTank(int i) {
-            return fluidStack;
+            return new FluidStack(FluidRegistry.LIQUID_EXPERIENCE.get(), getAmount());
         }
 
         @Override
@@ -44,7 +37,7 @@ public class ForgeExperienceCollectorBlockEntity extends ExperienceCollectorBloc
 
         @Override
         public boolean isFluidValid(int i, @NotNull FluidStack fluidStack) {
-            return fluidStack.getFluid() == FluidRegistry.LIQUID_EXPERIENCE.get();
+            return fluidStack.getFluid().isSame(FluidRegistry.LIQUID_EXPERIENCE.get());
         }
 
         public int fill(FluidStack resource, IFluidHandler.FluidAction action) {
@@ -81,10 +74,7 @@ public class ForgeExperienceCollectorBlockEntity extends ExperienceCollectorBloc
 
         @Nonnull
         public FluidStack drain(int maxDrain, IFluidHandler.FluidAction action) {
-            int drained = maxDrain;
-            if (getAmount() < maxDrain) {
-                drained = getAmount();
-            }
+            int drained = Math.min(getAmount(), maxDrain);
 
             FluidStack stack = new FluidStack(FluidRegistry.LIQUID_EXPERIENCE.get(), drained);
             if (action.execute() && drained > 0) {
@@ -98,14 +88,10 @@ public class ForgeExperienceCollectorBlockEntity extends ExperienceCollectorBloc
     });
 
 
-    public ForgeExperienceCollectorBlockEntity() {
-        super();
+    public ForgeExperienceCollectorBlockEntity(BlockPos pos, BlockState state) {
+        super(pos, state);
     }
 
-    @Override
-    protected void amountChanged() {
-        fluidStack.setAmount(getAmount());
-    }
 
     @NotNull
     @Override
@@ -114,6 +100,4 @@ public class ForgeExperienceCollectorBlockEntity extends ExperienceCollectorBloc
             return fluid.cast();
         return super.getCapability(cap, side);
     }
-
-
 }
