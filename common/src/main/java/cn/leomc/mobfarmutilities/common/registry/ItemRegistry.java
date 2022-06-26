@@ -1,6 +1,7 @@
 package cn.leomc.mobfarmutilities.common.registry;
 
 import cn.leomc.mobfarmutilities.MobFarmUtilities;
+import cn.leomc.mobfarmutilities.common.item.FanBladeItem;
 import cn.leomc.mobfarmutilities.common.item.LaserEmitterItem;
 import cn.leomc.mobfarmutilities.common.utils.PlatformCompatibility;
 import dev.architectury.registry.registries.DeferredRegister;
@@ -17,7 +18,7 @@ public class ItemRegistry {
 
     public static final RegistrySupplier<Item> FAN = register("fan", () -> new BlockItem(BlockRegistry.FAN.get(), new Item.Properties().tab(ModRegistry.ITEM_GROUP)));
 
-    public static final RegistrySupplier<Item> FAN_BLADE = register("fan_blade", () -> new Item(new Item.Properties().tab(ModRegistry.ITEM_GROUP)));
+    public static final RegistrySupplier<Item> FAN_BLADE = register("fan_blade", FanBladeItem::new);
 
     public static final RegistrySupplier<Item> ITEM_COLLECTOR = register("item_collector", () -> new BlockItem(BlockRegistry.ITEM_COLLECTOR.get(), new Item.Properties().tab(ModRegistry.ITEM_GROUP)));
 

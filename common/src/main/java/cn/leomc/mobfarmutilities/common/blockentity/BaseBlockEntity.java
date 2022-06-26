@@ -29,9 +29,8 @@ public abstract class BaseBlockEntity extends BlockEntity implements TickableBlo
 
     @Override
     public final void load(@NotNull CompoundTag tag) {
-        if (tag.contains("isUpdatePacket") && tag.getBoolean("isUpdatePacket")){
-            MobFarmUtilities.LOGGER.info("123rf");
-            loadClientData(tag);}
+        if (tag.contains("isUpdatePacket") && tag.getBoolean("isUpdatePacket"))
+            loadClientData(tag);
         else
             loadData(tag);
     }
