@@ -2,13 +2,14 @@
 
 ![Centered logo](/images/logo_centered.png)
 
-**MobFarmUtilities** is a Minecraft mod which adds tools for making mob farms, such as:
+**MobFarmUtilities** is a Minecraft mod which adds tools for making mob farms:
+![Machines](/images/machines.png)
 - **Fan** — to move mobs around
 - **Mob Slaughterer** — to kill mobs automatically while also receiving XP
 - **Item and XP collectors** — to pick up the loot
 
 All of these machines support redstone and can be upgraded to increase their working areas and effectiveness.
-![Machines](/images/machines.png)
+
 
 # Licensing
 - Code License: [GNU GPL v3.0](https://www.gnu.org/licenses/gpl-3.0.en.html)
