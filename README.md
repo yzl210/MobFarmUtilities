@@ -1,8 +1,6 @@
 # MobFarmUtilities
 
-![Centered logo](/images/logo_centered.png)
-
-**MobFarmUtilities** is a Minecraft mod which adds tools for making mob farms:
+**MobFarmUtilities** is a Minecraft mod which adds tools for making mob farms:<br>
 ![Machines](/images/machines.png)
 - **Fan** — to move mobs around
 - **Mob Slaughterer** — to kill mobs automatically while also receiving XP
