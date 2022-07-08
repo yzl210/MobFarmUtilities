@@ -3,7 +3,7 @@
 ![Centered logo](/images/logo_centered.png)
 <br>
 <br>
-**MobFarmUtilities** is a Minecraft mod which adds tools for making mob farms. It currently supports 1.16 and 1.18 for both **Fabric** and **Forge**.
+**MobFarmHelpers** is a Minecraft mod which adds tools for making mob farms. It currently supports 1.16 and 1.18 for both **Fabric** and **Forge**.
 # Downloads (CurseForge)
 ### > [Fabric](https://www.curseforge.com/minecraft/mc-mods/mob-farm-helpers-fabric/files) (*1.16.5, 1.18.2*)
 ### >  [Forge](https://www.curseforge.com/minecraft/mc-mods/mob-farm-helpers-forge/files) (*1.16.5, 1.18.2*)
