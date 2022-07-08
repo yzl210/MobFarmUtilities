@@ -1,5 +1,5 @@
 
-# MobFarmUtilities
+# MobFarmHelpers
 ![Centered logo](/images/logo_centered.png)
 <br>
 <br>
