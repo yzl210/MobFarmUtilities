@@ -9,8 +9,6 @@
 ### >  [Forge](https://www.curseforge.com/minecraft/mc-mods/mob-farm-helpers-forge/files) (*1.16.5, 1.18.2*)
 
 # New Machines
-=======
-MobFarmUtilities is a Minecraft mod that adds mob farm utilities, such as **Fan, Mob Slaughterer, XP collector and Item Collector**, all of which support redstone signals and can be upgraded to increase their working areas and effectiveness. <br> <br>
 ![Machines](/images/machines.png)
 - **Fan** — to move mobs around
 - **Mob Slaughterer** — to kill mobs automatically while also receiving XP
@@ -27,5 +25,3 @@ All of these machines support redstone and can be upgraded to increase their wor
 - Main Dev: [yzl210 aka 6LeoMC](https://github.com/yzl210)
 - Artist: [temhotaokeaha](https://github.com/temhotaokeaha)
 - Brazilian Portuguese Localization: [Mikeliro](https://github.com/Mikeliro)
-=======
-Artist: [temhotaokeaha](https://github.com/temhotaokeaha)
